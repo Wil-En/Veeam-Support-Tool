@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "reviewedOn": "2026-10-27",
+  "maximumPolicyAgeDays": 60,
+  "purpose": "Release floor for security-sensitive SAT runtime dependencies. Official packages fail closed when the policy is stale or a detected component is below its floor.",
+  "components": {
+    "openssl": {
+      "displayName": "OpenSSL",
+      "minimumVersion": "3.5.9",
+      "requiredWhenPresent": true,
+      "reason": "SAT release packaging is pinned to the OpenSSL 3.5 LTS series. 3.5.9 (2026-09-29) fixes CVE-2026-84782 (High, CVSS 8.2, an out-of-bounds read in DTLS handshake retransmission) and twelve Low advisories; 3.5.8 fixed CVE-2026-14456 (QUIC server) and the 2026-08-25 advisories. SAT uses TLS over TCP only (HTTPS, libssh2), no DTLS, QUIC or TLS listener, but the floor is the fixed release. Windows builds it through ports/openssl, Linux through tools/Build-ThirdParty-Linux.sh. Reviewed 2026-10-27; the method is in the security findings under docs.",
+      "requiredSeries": "3.5",
+      "advisory": "CVE-2026-84782 (High, DTLS), the 2026-09-29 advisories; CVE-2026-14456 and the 2026-08-25 advisories"
+    },
+    "libarchive": {
+      "displayName": "libarchive",
+      "minimumVersion": "3.8.10",
+      "requiredWhenPresent": true,
+      "reason": "3.8.10 (2026-10-14) is the current security and bugfix release. SAT opens customers' archives, so archive parsing is its largest exposure. Windows builds it through ports/libarchive, Linux through tools/Build-ThirdParty-Linux.sh. Reviewed 2026-10-27."
+    },
+    "libssh2": {
+      "displayName": "libssh2",
+      "minimumVersion": "1.11.2",
+      "requiredWhenPresent": true,
+      "reason": "CVE-2026-55200 (GHSA-r8mh-x5qv-7gg2, CVSS 8.1, AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:H/A:H): out-of-bounds write in ssh2_transport_read() which fails to enforce upper bounds on the packet_length field. A malicious or compromised SSH server sends crafted packets with excessively large packet_length values to corrupt heap memory and achieve remote code execution on the connecting client; a public PoC exists. All releases up to and including 1.11.1 are affected. SAT is an SSH/SFTP client and completes a full key exchange inside ssh_probe_host_key() before any host-key fingerprint is computed, so SAT host-key trust provides no mitigation for this defect. The advisory names a FIX COMMIT, not a fixed release: 97acf3df (\"transport.c: Additional boundary checks for packet length\", 2026-06-12). Upstream has published no release since 1.11.1 (2024-10-16) and master declares itself 1.11.2_DEV, so the fix will ship as 1.11.2. The floor is therefore 1.11.2, and requiredFixCommit additionally forces any pre-release build to be provably built from that commit - a 1.11.2_DEV snapshot predating the fix reports the same version and must not pass.",
+      "requiredFixCommit": "97acf3dfda80c91c3a8c9f2372546301d4a1a7a8",
+      "requiredFixCommitShort": "97acf3df",
+      "advisory": "GHSA-r8mh-x5qv-7gg2"
+    },
+    "sqlite": {
+      "displayName": "SQLite",
+      "minimumVersion": "3.53.4",
+      "requiredWhenPresent": true,
+      "reason": "Current reviewed SQLite maintenance floor for SAT's bundled database runtime."
+    }
+  }
+}

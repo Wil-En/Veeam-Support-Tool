@@ -1,0 +1,93 @@
+{
+  "schema": 1,
+  "about": "Guide and KB pages the checks and tools link to, each with the guide build or page date it was read from and the date it was reviewed.",
+  "links": {
+    "vbr13-ports": {
+      "title": "Ports (Veeam Backup & Replication 13 User Guide)",
+      "url": "https://helpcenter.veeam.com/docs/vbr/userguide/used_ports.html?ver=13",
+      "guide_build": "13.1.1.18",
+      "reviewed": "2026-09-28"
+    },
+    "vbr13-agent-ports": {
+      "title": "Ports for Veeam Agents (Veeam Backup & Replication 13 User Guide)",
+      "url": "https://helpcenter.veeam.com/docs/vbr/userguide/agents_used_ports.html?ver=13",
+      "guide_build": "13.1.1.18",
+      "page_updated": "2026-09-07",
+      "reviewed": "2026-09-28"
+    },
+    "vbr13-fast-clone": {
+      "title": "Fast Clone (Veeam Backup & Replication 13 User Guide)",
+      "url": "https://helpcenter.veeam.com/docs/vbr/userguide/backup_repository_block_cloning.html?ver=13",
+      "guide_build": "13.1.1.18",
+      "page_updated": "2026-07-20",
+      "reviewed": "2026-09-28"
+    },
+    "vbr13-repository-requirements": {
+      "title": "Backup Repository system requirements (Veeam Backup & Replication 13 User Guide)",
+      "url": "https://helpcenter.veeam.com/docs/vbr/userguide/system_requirements_backup_repo.html?ver=13",
+      "guide_build": "13.1.1.18",
+      "reviewed": "2026-09-28"
+    },
+    "vbr13-hardened-repository": {
+      "title": "Hardened repository requirements and limitations (Veeam Backup & Replication 13 User Guide)",
+      "url": "https://helpcenter.veeam.com/docs/vbr/userguide/hardened_repository_limitations.html?ver=13",
+      "guide_build": "13.1.1.18",
+      "reviewed": "2026-09-28"
+    },
+    "kb2792-refs": {
+      "title": "KB2792: ReFS requirements, limitations and known issues",
+      "url": "https://www.veeam.com/kb2792",
+      "reviewed": "2026-09-28"
+    },
+    "kb2014-disk-io": {
+      "title": "KB2014: How to Simulate Veeam Backup & Replication Disk I/O",
+      "url": "https://www.veeam.com/kb2014",
+      "page_updated": "2023-10-09",
+      "reviewed": "2026-09-28"
+    },
+    "microsoft-block-cloning": {
+      "title": "Block cloning on ReFS (Microsoft Learn)",
+      "url": "https://learn.microsoft.com/en-us/windows/win32/fileio/block-cloning",
+      "reviewed": "2026-09-28"
+    },
+    "vbr13-object-storage-immutability": {
+      "title": "Immutability considerations and limitations for object storage (Veeam Backup & Replication 13 User Guide)",
+      "url": "https://helpcenter.veeam.com/docs/vbr/userguide/os_immutability_limitations.html",
+      "guide_build": "13.1.1.18",
+      "reviewed": "2026-09-28"
+    },
+    "vbr13-object-storage-permissions": {
+      "title": "Object storage repository permissions (Veeam Backup & Replication 13 User Guide)",
+      "url": "https://helpcenter.veeam.com/docs/vbr/userguide/permissions_object_storage.html",
+      "guide_build": "13.1.1.18",
+      "reviewed": "2026-09-28"
+    },
+    "vbr13-sosapi": {
+      "title": "Working with SOSAPI (Veeam Backup & Replication 13 User Guide)",
+      "url": "https://helpcenter.veeam.com/docs/vbr/userguide/sosapi.html",
+      "guide_build": "13.1.1.18",
+      "reviewed": "2026-09-28"
+    },
+    "kb3151-object-storage-permissions": {
+      "title": "KB3151: Object storage permissions for Veeam Backup & Replication 12.0 and earlier",
+      "url": "https://www.veeam.com/kb3151",
+      "reviewed": "2026-09-28"
+    },
+    "vb365-8-s3-permissions": {
+      "title": "Amazon S3 Storage Permissions (Veeam Backup for Microsoft 365 8 User Guide)",
+      "url": "https://helpcenter.veeam.com/docs/vbo365/guide/amazon_s3_permissions.html",
+      "guide_build": "8.6.0.1102",
+      "reviewed": "2026-09-28"
+    },
+    "vbr-upload-streams": {
+      "title": "Managing Upload Streams (Veeam Backup & Replication User Guide for VMware vSphere)",
+      "url": "https://helpcenter.veeam.com/docs/backup/vsphere/enabling_multithreaded_transfer.html",
+      "reviewed": "2026-09-28"
+    },
+    "vbr13-kerberos": {
+      "title": "Kerberos Authentication (Veeam Backup & Replication 13 User Guide)",
+      "url": "https://helpcenter.veeam.com/docs/vbr/userguide/kerberos_authentication.html",
+      "reviewed": "2026-09-28"
+    }
+  }
+}

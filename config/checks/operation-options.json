@@ -1,0 +1,379 @@
+{
+  "schema": 1,
+  "about": "What each field, path and tick box of a Tools operation does, and whether it is required, shown as OPTIONS on the operation's hint card. An entry names the operation by the title its form shows (titles, with the operation's mode number in modes and its page), and each option by the label its form shows, so a renamed operation or label fails the check in tools/test_operation_options.py. need is required when an empty value is refused and optional when the field may stay empty, is defaulted or is read only in some cases; the text says what empty means, and for a tick box what ticking does and whether it starts ticked. platform limits an option to windows or linux where the two editions label or offer it differently. Several entries can name one title: the first option with the label on the running edition is the one shown. The Guided Diagnostics scenarios carry their own words in scenarios.json.",
+  "operations": [
+    {
+      "id": "tcp-connectivity",
+      "page": "network_tools",
+      "titles": ["TCP connectivity test"],
+      "modes": [0],
+      "options": [
+        {"label": "Host", "kind": "field", "need": "required", "platform": "both", "text": "The name or IP address of the machine to test. Starts as localhost."},
+        {"label": "Port", "kind": "field", "need": "required", "platform": "both", "text": "The TCP port to connect to, from 1 to 65535. Starts as 2500."},
+        {"label": "Timeout ms", "kind": "field", "need": "required", "platform": "both", "text": "How long to wait for each connection attempt, in milliseconds. Starts as 5000."},
+        {"label": "Payload MiB", "kind": "field", "need": "optional", "platform": "both", "text": "How much data to send, in MiB, when the payload tick box is ticked: a whole number from 1 to 8192. Starts as 50 and is not read while that box is clear."},
+        {"label": "Validate an in-memory payload when peer is a SAT listener", "kind": "tick box", "need": "optional", "platform": "both", "text": "Ticked, a test against a SAT listener also sends Payload MiB of data from memory and compares the byte count and SHA-256 at both ends, which gives a rough bandwidth reading. Clear to begin with."},
+        {"label": "Test through each discovered local interface", "kind": "tick box", "need": "optional", "platform": "linux", "text": "Ticked, the test runs from each local address in turn and lists a result for each interface. Clear to begin with, when the system chooses the route."}
+      ]
+    },
+    {
+      "id": "tcp-listener",
+      "page": "network_tools",
+      "titles": ["TCP listener"],
+      "modes": [1],
+      "options": [
+        {"label": "Listen port", "kind": "field", "need": "required", "platform": "both", "text": "The TCP port this machine accepts connections on. Starts as 2500."},
+        {"label": "Duration seconds", "kind": "field", "need": "required", "platform": "both", "text": "How long the listener stays open. Starts as 30."},
+        {"label": "Banner", "kind": "field", "need": "optional", "platform": "both", "text": "Text sent to each client that connects, so the other end can confirm it reached this listener. %port% is replaced by the listen port. Empty sends no banner."},
+        {"label": "Accept multiple connections until timeout", "kind": "tick box", "need": "optional", "platform": "both", "text": "Ticked, the listener keeps accepting connections until Duration seconds ends. Clear to begin with, when it stops after the first connection."}
+      ]
+    },
+    {
+      "id": "udp-connectivity",
+      "page": "network_tools",
+      "titles": ["UDP connectivity test"],
+      "modes": [16],
+      "options": [
+        {"label": "Host", "kind": "field", "need": "required", "platform": "both", "text": "The name or IP address of the machine to test. Starts as localhost."},
+        {"label": "Port", "kind": "field", "need": "required", "platform": "both", "text": "The UDP port to send to, from 1 to 65535. Starts as 2500."},
+        {"label": "Timeout ms", "kind": "field", "need": "required", "platform": "both", "text": "How long to wait for an answer, in milliseconds. Starts as 2000."},
+        {"label": "Verify a cooperating SAT UDP listener (required for PASS)", "kind": "tick box", "need": "optional", "platform": "both", "text": "Ticked, the probe expects an acknowledgement from a SAT UDP listener on the other machine, which is the only way the result reads VERIFIED. Cleared, a probe with no answer reads INDETERMINATE. Clear to begin with."},
+        {"label": "Test through each discovered local interface", "kind": "tick box", "need": "optional", "platform": "linux", "text": "Ticked, the test runs from each local address in turn and lists a result for each interface. Clear to begin with, when the system chooses the route."}
+      ]
+    },
+    {
+      "id": "udp-listener",
+      "page": "network_tools",
+      "titles": ["UDP listener"],
+      "modes": [17],
+      "options": [
+        {"label": "Listen port", "kind": "field", "need": "required", "platform": "both", "text": "The UDP port this machine receives probes on. Starts as 2500."},
+        {"label": "Duration seconds", "kind": "field", "need": "required", "platform": "both", "text": "How long the listener stays open. Starts as 30."}
+      ]
+    },
+    {
+      "id": "tls-handshake",
+      "page": "network_tools",
+      "titles": ["TLS handshake test"],
+      "modes": [18],
+      "options": [
+        {"label": "Host", "kind": "field", "need": "required", "platform": "both", "text": "The name or IP address of the server to run the handshake against."},
+        {"label": "Port", "kind": "field", "need": "required", "platform": "both", "text": "The TLS port on the server. Starts as 2500."},
+        {"label": "TLS server name / SNI (optional)", "kind": "field", "need": "optional", "platform": "both", "text": "The name sent as SNI and checked against the certificate when it differs from Host. Empty uses Host."},
+        {"label": "Expected SHA-1/SHA-256 fingerprint (optional)", "kind": "field", "need": "optional", "platform": "both", "text": "A certificate fingerprint to compare with the one the server presents. Empty reports the fingerprint without comparing it."},
+        {"label": "Compare TLS 1.2 and TLS 1.3 separately", "kind": "tick box", "need": "optional", "platform": "both", "text": "Ticked, the handshake runs once limited to TLS 1.2 and once limited to TLS 1.3, with a result for each. Clear to begin with, when one handshake negotiates the version."},
+        {"label": "Test through each discovered local interface", "kind": "tick box", "need": "optional", "platform": "linux", "text": "Ticked, the test runs from each local address in turn and lists a result for each interface. Clear to begin with, when the system chooses the route."}
+      ]
+    },
+    {
+      "id": "local-loopback",
+      "page": "network_tools",
+      "titles": ["Local loopback self-test"],
+      "modes": [19],
+      "options": [
+        {"label": "Loopback port", "kind": "field", "need": "required", "platform": "both", "text": "The port the temporary listener uses, on this machine only. When another program already owns the port, the test names the owner and does not start. Starts as 2500."},
+        {"label": "Timeout ms", "kind": "field", "need": "required", "platform": "both", "text": "How long to wait for the temporary listener to start and for the local connection, in milliseconds. Starts as 5000."}
+      ]
+    },
+    {
+      "id": "windows-rpc",
+      "page": "network_tools",
+      "titles": ["Windows RPC connectivity"],
+      "modes": [20],
+      "options": [
+        {"label": "Target host", "kind": "field", "need": "required", "platform": "both", "text": "The Windows computer to test: its name or IP address."},
+        {"label": "RPC Endpoint Mapper port", "kind": "field", "need": "required", "platform": "both", "text": "The Endpoint Mapper port on the target. Starts as 135, the port Windows RPC uses."},
+        {"label": "Timeout ms", "kind": "field", "need": "required", "platform": "both", "text": "How long to wait for the bind exchange, in milliseconds. Starts as 5000."}
+      ]
+    },
+    {
+      "id": "grpc-connectivity",
+      "page": "network_tools",
+      "titles": ["gRPC connectivity"],
+      "modes": [21],
+      "options": [
+        {"label": "Target host", "kind": "field", "need": "required", "platform": "both", "text": "The host that serves the gRPC or HTTP/2 transport: its name or IP address."},
+        {"label": "Port", "kind": "field", "need": "required", "platform": "both", "text": "The port the service listens on. Starts as 2500."},
+        {"label": "TLS server name / SNI (optional)", "kind": "field", "need": "optional", "platform": "both", "text": "The TLS server name presented when Use TLS and require ALPN h2 is ticked. Empty uses Target host."},
+        {"label": "Use TLS and require ALPN h2", "kind": "tick box", "need": "optional", "platform": "both", "text": "Ticked, the connection uses TLS and the server has to offer ALPN h2. Clear to begin with, when the HTTP/2 preface is sent over plain TCP."}
+      ]
+    },
+    {
+      "id": "grpc-listener",
+      "page": "network_tools",
+      "titles": ["gRPC listener"],
+      "modes": [22],
+      "options": [
+        {"label": "Listen port", "kind": "field", "need": "required", "platform": "both", "text": "The port this machine accepts the HTTP/2 transport test on. Starts as 2500."},
+        {"label": "Duration seconds", "kind": "field", "need": "required", "platform": "both", "text": "How long the listener stays open. Starts as 30."},
+        {"label": "Accept multiple connections until timeout", "kind": "tick box", "need": "optional", "platform": "both", "text": "Ticked, the listener keeps accepting connections until Duration seconds ends, so a second test can follow. Ticked to begin with."}
+      ]
+    },
+    {
+      "id": "veeam-service-channel",
+      "page": "network_tools",
+      "titles": ["Veeam Service Channel"],
+      "modes": [27],
+      "options": [
+        {"label": "Veeam product", "kind": "field", "need": "optional", "platform": "both", "text": "The product whose channel is tested: agent for Veeam Agent for Microsoft Windows, or vbr for Veeam Backup & Replication. Empty uses agent."},
+        {"label": "Log folder", "kind": "path", "need": "optional", "platform": "both", "text": "A folder of the product's logs, such as a collected bundle's Endpoint folder. Empty reads the product's own log folder on this machine."},
+        {"label": "Hours", "kind": "field", "need": "optional", "platform": "both", "text": "How far back the logs are read, in hours. Empty, or a value that is not a positive number, uses 24."},
+        {"label": "Read the logs only", "kind": "tick box", "need": "optional", "platform": "windows", "text": "Ticked, the service, its named pipe and the HTTP/2 handshake on this machine are skipped and only the product's logs are read. Clear to begin with."}
+      ]
+    },
+    {
+      "id": "smb-connectivity",
+      "page": "network_tools",
+      "titles": ["SMB connectivity test"],
+      "modes": [24],
+      "options": [
+        {"label": "Target machine", "kind": "field", "need": "required", "platform": "both", "text": "The Windows computer to test: its host name, fully qualified name or IPv4 address."},
+        {"label": "Bounded test path", "kind": "field", "need": "required", "platform": "both", "text": "A folder under C$ on the target, written as C$ followed by the folder. The test writes a small file there, reads it back and deletes it, so the account needs write access. Starts as C$\\Windows\\Veeam."},
+        {"label": "TCP / SMB timeout ms", "kind": "field", "need": "required", "platform": "both", "text": "How long to wait at each SMB stage, in milliseconds. Starts as 5000."},
+        {"label": "Prompt Windows for alternate credentials", "kind": "tick box", "need": "optional", "platform": "windows", "text": "Ticked, Windows asks for the account to connect with. Clear to begin with, when the test connects as the account SAT runs as."},
+        {"label": "Prompt for alternate credentials", "kind": "tick box", "need": "optional", "platform": "linux", "text": "Ticked, asks for the account to connect with. The SMB test runs on Windows only. Clear to begin with."}
+      ]
+    },
+    {
+      "id": "packet-capture",
+      "page": "network_tools",
+      "titles": ["Packet capture"],
+      "modes": [5],
+      "options": [
+        {"label": "Output", "kind": "field", "need": "optional", "platform": "linux", "text": "Shows where the capture is written: this run's Log-Collections/Tools output. It is filled in for each run."},
+        {"label": "Address filter", "kind": "field", "need": "optional", "platform": "linux", "text": "Limits the capture to traffic to or from one IP address. Empty captures every address."},
+        {"label": "IP filter", "kind": "field", "need": "optional", "platform": "windows", "text": "Limits the capture to traffic to or from one IP address. Empty captures every address."},
+        {"label": "Port filter", "kind": "field", "need": "optional", "platform": "both", "text": "Limits the capture to one port, entered as a number. Empty captures every port."}
+      ]
+    },
+    {
+      "id": "convert-etl",
+      "page": "network_tools",
+      "titles": ["Convert ETL to PCAPNG"],
+      "modes": [8],
+      "options": [
+        {"label": "Input ETL", "kind": "path", "need": "required", "platform": "windows", "text": "The .etl capture to convert, such as one Packet capture wrote."},
+        {"label": "Output PCAPNG", "kind": "path", "need": "required", "platform": "windows", "text": "Where the converted .pcapng file is written."},
+        {"label": "Optional converter fallback folder", "kind": "path", "need": "optional", "platform": "windows", "text": "A folder that holds etl2pcapng, used only when the pktmon converter in Windows cannot read the file. Empty uses the Tools folder."}
+      ]
+    },
+    {
+      "id": "iperf-client",
+      "page": "network_tools",
+      "titles": ["iPerf client (optional)"],
+      "modes": [11],
+      "options": [
+        {"label": "Server address", "kind": "field", "need": "required", "platform": "both", "text": "The iPerf3 server to measure against: its name or IP address."},
+        {"label": "Port", "kind": "field", "need": "required", "platform": "both", "text": "The port the iPerf3 server listens on. Starts as 2500."},
+        {"label": "Transfer size", "kind": "field", "need": "optional", "platform": "both", "text": "How much data to send, such as 1G. Empty runs the iPerf3 default test. Starts as 1G."},
+        {"label": "Optional tools folder", "kind": "path", "need": "optional", "platform": "both", "text": "The folder that holds iperf3. Empty uses the Tools folder."}
+      ]
+    },
+    {
+      "id": "iperf-server",
+      "page": "network_tools",
+      "titles": ["iPerf one-shot server (optional)"],
+      "modes": [12],
+      "options": [
+        {"label": "Port", "kind": "field", "need": "required", "platform": "both", "text": "The port the server listens on for one run. Starts as 2500."},
+        {"label": "Optional tools folder", "kind": "path", "need": "optional", "platform": "both", "text": "The folder that holds iperf3. Empty uses the Tools folder."}
+      ]
+    },
+    {
+      "id": "native-throughput-client",
+      "page": "network_tools",
+      "titles": ["Native throughput client"],
+      "modes": [14],
+      "options": [
+        {"label": "Server address", "kind": "field", "need": "required", "platform": "both", "text": "The machine running Native throughput server: its name or IP address."},
+        {"label": "Port", "kind": "field", "need": "required", "platform": "both", "text": "The port the throughput server listens on. Starts as 2500."},
+        {"label": "Transfer size", "kind": "field", "need": "required", "platform": "both", "text": "How much data to send, such as 512M or 1G. Starts as 1G."}
+      ]
+    },
+    {
+      "id": "native-throughput-server",
+      "page": "network_tools",
+      "titles": ["Native throughput server"],
+      "modes": [15],
+      "options": [
+        {"label": "Listen port", "kind": "field", "need": "required", "platform": "both", "text": "The port this machine accepts the throughput run on. Starts as 2500."},
+        {"label": "Connection timeout ms", "kind": "field", "need": "required", "platform": "both", "text": "How long to wait for the client to connect, in milliseconds. Starts as 60000."},
+        {"label": "Idle timeout ms", "kind": "field", "need": "required", "platform": "both", "text": "How long a stalled transfer is tolerated, in milliseconds. Starts as 30000."}
+      ]
+    },
+    {
+      "id": "log-collection-universal",
+      "page": "log_collection",
+      "titles": ["Universal / detected products"],
+      "modes": [0],
+      "options": [
+        {"label": "Output folder", "kind": "path", "need": "required", "platform": "both", "text": "The folder the collected bundle is written to. It starts filled in, and an empty field is refused."},
+        {"label": "Last X days (optional; blank = ALL)", "kind": "field", "need": "optional", "platform": "both", "text": "Collects only logs and events from the last N days, a whole number. Empty collects all of them."},
+        {"label": "Create ZIP archive", "kind": "tick box", "need": "optional", "platform": "both", "text": "Ticked, the collection is also written as one ZIP file, and the loose folder is removed once the ZIP is complete. Ticked to begin with."},
+        {"label": "Include sanitized third-party operational/error logs (SQL, PostgreSQL, Oracle, etc.)", "kind": "tick box", "need": "optional", "platform": "both", "text": "Ticked, the operational and error logs of database products found on this machine are collected with sensitive values sanitized. Database contents are not collected. Ticked to begin with."}
+      ]
+    },
+    {
+      "id": "log-collection-custom",
+      "page": "log_collection",
+      "titles": ["Custom paths"],
+      "modes": [1],
+      "options": [
+        {"label": "Output folder", "kind": "path", "need": "required", "platform": "both", "text": "The folder the collected bundle is written to. It starts filled in, and an empty field is refused."},
+        {"label": "Custom source paths (semicolon-separated)", "kind": "path", "need": "required", "platform": "both", "text": "The files and folders to collect, separated by semicolons. The collection stops with a message when none is given."},
+        {"label": "From date/time (optional)", "kind": "field", "need": "optional", "platform": "both", "text": "Leaves out evidence from before this moment. Empty applies no start limit."},
+        {"label": "To date/time (optional)", "kind": "field", "need": "optional", "platform": "both", "text": "Leaves out evidence from after this moment. Empty applies no end limit."},
+        {"label": "Create ZIP archive", "kind": "tick box", "need": "optional", "platform": "both", "text": "Ticked, the collection is also written as one ZIP file, and the loose folder is removed once the ZIP is complete. Ticked to begin with."},
+        {"label": "Include bounded platform / system support context", "kind": "tick box", "need": "optional", "platform": "windows", "text": "Ticked, a bounded set of system information is collected with the paths: VSS state, system and boot details, drivers and event logs. Ticked to begin with."},
+        {"label": "Include bounded platform / system support context", "kind": "tick box", "need": "optional", "platform": "linux", "text": "Ticked, a bounded set of system information is collected with the paths. Ticked to begin with."}
+      ]
+    },
+    {
+      "id": "sql-tools",
+      "page": "sql_tools",
+      "titles": ["Permission check", "Server shape", "Backups and log chain", "Database files and volumes", "Read-only query"],
+      "modes": [0, 1, 2, 3, 4],
+      "options": [
+        {"label": "SQL Server / instance", "kind": "field", "need": "required", "platform": "both", "text": "The instance to check, as clients connect to it, such as SQLHOST01\\VEEAMSQL2016. For PostgreSQL, host or host:port. The list offers this machine's instances and the configuration database's."},
+        {"label": "Engine", "kind": "field", "need": "optional", "platform": "both", "text": "SQL Server or PostgreSQL. Picking one of this machine's instances sets it. Empty is read as SQL Server."},
+        {"label": "Use logged-in user", "kind": "tick box", "need": "optional", "platform": "windows", "text": "Ticked, connects as the account running SAT. Cleared, asks for a SQL login for that run, which is not saved. Ticked to begin with."},
+        {"label": "Use logged-in user (Kerberos ticket)", "kind": "tick box", "need": "optional", "platform": "linux", "text": "Ticked, connects with this session's Kerberos ticket. Cleared, asks for a SQL login for that run, which is not saved. Clear to begin with."},
+        {"label": "Trust the server certificate", "kind": "tick box", "need": "optional", "platform": "both", "text": "Ticked, accepts a SQL Server certificate this machine does not trust, such as SQL Server's own self-signed one. Clear to begin with."}
+      ]
+    },
+    {
+      "id": "sql-permission-check",
+      "page": "sql_tools",
+      "titles": ["Permission check"],
+      "modes": [0],
+      "options": [
+        {"label": "Check against", "kind": "field", "need": "optional", "platform": "both", "text": "Guest processing checks the rights for backing up a guest: sysadmin, or the minimal list. Configuration database checks the rights on Veeam's configuration database. Empty is read as Guest processing."},
+        {"label": "Configuration database", "kind": "field", "need": "optional", "platform": "both", "text": "The configuration database's name, read by the Configuration database check. Empty uses VeeamBackup, or for PostgreSQL the one found on this machine."},
+        {"label": "Another account", "kind": "field", "need": "optional", "platform": "both", "text": "A login to look up in the catalog instead of the account connecting. The connecting account needs VIEW ANY DEFINITION or sysadmin, and Windows groups are not expanded. Empty checks the account connecting."}
+      ]
+    },
+    {
+      "id": "sql-backups",
+      "page": "sql_tools",
+      "titles": ["Backups and log chain"],
+      "modes": [2],
+      "options": [
+        {"label": "Database", "kind": "field", "need": "optional", "platform": "both", "text": "One database to read backup history for. Empty reads every database except tempdb. PostgreSQL ignores it."},
+        {"label": "Days", "kind": "field", "need": "optional", "platform": "both", "text": "How many days of backup history to read. Empty, or a value that is not a positive number, uses 14."}
+      ]
+    },
+    {
+      "id": "sql-query",
+      "page": "sql_tools",
+      "titles": ["Read-only query"],
+      "modes": [4],
+      "options": [
+        {"label": "Database", "kind": "field", "need": "optional", "platform": "both", "text": "The database the query runs in. Empty connects to the server's default: master on SQL Server, postgres on PostgreSQL. Starts as master."},
+        {"label": "Query", "kind": "field", "need": "required", "platform": "both", "text": "A query that reads data, or one of the named queries in the list. A query that changes data does not run."}
+      ]
+    },
+    {
+      "id": "vss-test-snapshot",
+      "page": "vss_tools",
+      "titles": ["Create / hold / release test snapshot"],
+      "modes": [1],
+      "options": [
+        {"label": "VSS-capable volume", "kind": "field", "need": "required", "platform": "windows", "text": "The local NTFS or ReFS volume to take a temporary shadow copy of, such as C:\\. Several volumes can be separated by semicolons."},
+        {"label": "Writer class GUIDs (optional)", "kind": "field", "need": "optional", "platform": "windows", "text": "The VSS writers to include in the snapshot, by writer class GUID, separated by semicolons. Choose lists them. Empty includes every writer."},
+        {"label": "Hold seconds", "kind": "field", "need": "required", "platform": "windows", "text": "How long the shadow copy is held before it is released and checked for cleanup. Starts as 30."},
+        {"label": "Full backup state", "kind": "tick box", "need": "optional", "platform": "windows", "text": "Ticked, the test snapshot takes a full backup state. Cleared, it takes a copy backup state, which leaves the writers' backup history as it was. Clear to begin with."},
+        {"label": "Select all selectable writer components", "kind": "tick box", "need": "optional", "platform": "windows", "text": "Ticked, the snapshot runs in component mode with every selectable writer component selected. Clear to begin with."}
+      ]
+    },
+    {
+      "id": "system-differences-files",
+      "page": "filesystem_change",
+      "titles": ["File Differences"],
+      "modes": [0],
+      "options": [
+        {"label": "Folder to look at", "kind": "path", "need": "required", "platform": "both", "text": "Everything under this folder is captured. Capture needs it; Compare reads the folder again from the capture's own settings."},
+        {"label": "Capture file", "kind": "path", "need": "required", "platform": "both", "text": "The .satsnap file Capture writes (an existing one is replaced after a question) and Compare and Open read; Compare captures first when it is not there yet. Compares are kept in it."},
+        {"label": "Compare file contents", "kind": "field", "need": "optional", "platform": "both", "text": "Never compares names, sizes and times. Files up to 64 MB and All files also read each file, which finds a change that left its size and times alone. Empty is read as Never."},
+        {"label": "Compare with", "kind": "path", "need": "optional", "platform": "both", "text": "Now reads the folder again with the capture's settings and compares; a second .satsnap capture compares the two captures. Empty is read as Now."},
+        {"label": "Include alternate data streams", "kind": "tick box", "need": "optional", "platform": "windows", "text": "Ticked, Capture also records each file's alternate data streams. Clear to begin with."}
+      ]
+    },
+    {
+      "id": "system-differences-registry",
+      "page": "filesystem_change",
+      "titles": ["Registry Differences"],
+      "modes": [2],
+      "options": [
+        {"label": "Registry scope", "kind": "field", "need": "required", "platform": "windows", "text": "The key Capture starts from, such as HKLM\\SOFTWARE\\Veeam, or a whole hive at its root: HKLM, HKU, HKCR, HKCC or HKCU."},
+        {"label": "Capture file", "kind": "path", "need": "required", "platform": "windows", "text": "The .satsnap file Capture writes (an existing one is replaced after a question) and Compare and Open read; Compare captures first when it is not there yet. Compares are kept in it."},
+        {"label": "Registry view", "kind": "field", "need": "optional", "platform": "windows", "text": "both, 64 or 32: the 64-bit view, the 32-bit view or both. Empty is read as both."},
+        {"label": "Compare with", "kind": "path", "need": "optional", "platform": "windows", "text": "Now reads the same keys again and compares; a second registry .satsnap capture compares the two captures. Empty is read as Now."}
+      ]
+    },
+    {
+      "id": "wmi-cluster",
+      "page": "wmi_diagnostics",
+      "titles": ["WMI cluster test"],
+      "modes": [3],
+      "options": [
+        {"label": "Machine", "kind": "field", "need": "optional", "platform": "windows", "text": "A dot for this machine, the first entry the list offers, or the name or address of a cluster node. Empty is read as this machine."},
+        {"label": "Sign in", "kind": "field", "need": "optional", "platform": "windows", "text": "Current Windows account signs in to another machine as the account SAT runs as. Another account asks for an account and password when the query runs, uses them for that query only and saves nothing. This machine always uses the account SAT runs as."}
+      ]
+    },
+    {
+      "id": "wmi-custom-query",
+      "page": "wmi_diagnostics",
+      "titles": ["WMI custom query"],
+      "modes": [4],
+      "options": [
+        {"label": "Machine", "kind": "field", "need": "optional", "platform": "windows", "text": "A dot for this machine, or another machine's name or address. Empty is read as this machine."},
+        {"label": "Namespace", "kind": "field", "need": "required", "platform": "windows", "text": "The WMI namespace the query runs in. The list offers common namespaces. Starts as root\\cimv2."},
+        {"label": "WQL query", "kind": "field", "need": "required", "platform": "windows", "text": "The WQL SELECT to run. The list offers examples. Starts as SELECT * FROM Win32_OperatingSystem."},
+        {"label": "Sign in", "kind": "field", "need": "optional", "platform": "windows", "text": "Current Windows account signs in to another machine as the account SAT runs as. Another account asks for an account and password when the query runs, uses them for that query only and saves nothing. This machine always uses the account SAT runs as."}
+      ]
+    },
+    {
+      "id": "host-checks",
+      "page": "general_tools",
+      "titles": ["Host Checks"],
+      "modes": [28],
+      "options": [
+        {"label": "Days", "kind": "field", "need": "optional", "platform": "windows", "text": "How many days of System and Application events the Backup events check reads. Empty reads 7 days."},
+        {"label": "Backup events", "kind": "tick box", "need": "optional", "platform": "windows", "text": "Reads the System and Application events that explain failed snapshots and storage trouble: volsnap, VSS, disk and NTFS. Ticked to begin with."},
+        {"label": "Veeam drivers", "kind": "tick box", "need": "optional", "platform": "windows", "text": "Lists the Veeam drivers on this machine with their state and how each starts, and the change tracking store. Ticked to begin with."},
+        {"label": "Veeam drivers", "kind": "tick box", "need": "optional", "platform": "linux", "text": "Reports the Veeam snapshot module: whether it is loaded and whether it was built for this kernel. Ticked to begin with."},
+        {"label": "VSS shadow storage  (administrator)", "kind": "tick box", "need": "optional", "platform": "windows", "text": "Reads the shadow storage of each volume: used, allocated and maximum space, and the shadow copies on it. Needs administrator rights. Ticked to begin with."},
+        {"label": ".NET and TLS", "kind": "tick box", "need": "optional", "platform": "windows", "text": "Reads the .NET Framework release and the registry values that turn TLS 1.2 on or off. Ticked to begin with."},
+        {"label": "Kernel log  (administrator)", "kind": "tick box", "need": "optional", "platform": "linux", "text": "Reads kernel messages that name a Veeam snapshot module, an I/O error or a file system error. Needs root. Ticked to begin with."}
+      ]
+    },
+    {
+      "id": "installer-cache",
+      "page": "general_tools",
+      "titles": ["Installer Cache Check"],
+      "modes": [25],
+      "options": [
+        {"label": "UpgradeCode or product name", "kind": "field", "need": "optional", "platform": "windows", "text": "Part of a product's name or publisher, or an UpgradeCode with or without braces. Veeam lists every product Veeam installed. Empty lists every installed product. Starts as Veeam."},
+        {"label": "Installer, or a folder, to check (optional)", "kind": "path", "need": "optional", "platform": "windows", "text": "An .msi shows its PackageCode and whether a listed product was installed from it. An .exe shows its version and signer. A folder is searched four levels down for .msi files. Each file's SHA-256 is shown."}
+      ]
+    },
+    {
+      "id": "named-pipes",
+      "page": "general_tools",
+      "titles": ["Named Pipes"],
+      "modes": [29],
+      "options": [
+        {"label": "Pipes shown", "kind": "field", "need": "required", "platform": "windows", "text": "Every pipe lists the whole pipe namespace. Veeam pipes keeps the pipes of Veeam products, SQL Server and PostgreSQL and the pipes of Veeam programs. Starts as Every pipe."}
+      ]
+    },
+    {
+      "id": "unix-sockets",
+      "page": "general_tools",
+      "titles": ["Unix sockets"],
+      "modes": [29],
+      "options": [
+        {"label": "Sockets shown", "kind": "field", "need": "required", "platform": "both", "text": "Every socket lists every Unix domain socket with a path. Veeam sockets keeps the Veeam and database sockets and the sockets of Veeam programs. Starts as Every socket."}
+      ]
+    }
+  ]
+}

@@ -1,0 +1,1261 @@
+{
+  "schema": 1,
+  "about": "Guided Diagnostics: each scenario is a symptom an engineer recognises, the machine to run it on (run_on), the inputs it needs, and its steps in order. A step runs one of SAT's read-only checks and says what it checks (does), with the ports, query, events or service it uses. A decisive step that fails stops the run unless Keep going after a failure is ticked. Each step says what a pass, an attention and a fail mean in Veeam's terms, with the page it follows. A $name in a parameter is the scenario input of that id.",
+  "sources": {
+    "vbr13-ports": {
+      "title": "Ports (Veeam Backup & Replication 13 User Guide)",
+      "url": "https://helpcenter.veeam.com/docs/vbr/userguide/used_ports.html?ver=13",
+      "reviewed": "2026-10-12"
+    },
+    "vbr13-permissions": {
+      "title": "Permissions (Veeam Backup & Replication 13 User Guide)",
+      "url": "https://helpcenter.veeam.com/docs/vbr/userguide/required_permissions.html?ver=13",
+      "reviewed": "2026-10-12"
+    },
+    "vbr13-cipher-suites": {
+      "title": "Cipher suites and protocols (Veeam Backup & Replication 13 User Guide)",
+      "url": "https://helpcenter.veeam.com/docs/vbr/userguide/cipher_suites_protocols.html?ver=13",
+      "reviewed": "2026-10-12"
+    },
+    "vbr13-certificate": {
+      "title": "Backup server certificate (Veeam Backup & Replication 13 User Guide)",
+      "url": "https://helpcenter.veeam.com/docs/vbr/userguide/backup_server_certificate.html?ver=13",
+      "reviewed": "2026-10-13"
+    },
+    "vbr13-alwayson-vm": {
+      "title": "Always On Availability Groups support (Veeam Backup & Replication 13 User Guide)",
+      "url": "https://helpcenter.veeam.com/archive/vbr/13.0.2/userguide/alwayson_support.html",
+      "reviewed": "2026-10-17"
+    },
+    "kb1926": {
+      "title": "Veeam KB1926",
+      "url": "https://www.veeam.com/kb1926",
+      "reviewed": "2026-10-12"
+    },
+    "kb2041": {
+      "title": "Veeam KB2041",
+      "url": "https://www.veeam.com/kb2041",
+      "reviewed": "2026-10-12"
+    },
+    "kb2065": {
+      "title": "Veeam KB2065",
+      "url": "https://www.veeam.com/kb2065",
+      "reviewed": "2026-10-12"
+    },
+    "kb1471": {
+      "title": "Veeam KB1471",
+      "url": "https://www.veeam.com/kb1471",
+      "reviewed": "2026-10-12"
+    },
+    "kb4542": {
+      "title": "Veeam KB4542",
+      "url": "https://www.veeam.com/kb4542",
+      "reviewed": "2026-10-12"
+    },
+    "kb2027": {
+      "title": "Veeam KB2027",
+      "url": "https://www.veeam.com/kb2027",
+      "reviewed": "2026-10-21"
+    },
+    "kb2117": {
+      "title": "Veeam KB2117",
+      "url": "https://www.veeam.com/kb2117",
+      "reviewed": "2026-10-12"
+    },
+    "kb2127": {
+      "title": "Veeam KB2127",
+      "url": "https://www.veeam.com/kb2127",
+      "reviewed": "2026-10-13"
+    },
+    "kb2689": {
+      "title": "Veeam KB2689",
+      "url": "https://www.veeam.com/kb2689",
+      "reviewed": "2026-10-12"
+    },
+    "kb2014": {
+      "title": "Veeam KB2014",
+      "url": "https://www.veeam.com/kb2014",
+      "reviewed": "2026-10-12"
+    },
+    "vbr13-bottlenecks": {
+      "title": "Performance bottlenecks (Veeam Backup & Replication 13 User Guide)",
+      "url": "https://helpcenter.veeam.com/docs/vbr/userguide/detecting_bottlenecks.html",
+      "reviewed": "2026-10-12"
+    },
+    "ms-dynamic-port-range": {
+      "title": "Default dynamic port range for TCP/IP (Microsoft)",
+      "url": "https://learn.microsoft.com/en-us/troubleshoot/windows-server/networking/default-dynamic-port-range-tcpip-chang",
+      "reviewed": "2026-10-22"
+    },
+    "ms-port-exhaustion": {
+      "title": "TCP/IP port exhaustion troubleshooting (Microsoft)",
+      "url": "https://learn.microsoft.com/en-us/troubleshoot/windows-client/networking/tcp-ip-port-exhaustion-troubleshooting",
+      "reviewed": "2026-10-22"
+    },
+    "ms-askds-port-exhaustion": {
+      "title": "Port Exhaustion and You (Microsoft Directory Services team)",
+      "url": "https://learn.microsoft.com/en-us/archive/blogs/askds/port-exhaustion-and-you-or-why-the-netstat-tool-is-your-friend",
+      "reviewed": "2026-10-22"
+    },
+    "ms-event-4227": {
+      "title": "Event ID 4227, Tcpip (Microsoft)",
+      "url": "https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2008-R2-and-2008/cc735929(v=ws.10)",
+      "reviewed": "2026-10-22"
+    },
+    "ms-nettcpsetting": {
+      "title": "MSFT_NetTCPSetting class (Microsoft)",
+      "url": "https://learn.microsoft.com/en-us/windows/win32/fwp/wmi/nettcpipprov/msft-nettcpsetting",
+      "reviewed": "2026-10-22"
+    },
+    "ms-paged-pool": {
+      "title": "Unable to allocate memory from the system paged pool (Microsoft)",
+      "url": "https://learn.microsoft.com/en-us/troubleshoot/windows-server/performance/unable-allocate-memory-system-paged-pool",
+      "reviewed": "2026-10-22"
+    },
+    "ms-service-overview": {
+      "title": "Service overview and network port requirements for Windows (Microsoft)",
+      "url": "https://learn.microsoft.com/en-us/troubleshoot/windows-server/networking/service-overview-and-network-port-requirements",
+      "reviewed": "2026-10-22"
+    },
+    "ms-rpc-dynamic-ports": {
+      "title": "Configure RPC dynamic port allocation to work with firewalls (Microsoft)",
+      "url": "https://learn.microsoft.com/en-us/troubleshoot/windows-server/networking/configure-rpc-dynamic-port-allocation-with-firewalls",
+      "reviewed": "2026-10-22"
+    },
+    "ms-firewall-rpc-rules": {
+      "title": "Create inbound rules to support RPC (Microsoft)",
+      "url": "https://learn.microsoft.com/en-us/windows/security/operating-system-security/network-security/windows-firewall/create-inbound-rules-to-support-rpc",
+      "reviewed": "2026-10-22"
+    },
+    "ms-rpc-1722": {
+      "title": "RPC error 1722, the RPC server is unavailable (Microsoft)",
+      "url": "https://learn.microsoft.com/en-us/troubleshoot/windows-server/active-directory/replication-error-1722-rpc-server-unavailable",
+      "reviewed": "2026-10-22"
+    },
+    "kb1174": {
+      "title": "Veeam KB1174",
+      "url": "https://www.veeam.com/kb1174",
+      "reviewed": "2026-10-22"
+    },
+    "kb4217": {
+      "title": "Veeam KB4217",
+      "url": "https://www.veeam.com/kb4217",
+      "reviewed": "2026-10-22"
+    },
+    "kb4760": {
+      "title": "Veeam KB4760",
+      "url": "https://www.veeam.com/kb4760",
+      "reviewed": "2026-10-22"
+    }
+  },
+  "scenarios": [
+    {
+      "id": "managed-server-unreachable",
+      "title": "Managed server cannot be reached",
+      "aliases": [
+        "managed-server-connectivity",
+        "wmi-connectivity"
+      ],
+      "symptom": "Adding or rescanning a server fails, or a managed server shows as unavailable.",
+      "run_on": "On the backup server, the machine that fails to reach the managed server. Every step tests from the machine SAT runs on toward the server named in the field, so the result is that machine's view of the path.",
+      "setup": [
+        "To run steps 1 to 3, note the managed server's name, role and operating system in the Veeam console first, on the backup server.",
+        "Optional: to compare the two clocks in step 2, make sure a time service on the managed server answers SNTP queries on UDP port 123 first, on the managed server. Without an answer step 2 reads Could not check and the other steps still run.",
+        "Optional: to run step 4, start a TCP listener on the managed server first. In SAT on the managed server open Tools > Network Tools, choose the TCP listener operation, set Listen port to the SAT listener port (2500 by default) and Duration seconds to 600, and choose Listen; leave it running until the scenario has finished. Tick Accept multiple connections until timeout to run the scenario again without restarting it. Without the listener, or when a firewall blocks its port, step 4 reads Could not check and the other steps still run.",
+        "Optional: to let step 4 reach the listener on a Windows managed server, allow SAT when Windows asks whether to allow it to listen on the network, first, on the managed server. The answer stays as a firewall rule. Without it Windows Firewall blocks inbound connections to the listener and step 4 reads Could not check."
+      ],
+      "setup_windows": [
+        "To run step 6, start SAT first as an account that WMI on the managed server allows, usually an administrator of that server, on the backup server. The step connects to the server as the account running SAT, and without that access it fails."
+      ],
+      "inputs": [
+        {
+          "id": "target",
+          "label": "Server name or address",
+          "hint": "repo01.contoso.local",
+          "about": "The managed server every step tests from this machine, typed as the Veeam console lists it, or its IP address. Left empty, every step reads Could not check."
+        },
+        {
+          "id": "role",
+          "label": "Server role",
+          "hint": "agent-windows",
+          "default": "agent-windows",
+          "about": "The server's role in Veeam, picked from the list. Step 3 tests the TCP ports the Veeam ports page lists for that role."
+        },
+        {
+          "id": "system",
+          "label": "Server's system",
+          "hint": "Windows or Linux; empty: the system the role names",
+          "optional": true,
+          "about": "Which system's ports step 3 tests, Windows or Linux. A role that lists ports for one system only, such as a backup repository (445 on Windows, 22 on Linux), needs it. Left empty, the system the role names is used (agent-windows or agent-linux); a role that lists ports for one system only and names none reads Could not check."
+        },
+        {
+          "id": "sat_port",
+          "label": "SAT listener port",
+          "hint": "2500",
+          "default": "2500",
+          "about": "The port the SAT listener on the managed server listens on. Step 4 connects to it, so it has to match Listen port on the managed server."
+        },
+        {
+          "id": "vbr_version",
+          "label": "VBR version",
+          "hint": "12 or 13; empty: both",
+          "optional": true,
+          "about": "The Veeam Backup & Replication version the server belongs to. Step 3 tests the ports that version's guide lists; left empty, it tests the ports of VBR 12 and 13 and names the version of each port only one of them lists."
+        }
+      ],
+      "steps": [
+        {
+          "title": "Name resolution",
+          "check": "name.resolve",
+          "params": {
+            "name": "$target"
+          },
+          "decisive": true,
+          "does": "Looks the name up the way this machine does: the hosts file first, then each DNS server this machine is configured with, asking each for the IPv4 and then the IPv6 addresses. The addresses in the row are the ones this machine's resolver returns, and the row says where the answer came from first. An IP address typed in place of a name passes. The step fails when the resolver returns no address.",
+          "pass": {
+            "meaning": "The name resolves from this machine, and the addresses shown are the ones a connection from here tries."
+          },
+          "attention": {
+            "meaning": "The hosts file has an entry for this name and a DNS server also answers for it, or the DNS servers answer with different addresses, so the name can lead to a machine other than the one intended.",
+            "next": "Compare the addresses with the managed server's current address, then correct the hosts entry or the DNS record."
+          },
+          "fail": {
+            "meaning": "Veeam reaches managed servers by the name they were added with; it has to resolve from the backup server.",
+            "next": "Correct the DNS record or the hosts entry, then rescan.",
+            "sources": [
+              "vbr13-ports"
+            ]
+          }
+        },
+        {
+          "title": "Clock difference",
+          "check": "time.skew",
+          "params": {
+            "server": "$target"
+          },
+          "decisive": false,
+          "does": "Sends one SNTP request on UDP port 123 from this machine to the server, waits up to 3 seconds for the answer and compares the server's clock with this one. A difference over 1 minute needs attention and over 5 minutes fails. A server that does not answer SNTP reads Could not check.",
+          "pass": {
+            "meaning": "The two clocks are within a minute of each other."
+          },
+          "attention": {
+            "meaning": "The clocks differ by more than a minute. Kerberos refuses authentication when clocks differ by more than 5 minutes.",
+            "next": "Correct the time source of the machine that is off."
+          },
+          "fail": {
+            "meaning": "Kerberos refuses authentication when clocks differ by more than 5 minutes.",
+            "next": "Correct the time source of the machine that is off."
+          }
+        },
+        {
+          "title": "Ports for the role",
+          "check": "port.tcp.role",
+          "params": {
+            "host": "$target",
+            "role": "$role",
+            "system": "$system",
+            "version": "$vbr_version"
+          },
+          "decisive": true,
+          "does": "Opens a TCP connection from this machine to the server on each port in the chosen role's entry of the Veeam ports page (the VBR version chosen; with none chosen, the ports of VBR 12 and 13, each port listed by one version only saying so), waits up to 3 seconds for an answer from each and closes it again; no data is sent. The entries are those for the server's system, Windows or Linux: the one chosen in Server's system, else the one the role names, as the page lists some ports for one system only. A range such as 6184 to 6195, where a service takes the first free port, passes when any port in it answers. A closed port the page marks optional needs attention, as the server may not use that feature; a closed required port fails. Ranges held only while a job moves data, such as 2500 to 3300, are left out. A role that lists ports for one system only, with no system chosen and none named by the role, reads Could not check.",
+          "pass": {
+            "meaning": "Every port tried accepted a connection from this machine, so the path to those ports is open."
+          },
+          "fail": {
+            "meaning": "A port the Veeam page lists as required for this role did not accept a connection: it is closed, or a firewall drops the attempt. Closed optional ports are listed in the row separately.",
+            "next": "Open the required ports end to end, in every firewall on the path, and check each closed optional port against the features in use.",
+            "sources": [
+              "vbr13-ports",
+              "kb2065"
+            ]
+          },
+          "attention": {
+            "meaning": "Only ports the Veeam page marks optional are closed. Each belongs to a feature the server may not use; the row names it.",
+            "next": "Open a listed optional port only if the server uses its feature."
+          }
+        },
+        {
+          "title": "Payload to a SAT listener",
+          "check": "payload.sat",
+          "params": {
+            "host": "$target",
+            "port": "$sat_port",
+            "mib": "50"
+          },
+          "decisive": false,
+          "does": "Optional. Opens one TCP connection from this machine to the port in SAT listener port (2500 by default) on the server, waiting up to 3 seconds, and looks for a SAT listener there. When one answers, this machine sends 50 MiB generated in memory, and the listener answers with the byte count and SHA-256 it received; the step compares both with what was sent and gives the rate. Both machines hash the data in memory as it passes. A port that does not answer, or that answers and is not a SAT listener, reads Could not check, as the step needs the listener started on the server first; SETUP says how. A listener that answers and does not verify the payload fails the step.",
+          "pass": {
+            "meaning": "A 50 MiB stream went from this machine to the server and arrived intact on the SAT listener port, so a long TCP connection between the two machines carries data without loss or change. Veeam components move backup data over TCP connections in the 2500 to 3300 range when port 6162 is unavailable.",
+            "sources": [
+              "vbr13-ports"
+            ]
+          },
+          "fail": {
+            "meaning": "The SAT listener on the server answered, but the stream did not arrive intact: the connection broke during the transfer, or the byte count or SHA-256 differed. A firewall or inspection device that drops or alters long connections can do this, so can a listener stopped or closed during the transfer, and so can a path slower than about 7 Mbit/s, as the listener allows 60 seconds for the 50 MiB.",
+            "next": "Start the listener again, leave it running and repeat the step. If it fails again, test the same path from each end with the Remote Port Checker and look at the devices between the two machines."
+          }
+        },
+        {
+          "title": "Windows RPC endpoint mapper",
+          "check": "rpc.epmap",
+          "params": {
+            "host": "$target",
+            "role": "$role",
+            "system": "$system"
+          },
+          "decisive": true,
+          "platform": "windows",
+          "does": "Connects from this machine to TCP port 135 on the server and sends a DCE/RPC bind request to the RPC endpoint mapper, which a working RPC service answers with a bind acknowledgement. Each stage waits up to 5 seconds, and the row names the stage that failed, the connection or the bind. A server whose system is Linux, chosen in Server's system or named by its role, reads Not applicable. Only port 135 is tested; the dynamic ports RPC services use afterwards are outside this step.",
+          "pass": {
+            "meaning": "The endpoint mapper answered a bind, so RPC is reachable on port 135."
+          },
+          "fail": {
+            "meaning": "Deployment with credentials and remote operations on a Windows server use RPC (135) and SMB (445).",
+            "next": "Allow RPC and the dynamic RPC range, or use certificate-based deployment.",
+            "sources": [
+              "vbr13-ports"
+            ]
+          }
+        },
+        {
+          "title": "WMI on the server",
+          "check": "wmi.query",
+          "params": {
+            "machine": "$target",
+            "role": "$role",
+            "system": "$system"
+          },
+          "decisive": false,
+          "platform": "windows",
+          "does": "Runs one WMI query on the server over DCOM, as the account running SAT: SELECT Caption, Version, CSName FROM Win32_OperatingSystem in the root\\cimv2 namespace. The row gives the operating system and computer name it returned. The connection and the answer each wait up to two minutes. A server whose system is Linux, chosen in Server's system or named by its role, reads Not applicable.",
+          "pass": {
+            "meaning": "WMI answers from this machine with this account."
+          },
+          "fail": {
+            "meaning": "Veeam reads a Windows server's state over WMI.",
+            "next": "Check WMI and DCOM on the server, and the account's rights.",
+            "sources": [
+              "kb1926"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "sql-application-aware-fails",
+      "title": "Application-aware processing of SQL Server fails",
+      "symptom": "A job's guest processing of SQL Server fails or truncates no logs.",
+      "run_on": "On the SQL Server host whose guest processing fails. The service, VSS writer and event log steps read the machine SAT runs on, and the permission steps sign in to the instance named in the field. Run SAT as the account the job uses for guest processing, or type that account in Another account.",
+      "setup": [
+        "To run steps 3 and 4, have the instance name as clients connect to it first, such as SQLHOST01\\INSTANCE, or the host name alone for the default instance, on the SQL Server host.",
+        "To check the rights of the account the job uses for guest processing, start SAT first as that account, on the SQL Server host. Steps 3 and 4 sign in to the instance with Windows authentication as the account running SAT.",
+        "Optional: to read another account's rights in step 3, start SAT first as an account that holds VIEW ANY DEFINITION or sysadmin on the instance, and type the account in Another account, on the SQL Server host. Without that right the other account's rows cannot be seen."
+      ],
+      "setup_windows": [
+        "To read the SQL Server VSS writer in step 2, start SAT first as administrator, on the SQL Server host. Without it step 2 reads Could not check.",
+        "To sign in to the instance in steps 3 and 4 with a current driver, install Microsoft's ODBC Driver 18 or 17 for SQL Server first, on the SQL Server host. Without either, the older SQL Server driver included with Windows is used."
+      ],
+      "setup_linux": [
+        "To run steps 3 and 4, install unixODBC and Microsoft's ODBC Driver 18 or 17 for SQL Server first, and get a Kerberos ticket for the account running SAT, on the machine running SAT. Steps 1, 2 and 5 are Windows-only and read Not applicable."
+      ],
+      "inputs": [
+        {
+          "id": "server",
+          "label": "SQL Server / instance",
+          "hint": "SQLHOST01\\INSTANCE",
+          "about": "The instance whose guest processing fails, as clients connect to it, such as SQLHOST01\\INSTANCE; the host name alone is the default instance. Steps 3 and 4 sign in to it, and step 1 reads its service when it is this machine. Left empty, steps 1, 3 and 4 read Could not check."
+        },
+        {
+          "id": "account",
+          "label": "Another account",
+          "hint": "Empty: the account running SAT",
+          "optional": true,
+          "about": "An account whose rights step 3 reads from the instance's catalog rows, such as the one the job uses for guest processing when SAT runs as someone else. The account running SAT needs VIEW ANY DEFINITION or sysadmin to see them, and rights an account gets through a Windows group are not counted. Left empty, the account running SAT is checked."
+        }
+      ],
+      "steps": [
+        {
+          "title": "SQL Server service",
+          "check": "sql.service",
+          "params": {
+            "server": "$server"
+          },
+          "decisive": true,
+          "platform": "windows",
+          "does": "Reads the Windows service of the instance on this machine from the Service Control Manager: MSSQLSERVER for the default instance, MSSQL$NAME for a named one. A running service passes; a service that is not installed, is disabled, or is not running although set to start automatically fails; a stopped service set to manual start is reported without a failure. When the field names another machine the step reads Not applicable.",
+          "fail": {
+            "meaning": "Application-aware processing needs the SQL Server instance running.",
+            "next": "Start the SQL Server service, and enable it first when it is disabled, then rerun the job. A service that is not installed means the instance name does not match an instance on this machine."
+          }
+        },
+        {
+          "title": "SQL Server VSS writer",
+          "check": "vss.writer",
+          "params": {
+            "writer": "SqlServerWriter"
+          },
+          "decisive": true,
+          "platform": "windows",
+          "does": "Asks the Volume Shadow Copy Service for the state of every VSS writer on this machine, without taking a snapshot, and looks at SqlServerWriter. It passes when the writer is Stable with no error code; a writer in any other state, with an error code, or missing from the list fails. Reading the writers needs SAT run as administrator, and the step reads Could not check when they cannot be read.",
+          "pass": {
+            "meaning": "SqlServerWriter is present and Stable."
+          },
+          "fail": {
+            "meaning": "A failed SqlServerWriter stops the snapshot of the databases.",
+            "next": "Restart the SQL Server VSS Writer service and read the Application log events it left."
+          }
+        },
+        {
+          "title": "Guest processing account rights",
+          "check": "sql.permissions",
+          "params": {
+            "server": "$server",
+            "account": "$account",
+            "against": "guest"
+          },
+          "decisive": true,
+          "does": "Signs in to the instance with Windows authentication as the account running SAT, or reads the catalog rows of the account in Another account, and compares its rights with the Veeam Permissions page: membership of sysadmin, or the minimal list. The minimal list is the server roles public and dbcreator; VIEW ANY DEFINITION, VIEW SERVER STATE and CONNECT SQL; and roles in model (db_backupoperator, db_denydatareader, public), master (db_backupoperator, db_datareader, public) and msdb (db_backupoperator, db_datareader, public, db_datawriter). Another account is read only when the signed-in account holds VIEW ANY DEFINITION or sysadmin, and rights it gets through a Windows group are not counted. A named account with no login on the instance fails when the signed-in account can see the logins.",
+          "pass": {
+            "meaning": "The account is a member of sysadmin, which meets the guest processing requirement.",
+            "sources": [
+              "vbr13-permissions"
+            ]
+          },
+          "attention": {
+            "meaning": "The account is not a member of sysadmin but holds the minimal list, which the Permissions page gives as the alternative.",
+            "sources": [
+              "vbr13-permissions"
+            ]
+          },
+          "fail": {
+            "meaning": "The account used for application-aware processing needs sysadmin, or the minimal set the guide lists.",
+            "next": "The database administrator grants the missing rights; rerun the job.",
+            "sources": [
+              "vbr13-permissions",
+              "kb2689"
+            ]
+          }
+        },
+        {
+          "title": "NT AUTHORITY\\SYSTEM fallback",
+          "check": "sql.permissions",
+          "params": {
+            "server": "$server",
+            "account": "NT AUTHORITY\\SYSTEM",
+            "against": "guest"
+          },
+          "decisive": false,
+          "does": "Runs the same comparison for the account NT AUTHORITY\\SYSTEM from the instance's catalog rows. The signed-in account sees those rows only with VIEW ANY DEFINITION or sysadmin, and rights SYSTEM gets through a Windows group are not counted.",
+          "pass": {
+            "meaning": "NT AUTHORITY\\SYSTEM is a member of sysadmin."
+          },
+          "attention": {
+            "meaning": "NT AUTHORITY\\SYSTEM is not a member of sysadmin but holds the minimal list."
+          },
+          "fail": {
+            "meaning": "When the account lacks rights, Veeam tries NT AUTHORITY\\SYSTEM, which then needs them.",
+            "next": "Grant the rights to the processing account not to SYSTEM.",
+            "sources": [
+              "kb2027"
+            ]
+          }
+        },
+        {
+          "title": "SQL writer events",
+          "check": "events.recent",
+          "params": {
+            "log": "Application",
+            "ids": "24582,1",
+            "providers": "SQLWRITER,SQLVDI",
+            "days": "7"
+          },
+          "decisive": false,
+          "platform": "windows",
+          "does": "Reads the Application event log on this machine for the last 7 days and counts the events with id 24582 or 1 from the providers SQLWRITER and SQLVDI, of any severity. Any such event needs attention, and the row shows the newest.",
+          "attention": {
+            "meaning": "Events from SQLWRITER or SQLVDI with these ids usually come with a failed SQL snapshot.",
+            "next": "Read the events' text for the database and the cause."
+          }
+        }
+      ]
+    },
+    {
+      "id": "sql-log-chain",
+      "title": "SQL transaction log backup fails or the chain is broken",
+      "symptom": "Log backups fail, or a restore says the logs do not match a backup.",
+      "run_on": "On the SQL Server host, or on any machine that reaches the instance over ODBC with an account that can sign in to it. Both steps connect to the instance named in the field, so the machine SAT runs on only has to reach it.",
+      "setup": [
+        "To run both steps, have the instance name as clients connect to it first, such as SQLHOST01\\INSTANCE, on the machine running SAT.",
+        "To read the backup history in step 1, start SAT first as an account that can sign in to the instance and read msdb's backup history, on the SQL Server host or any machine that reaches the instance. Both steps sign in with Windows authentication as the account running SAT."
+      ],
+      "setup_windows": [
+        "To sign in to the instance with a current driver, install Microsoft's ODBC Driver 18 or 17 for SQL Server first, on the machine running SAT. Without either, the older SQL Server driver included with Windows is used."
+      ],
+      "setup_linux": [
+        "To run both steps, install unixODBC and Microsoft's ODBC Driver 18 or 17 for SQL Server first, and get a Kerberos ticket for the account running SAT, on the machine running SAT."
+      ],
+      "inputs": [
+        {
+          "id": "server",
+          "label": "SQL Server / instance",
+          "hint": "SQLHOST01\\INSTANCE",
+          "about": "The instance whose log backups fail, as clients connect to it, such as SQLHOST01\\INSTANCE. Both steps sign in to it. Left empty, both steps read Could not check."
+        },
+        {
+          "id": "database",
+          "label": "Database",
+          "hint": "Empty: every database",
+          "optional": true,
+          "about": "The database whose backup history step 1 reads. Step 2 reads the whole instance. Left empty, step 1 reads every database except tempdb."
+        },
+        {
+          "id": "days",
+          "label": "Days",
+          "hint": "14",
+          "default": "14",
+          "about": "How many days of msdb's backup history step 1 reads. A value below 1 or one that is not a number is read as 1, and a value above 3650 as 3650."
+        }
+      ],
+      "steps": [
+        {
+          "title": "Backups and the log chain",
+          "check": "sql.backups",
+          "params": {
+            "server": "$server",
+            "database": "$database",
+            "days": "$days"
+          },
+          "decisive": true,
+          "does": "Signs in to the instance's msdb database with Windows authentication as the account running SAT and reads each database's recovery model and msdb's backup history for the last Days days (14 by default), for the database named or every database except tempdb. For each database it counts full, copy-only full, differential and log backups and who took each: Veeam, recognised by a software or device name that names Veeam or by the vendor id seen with it; likely Veeam for a VSS snapshot full where Veeam is installed on the SQL host or the database has Veeam backups; SQL Server itself; or another product. It checks that each log backup starts where the one before it ended, and lists the log chain oldest first. The step fails on a log backup that is not copy-only and not Veeam's, for a database that also has Veeam backups in the days read; on a log backup to NUL; on a gap in the log chain that is not followed by a new chain; and on a database in the full or bulk-logged recovery model that cannot take a log backup until a full backup exists.",
+          "pass": {
+            "meaning": "No backup outside Veeam breaks the chain, and the log chain has no gap in the days read.",
+            "sources": [
+              "kb2117"
+            ]
+          },
+          "attention": {
+            "meaning": "The history shows a full backup outside Veeam that is not copy-only, a log chain broken and started again with a new full, a restarted log chain, a changed recovery model, a restore, or a log waiting for a log backup that was not taken. Each row names the database and, where the history gives one, the time.",
+            "next": "Check that each of these was expected."
+          },
+          "fail": {
+            "meaning": "A log backup outside Veeam that is not copy-only, a log backup to NUL, a gap in the log chain, or a database with no full backup to log from breaks the chain Veeam's log backups depend on.",
+            "next": "Make other backups copy-only, then run the Veeam job so it starts a new chain. For a database with no full backup, run a full backup first.",
+            "sources": [
+              "kb2117",
+              "kb2027"
+            ]
+          }
+        },
+        {
+          "title": "Availability groups and backup preference",
+          "check": "sql.shape",
+          "params": {
+            "server": "$server"
+          },
+          "decisive": false,
+          "does": "Reads from the instance whether it is a failover cluster instance, with its nodes and shared disks, and whether Always On is enabled. For each availability group it reads the replicas with their roles, synchronization health and backup priority, the listener, the backup preference and the databases this node is the preferred backup replica for. A replica whose reported synchronization health is not HEALTHY needs attention.",
+          "pass": {
+            "meaning": "No replica reports a synchronization problem. SQL Tools, Server shape, lists every row with the notes the Veeam guides give for each setup."
+          },
+          "attention": {
+            "meaning": "A replica of an availability group reports a synchronization health other than HEALTHY. Veeam processes a node only when its backup preference allows it, and takes the logs from one node per interval.",
+            "next": "Check the replica's health and the group's backup preference against the job.",
+            "sources": [
+              "vbr13-alwayson-vm"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "slow-backup",
+      "title": "Backup to repository is slow",
+      "symptom": "A job runs longer than expected; the statistics name a bottleneck.",
+      "run_on": "On the backup repository when its path is local to it, because the volume step reads the path on the machine SAT runs on. The busy percentages are typed from the job's statistics, so the bottleneck step runs on any machine.",
+      "setup": [
+        "Optional: to run step 1, open the statistics of the slow job session in the Veeam console first and note the Source, Proxy, Network and Target busy percentages, on the machine with the console. Without them step 1 reads Could not check.",
+        "Optional: to run step 2, start SAT first on the backup repository and have the repository path as that machine sees it, such as E:\\Backups. Step 2 reads the volume that holds the path on the machine running SAT, and without a path it reads Not applicable."
+      ],
+      "inputs": [
+        {
+          "id": "source",
+          "label": "Source busy %",
+          "hint": "From the job's statistics",
+          "optional": true,
+          "about": "The Source busy percentage from the statistics of the slow job session, a number such as 85. Left empty, Source is left out of the comparison in step 1, and with all four left empty step 1 reads Could not check."
+        },
+        {
+          "id": "proxy",
+          "label": "Proxy busy %",
+          "hint": "From the job's statistics",
+          "optional": true,
+          "about": "The Proxy busy percentage from the statistics of the slow job session, a number such as 85. Left empty, Proxy is left out of the comparison in step 1, and with all four left empty step 1 reads Could not check."
+        },
+        {
+          "id": "network",
+          "label": "Network busy %",
+          "hint": "From the job's statistics",
+          "optional": true,
+          "about": "The Network busy percentage from the statistics of the slow job session, a number such as 85. Left empty, Network is left out of the comparison in step 1, and with all four left empty step 1 reads Could not check."
+        },
+        {
+          "id": "target",
+          "label": "Target busy %",
+          "hint": "From the job's statistics",
+          "optional": true,
+          "about": "The Target busy percentage from the statistics of the slow job session, a number such as 85. Left empty, Target is left out of the comparison in step 1, and with all four left empty step 1 reads Could not check."
+        },
+        {
+          "id": "path",
+          "label": "Repository path",
+          "hint": "E:\\Backups",
+          "optional": true,
+          "about": "The repository's folder as the machine running SAT sees it, such as E:\\Backups. Step 2 reads the volume that holds it. Left empty, step 2 reads Not applicable."
+        }
+      ],
+      "steps": [
+        {
+          "title": "Bottleneck",
+          "check": "bottleneck",
+          "params": {
+            "source": "$source",
+            "proxy": "$proxy",
+            "network": "$network",
+            "target": "$target"
+          },
+          "decisive": false,
+          "does": "Compares the busy percentages typed from the job's statistics for Source, Proxy, Network and Target and names the highest as the bottleneck; with equal figures the first of the four in that order is named. Figures are read as whole numbers. It works on the typed numbers, so it runs on any machine. With at least one number it reads Attention, since it names the busiest component; with none typed it reads Could not check.",
+          "attention": {
+            "meaning": "The busiest component is where the job's time goes; a balanced pipe is the aim.",
+            "next": "Look at that component first.",
+            "sources": [
+              "vbr13-bottlenecks"
+            ]
+          }
+        },
+        {
+          "title": "Repository volume",
+          "check": "volume.info",
+          "params": {
+            "path": "$path"
+          },
+          "decisive": false,
+          "does": "Reads the volume that holds the Repository path on this machine: the kind of disk or share, its bus, file system and cluster size. For ReFS and XFS it checks the Fast Clone requirements, ReFS 3.1 or later with block cloning and XFS with reflink, CRC and a block size of 1 KB to 4 KB. A network share reads Attention, as Fast Clone depends on the server behind it. An empty path reads Not applicable.",
+          "pass": {
+            "meaning": "Fast Clone can work on this volume, or the file system is one Fast Clone does not apply to."
+          },
+          "attention": {
+            "meaning": "Fast Clone cannot be confirmed on this volume: ReFS without block cloning, XFS without reflink or CRC, with a block size outside 1 KB to 4 KB or with settings that could not be read, or a network share whose Fast Clone depends on the server. Veeam uses Fast Clone for merges and synthetic fulls.",
+            "next": "Check the volume against the Fast Clone requirements, and measure the storage with the Disk Speed Test (KB2014 patterns).",
+            "sources": [
+              "kb2014"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "agent-service-channel",
+      "title": "Veeam Agent cannot connect to its backup service",
+      "products": [
+        "vaw"
+      ],
+      "platform": "windows",
+      "symptom": "The Agent's tray or control panel reports Failed to connect with the backup service.",
+      "run_on": "On the computer running Veeam Agent for Microsoft Windows that shows the error, signed in as the user who sees it. The pipe test connects as the account running SAT.",
+      "setup": [
+        "To test the pipe the way the tray reaches it, sign in as the user who sees the error and start SAT in that session first, on the computer running Veeam Agent for Microsoft Windows. The pipe test connects as the account running SAT.",
+        "To include the error in the log layer, run the scenario within 24 hours of it, on the same computer. The log layer reads the Agent's logs from the last 24 hours."
+      ],
+      "inputs": [],
+      "steps": [
+        {
+          "title": "Service channel",
+          "check": "grpc.channel",
+          "params": {
+            "product": "agent"
+          },
+          "decisive": true,
+          "does": "Tests the channel the Agent's tray and jobs use to reach the Veeam service, in four layers on this machine: the service VeeamEndpointBackupSvc is running; its named pipe \\\\.\\pipe\\Veeam\\VAW\\ServiceConnectionPipe is present; an HTTP/2 handshake on the pipe as the account running SAT succeeds (SETTINGS and a PING, with no call to the service); and the gRPC lines in the Agent's logs under %ProgramData%\\Veeam\\Endpoint from the last 24 hours show no failures. A failed layer fails the step.",
+          "pass": {
+            "meaning": "The service runs, its pipe accepts this account and speaks HTTP/2, and the logs show no gRPC failures in the hours read."
+          },
+          "fail": {
+            "meaning": "The tray and the jobs reach the Veeam service over a named pipe. A stopped service, a missing pipe or a pipe that refuses this account, a failed handshake, or logged connection failures all break that path.",
+            "next": "Start the Veeam Agent service if it is stopped, then read why it stopped in its log. For a pipe, handshake or log failure, follow the summary in the row.",
+            "sources": [
+              "kb2127"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "configuration-database-unreachable",
+      "title": "Backup server cannot reach its configuration database",
+      "products": [
+        "vbr"
+      ],
+      "platform": "windows",
+      "aliases": [
+        "configuration-database",
+        "postgresql-sspi"
+      ],
+      "symptom": "The Veeam Backup Service does not start, or the console cannot connect to the database.",
+      "run_on": "On the backup server, the machine whose Veeam Backup Service does not start or whose console cannot connect to the database. The steps read that machine's registry, services and PostgreSQL files, and test the connection from it to the database server.",
+      "setup": [
+        "To run step 3 on a SQL Server configuration database, start SAT first as an account that holds VIEW ANY DEFINITION or sysadmin on the instance, on the backup server. The step signs in with Windows authentication as the account running SAT and reads the rights of the account the Veeam Backup Service runs as. Without that right the service account cannot be looked up.",
+        "To sign in to a SQL Server configuration database in step 3, and in step 2 for a named instance, install Microsoft's ODBC Driver 18 or 17 for SQL Server first, on the backup server. The older SQL Server driver included with Windows is used when neither is installed.",
+        "To read the authentication of a PostgreSQL configuration database in step 4, start SAT first as an account that can read the PostgreSQL data folder under Program Files, such as an administrator, on the backup server. Step 4 reads pg_ident.conf and the newest log there, so a PostgreSQL database on another server reads Not applicable."
+      ],
+      "inputs": [],
+      "steps": [
+        {
+          "title": "Configuration database",
+          "check": "config.db.identify",
+          "params": {},
+          "decisive": true,
+          "does": "Reads the active database configuration from the registry key HKLM\\SOFTWARE\\Veeam\\Veeam Backup and Replication\\DatabaseConfigurations: its SqlActiveConfiguration value says whether Microsoft SQL Server or PostgreSQL is in use, then its server, instance or port, and the database name. A machine whose key names no active configuration fails.",
+          "fail": {
+            "meaning": "The Veeam Backup Service reads its configuration database from this key; when the key names none, the database cannot be identified here.",
+            "next": "Reconfigure the database connection with the Database Configuration Tool.",
+            "sources": [
+              "kb1471"
+            ]
+          }
+        },
+        {
+          "title": "Database server reachable",
+          "check": "config.db.reach",
+          "params": {},
+          "decisive": true,
+          "does": "Opens a TCP connection from this machine to the database server, waiting up to 3 seconds: for PostgreSQL on the SqlHostPort value, or 5432 when none is registered; for the default SQL Server instance on 1433, as the registry holds no SQL Server port. A named SQL Server instance is reached by an ODBC connection that runs SELECT @@SERVERNAME, and a refused sign-in there still counts as reached.",
+          "pass": {
+            "meaning": "The database server answers on its port from this machine."
+          },
+          "fail": {
+            "meaning": "The backup server must reach the database server's port.",
+            "next": "Check the name, the port and the firewall to the database server.",
+            "sources": [
+              "vbr13-ports"
+            ]
+          }
+        },
+        {
+          "title": "Service account's rights on the database",
+          "check": "config.db.rights",
+          "params": {},
+          "decisive": false,
+          "does": "For a SQL Server database, signs in to the database server as the account running SAT and reads, in the configuration database, the rights of the account the Veeam Backup Service runs as (LocalSystem is read as NT AUTHORITY\\SYSTEM); when that service cannot be read, the rights of the account running SAT are read instead. It compares them with the Permissions page: db_datareader, db_datawriter and EXECUTE, or db_owner, for operation; db_owner recommended for an upgrade; CREATE ANY DATABASE for installation. Membership of sysadmin covers all three. A PostgreSQL database reads Not applicable.",
+          "pass": {
+            "meaning": "The service account holds the rights the Permissions page lists for the configuration database.",
+            "sources": [
+              "vbr13-permissions"
+            ]
+          },
+          "attention": {
+            "meaning": "The service account can operate the configuration database but lacks db_owner, which the guide recommends for an upgrade, or CREATE ANY DATABASE, which an installation needs.",
+            "next": "The DBA grants the rights when an upgrade or an installation is planned.",
+            "sources": [
+              "vbr13-permissions"
+            ]
+          },
+          "fail": {
+            "meaning": "The account the Veeam Backup Service runs as needs db_owner, or db_datareader, db_datawriter and EXECUTE.",
+            "next": "The DBA grants the rights to that account.",
+            "sources": [
+              "vbr13-permissions"
+            ]
+          }
+        },
+        {
+          "title": "PostgreSQL authentication",
+          "check": "postgres.sspi",
+          "params": {},
+          "decisive": false,
+          "does": "For a PostgreSQL database on this machine, reads pg_ident.conf in each PostgreSQL installation under Program Files and lists the Windows accounts mapped under the map name veeam, then scans the newest file in that installation's data\\log folder for SSPI authentication failures and user-map mismatches, up to 20 lines. A SQL Server database reads Not applicable, and so does a machine with no PostgreSQL installation under Program Files, such as one whose PostgreSQL database is on another server.",
+          "pass": {
+            "meaning": "The newest PostgreSQL log holds no SSPI authentication errors. Check that the service account is among the mapped accounts shown."
+          },
+          "attention": {
+            "meaning": "PostgreSQL maps Windows accounts to database roles; SSPI errors in the newest log can point to a missing mapping.",
+            "next": "Add the account to the mapping as the KB describes.",
+            "sources": [
+              "kb4542"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "vss-fails",
+      "title": "Snapshot (VSS) fails during backup",
+      "platform": "windows",
+      "aliases": [
+        "vss-writer-health"
+      ],
+      "symptom": "A job fails at the snapshot, or a writer is reported as failed.",
+      "run_on": "On the machine whose snapshot fails, the server or computer named in the failing job's error. Run SAT as administrator so the writers can be read.",
+      "setup": [
+        "To read the VSS writers in step 1, start SAT first as administrator, on the machine whose snapshot fails. Without it step 1 reads Could not check.",
+        "To include the failure in step 3, run the scenario within 7 days of it, on the same machine. Step 3 reads the Application log for the last 7 days."
+      ],
+      "inputs": [],
+      "steps": [
+        {
+          "title": "VSS writers",
+          "check": "vss.writers",
+          "params": {},
+          "decisive": true,
+          "does": "Asks the Volume Shadow Copy Service for the state of every VSS writer on this machine, without taking a snapshot. A writer that is not Stable, or that reports an error code, fails the step and is named in the row. Reading the writers needs SAT run as administrator, and the step reads Could not check when they cannot be read.",
+          "pass": {
+            "meaning": "Every writer is Stable."
+          },
+          "fail": {
+            "meaning": "A writer that is not stable fails the snapshot of what it owns.",
+            "next": "Restart the failed writer's service; a reboot clears a writer that stays failed.",
+            "sources": [
+              "kb2041"
+            ]
+          }
+        },
+        {
+          "title": "Volume Shadow Copy service",
+          "check": "service.state",
+          "params": {
+            "name": "VSS"
+          },
+          "decisive": false,
+          "does": "Reads the service named VSS, the Volume Shadow Copy service, from the Service Control Manager. A running service passes; a service that is not installed, is disabled, or is not running although set to start automatically fails; a stopped service set to manual start is reported without a failure.",
+          "pass": {
+            "meaning": "The service is running, or stopped with manual start, which lets Windows start it on demand."
+          },
+          "fail": {
+            "meaning": "The Volume Shadow Copy service starts on demand. It is not installed, is disabled, or is not running although set to start automatically, and a disabled service fails every snapshot.",
+            "next": "Set the service to Manual start, and start it when it is stopped."
+          }
+        },
+        {
+          "title": "VSS events",
+          "check": "events.recent",
+          "params": {
+            "log": "Application",
+            "ids": "8193,8194,12289",
+            "providers": "VSS",
+            "days": "7"
+          },
+          "decisive": false,
+          "does": "Reads the Application event log on this machine for the last 7 days and counts the events with id 8193, 8194 or 12289 from the provider VSS. Any such event needs attention, and the row shows the newest.",
+          "attention": {
+            "meaning": "VSS errors in the Application log name the writer or provider that failed.",
+            "next": "Read the events' text and fix the component they name.",
+            "sources": [
+              "kb2041"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "tls-error",
+      "title": "Certificate or TLS error between Veeam components",
+      "aliases": [
+        "veeam-secure-channel"
+      ],
+      "symptom": "A component reports a certificate, trust or TLS error when connecting.",
+      "run_on": "On the machine that reports the error, the client side of the connection, with the server it connects to in the field. On a Windows backup server with no expected certificate typed, the certificate is compared with the one Veeam Backup & Replication is configured with. On any other machine, type the expected fingerprint to compare one.",
+      "setup": [
+        "To run steps 1 to 3, have the server's name or address, as the failing component uses it, and the port of the Veeam service that reports the error first, on the machine that reports the error. The backup server presents its certificate on 443, 9419 and 33034 in Veeam Backup & Replication 13, and on 9401 in version 12.",
+        "Optional: to compare the certificate with a known one in step 3, have its SHA-1 or SHA-256 fingerprint ready first, from the machine that holds the certificate. Without one, step 3 completes the handshake and reads the certificate."
+      ],
+      "setup_windows": [
+        "To test another server's certificate from a Windows backup server, type that certificate's fingerprint first, on the backup server. An empty fingerprint there is compared with the certificate Veeam Backup & Replication is configured with, and step 3 fails when the two differ."
+      ],
+      "inputs": [
+        {
+          "id": "host",
+          "label": "Server name or address",
+          "hint": "vbr01.contoso.local",
+          "about": "The server the failing component connects to, by the name that component uses for it. Steps 1 to 3 all use it. Left empty, they read Could not check."
+        },
+        {
+          "id": "port",
+          "label": "Port",
+          "hint": "Veeam service port: 443, 9419 or 33034 on VBR 13, 9401 on VBR 12",
+          "default": "9419",
+          "default_by_vbr": {"12": "9401", "13": "9419"},
+          "about": "The TCP port of the Veeam service that reports the error. Step 3 runs the TLS handshake on it. On a backup server it starts as that version's port: 9419 (REST API) on Veeam Backup & Replication 13, which also presents the certificate on 443 and 33034, and 9401 on version 12. Elsewhere it starts as 9419."
+        },
+        {
+          "id": "fingerprint",
+          "label": "Expected certificate SHA-1/SHA-256 (optional)",
+          "hint": "Empty: no comparison",
+          "optional": true,
+          "about": "The SHA-1 or SHA-256 fingerprint of the certificate the server should present, with or without colons or spaces. Step 3 fails when the certificate differs. Left empty on a Windows backup server, step 3 expects the certificate Veeam Backup & Replication is configured with, which suits the backup server's own port and fails for another server's certificate; left empty elsewhere, it reads the certificate without a comparison."
+        }
+      ],
+      "steps": [
+        {
+          "title": "Name resolution",
+          "check": "name.resolve",
+          "params": {
+            "name": "$host"
+          },
+          "decisive": true,
+          "does": "Looks the name up the way this machine does: the hosts file first, then each DNS server this machine is configured with, asking each for the IPv4 and then the IPv6 addresses. The addresses in the row are the ones this machine's resolver returns, and the row says where the answer came from first. An IP address typed in place of a name passes. The step fails when the resolver returns no address.",
+          "pass": {
+            "meaning": "The name resolves from this machine, and the addresses shown are the ones the handshake step connects to."
+          },
+          "attention": {
+            "meaning": "The hosts file has an entry for this name and a DNS server also answers for it, or the DNS servers answer with different addresses, so the name can lead to a machine other than the one intended.",
+            "next": "Compare the addresses with the server's current address, then correct the hosts entry or the DNS record."
+          },
+          "fail": {
+            "meaning": "The certificate is checked against the name the component connects to.",
+            "next": "Correct the DNS record or the hosts entry."
+          }
+        },
+        {
+          "title": "Clock difference",
+          "check": "time.skew",
+          "params": {
+            "server": "$host"
+          },
+          "decisive": false,
+          "does": "Sends one SNTP request on UDP port 123 from this machine to the server, waits up to 3 seconds for the answer and compares the server's clock with this one. A difference over 1 minute needs attention and over 5 minutes fails. A server that does not answer SNTP reads Could not check.",
+          "pass": {
+            "meaning": "The two clocks are within a minute of each other."
+          },
+          "attention": {
+            "meaning": "A certificate is valid only between its dates, on both machines' clocks. The clocks differ by more than a minute.",
+            "next": "Correct the time source of the machine that is off."
+          },
+          "fail": {
+            "meaning": "A certificate is valid only between its dates, on both machines' clocks. The clocks differ by more than 5 minutes.",
+            "next": "Correct the time source of the machine that is off."
+          }
+        },
+        {
+          "title": "TLS handshake",
+          "check": "tls.handshake",
+          "params": {
+            "host": "$host",
+            "port": "$port",
+            "fingerprint": "$fingerprint"
+          },
+          "decisive": true,
+          "does": "Connects to the server on the port given, waiting up to 10 seconds for the connection and again for the handshake, offers TLS 1.2 and 1.3, and reads the certificate the server presents: subject, issuer, expiry and SHA-256 fingerprint, with the TLS version and cipher agreed. The handshake completes whatever the certificate's trust, name or dates, so those are for the engineer to read in the row. With an expected fingerprint typed, the certificate has to match it. With none typed on a Windows backup server, the expected certificate is the one Veeam Backup & Replication is configured with, found in the LocalMachine Personal certificate store by the thumbprint Veeam Backup & Replication records (BackupServerCertificateThumbprint), or the store's Veeam Backup Server Certificate when none is recorded. A connection that cannot be made, or a handshake that does not complete, fails the step.",
+          "pass": {
+            "meaning": "The server completed a TLS handshake. Where the row names an expected certificate source, the certificate presented matches it."
+          },
+          "fail": {
+            "meaning": "The connection, the handshake or the expected certificate failed. Veeam components connect with TLS and check the certificate the server presents.",
+            "next": "If the row names a connection failure, check the port and the firewall first: nothing listens on 9401 on Veeam Backup & Replication 13, whose backup server presents its certificate on 443, 9419 and 33034. Otherwise compare the certificate shown with the one the client expects; renew or replace it on the server.",
+            "sources": [
+              "vbr13-certificate",
+              "vbr13-cipher-suites"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "rpc-port-exhaustion",
+      "title": "RPC or port exhaustion",
+      "platform": "windows",
+      "aliases": [
+        "port-exhaustion",
+        "ephemeral-ports",
+        "rpc-out-of-ports"
+      ],
+      "symptom": "A Veeam task, service or console fails with The RPC server is unavailable, Only one usage of each socket address, or a connection that cannot be made, and a process cannot open another socket or port.",
+      "run_on": "On the machine that fails to open the connection: the backup server, proxy, repository, gateway, guest interaction proxy or the guest. Exhaustion concerns the ports a machine uses to connect out, so steps 1 to 9 read this machine. Only step 10 connects to another machine.",
+      "setup": [
+        "To read the Windows event logs and the process handle counts in full, start SAT first as administrator, on the machine that fails. Without it, a step that cannot read a log or a process reads Could not check, or counts only what it can see.",
+        "To see the ports in use at the time of the failure, run the scenario while the failure is happening, on the machine that fails. Steps 3 and 4 read the sockets of the moment they run.",
+        "Optional: to run step 10, note the name or address of the machine the failing RPC call goes to, from the job's error text, on the backup server. Without it step 10 reads Could not check and the other steps still run."
+      ],
+      "inputs": [
+        {
+          "id": "process",
+          "label": "Process name or PID",
+          "hint": "VeeamAgent.exe",
+          "optional": true,
+          "about": "A process to report on in step 4 beside the processes that hold the most ports. A name covers every instance of that program. Left empty, only the processes that hold the most ports are reported."
+        },
+        {
+          "id": "target",
+          "label": "Remote server for the RPC test",
+          "hint": "gic01.contoso.local",
+          "optional": true,
+          "about": "The Windows server that step 10 connects to on TCP port 135, such as the guest a failing job processes. Left empty, step 10 reads Could not check."
+        }
+      ],
+      "steps": [
+        {
+          "title": "Dynamic port range and TIME_WAIT delay",
+          "check": "net.dynamic_range",
+          "params": {},
+          "decisive": false,
+          "does": "Reads the TCP and UDP dynamic port ranges from the network stack through WMI in the root\\StandardCimv2 namespace (MSFT_NetTCPSetting for the Internet setting, and MSFT_NetUDPSetting), and the registry values MaxUserPort and TcpTimedWaitDelay under HKLM\\SYSTEM\\CurrentControlSet\\Services\\Tcpip\\Parameters. A missing TcpTimedWaitDelay reads as the default of 240 seconds. The row gives each range with its first port, last port and size, and the number of new connections per second the TCP range allows, which is its size divided by the TIME_WAIT delay. Ranges of 16,384 ports or more that are the same for TCP and UDP and start at 49152 or higher, with a delay of 30 to 240 seconds, pass. A smaller range, a start below 49152, ranges that differ, a delay outside 30 to 240 seconds, or a MaxUserPort that is not the last port of the TCP range needs attention. A range under 5,000 ports fails. A Windows version without the root\\StandardCimv2 namespace reads Could not check.",
+          "pass": {
+            "meaning": "The machine uses the default range for outgoing connections. Each new connection holds a port until the TIME_WAIT delay ends, so the rate in the row is the most the range sustains."
+          },
+          "attention": {
+            "meaning": "The range is smaller than the default, starts below 49152, differs between TCP and UDP, or the delay is not the default. A range that starts below 49152 moves the ports RPC uses outside the range Veeam asks firewalls to open, and a smaller range or a longer delay lowers how fast the machine can reuse ports.",
+            "next": "Check the firewall rules and the RPC settings against a changed range first.",
+            "sources": [
+              "ms-dynamic-port-range",
+              "kb4760",
+              "kb4217"
+            ]
+          },
+          "fail": {
+            "meaning": "Only a few ports are available for outgoing connections. Each new connection needs one until it is released, and the Windows default is 16,384.",
+            "next": "Restore the default range, then run the scenario again. A wider range gives time and does not remove the cause.",
+            "sources": [
+              "ms-dynamic-port-range",
+              "ms-port-exhaustion",
+              "ms-nettcpsetting"
+            ]
+          }
+        },
+        {
+          "title": "Port exhaustion events",
+          "check": "events.counts",
+          "params": {
+            "group": "ports"
+          },
+          "decisive": false,
+          "does": "Reads the System event log on this machine for the last 7 days and counts the events with id 4231, 4227 or 4266 from the provider Tcpip. 4231 is a failed request for a TCP port because all were in use, 4227 is a connection that reused a local port too soon for the same remote endpoint, and 4266 is a failed request for a UDP port. Any such event in the last 7 days needs attention, and a 4231 within the last 24 hours fails the step. The row gives the count of each and the time of the newest.",
+          "pass": {
+            "meaning": "No port exhaustion event was logged in the last 7 days."
+          },
+          "attention": {
+            "meaning": "A port exhaustion event was logged; Found names each event and what it means. A 4231 (TCP) or a 4227 points at ports running out for connections; a 4266 (UDP) on its own also appears on machines that work normally, so read it with steps 3 and 4.",
+            "next": "Compare the time of the newest event with the time of the failure, then read steps 3 and 4.",
+            "sources": [
+              "ms-port-exhaustion"
+            ]
+          },
+          "fail": {
+            "meaning": "A request for a TCP port failed within the last 24 hours because all ports were in use.",
+            "next": "Read steps 3 and 4 to see which process holds the ports, and run the scenario again while the failure is happening.",
+            "sources": [
+              "ms-port-exhaustion"
+            ]
+          }
+        },
+        {
+          "title": "Ports in use against the range",
+          "check": "ports.usage",
+          "params": {},
+          "decisive": false,
+          "does": "Reads this machine's TCP and UDP socket tables, the ones the Local Port Checker reads, and counts the distinct local ports inside each dynamic range on the local address that holds the most. A socket bound to every address holds its port on each address. The row gives the count, its share of the range and the sockets by state for TCP, the same for UDP, and the same for TCP ports 2500 to 3300, the range the Veeam ports page lists for data movers. Under 50 percent of every range passes, 50 to 89 percent of one needs attention and 90 percent or more of one fails. Ports in the BOUND state are not in the socket tables, so the counts are a lower bound, and the tables are a snapshot of the moment the step runs.",
+          "pass": {
+            "meaning": "The ports in use are well below the range. This is a snapshot, so run the scenario again while the failure is happening."
+          },
+          "attention": {
+            "meaning": "A range is half used or more. A process that keeps opening connections uses a range up, and new outgoing connections fail when it is full.",
+            "next": "Read step 4 for the process that holds the ports, and run the scenario again while the failure is happening.",
+            "sources": [
+              "ms-askds-port-exhaustion",
+              "ms-port-exhaustion",
+              "vbr13-ports"
+            ]
+          },
+          "fail": {
+            "meaning": "A range is nearly full. At exhaustion one or two processes usually hold 90 to 95 percent of it, and a new outgoing connection fails when no port is free.",
+            "next": "Read step 4 for the process that holds the ports. A wider range gives time and does not remove the cause.",
+            "sources": [
+              "ms-askds-port-exhaustion",
+              "ms-port-exhaustion"
+            ]
+          }
+        },
+        {
+          "title": "Which process holds the ports",
+          "check": "ports.holder",
+          "params": {
+            "process": "$process"
+          },
+          "decisive": false,
+          "does": "Groups the TCP sockets inside the dynamic range by the process that owns them and lists the five that hold the most, with the process name, its PID, the Windows services it hosts, its ports and its share of the sockets in the range, and the processes with sockets in CLOSE_WAIT. Sockets in TIME_WAIT have no owner, so the row lists the three remote endpoints with the most of them, and the process with the most live connections to the same endpoint as the likely one. A process named in Process name or PID is reported beside them, all instances of a name together. With the ports in use at 50 percent of the range or more and one process holding half of the sockets in it, the step needs attention, and at 90 percent or more it fails. A process with 500 or more sockets in CLOSE_WAIT, or one remote endpoint with half of 1,000 or more TIME_WAIT sockets, needs attention.",
+          "pass": {
+            "meaning": "No single process holds the ports while the range fills up, and no process or remote endpoint stands out."
+          },
+          "attention": {
+            "meaning": "One process holds half of the sockets in the range, keeps many sockets in CLOSE_WAIT, or many short connections go to one remote endpoint. A process that keeps this many ports open is busy or does not close its sockets. Many short connections to one endpoint use the range faster than TIME_WAIT frees it.",
+            "next": "Compare the process's handle count in step 5. For a Veeam program, collect its logs for the time of the failure and open a case. For connections to one endpoint, compare the rate with step 1.",
+            "sources": [
+              "ms-askds-port-exhaustion",
+              "ms-port-exhaustion",
+              "kb4760"
+            ]
+          },
+          "fail": {
+            "meaning": "One process holds half of the sockets of a range that is almost full.",
+            "next": "Contact the vendor of the process. For a Veeam program, collect its logs for the time of the failure and open a case.",
+            "sources": [
+              "ms-askds-port-exhaustion",
+              "ms-port-exhaustion"
+            ]
+          }
+        },
+        {
+          "title": "Handles and kernel pool",
+          "check": "pool.pressure",
+          "params": {},
+          "decisive": false,
+          "does": "Reads the open handle count of each process, and the kernel pool sizes from the system's performance information: nonpaged pool, paged pool, physical memory and the total handles of the system. The row lists the five processes with the most handles, leaving out System, lsass.exe, store.exe, sqlservr.exe and sqlsvr.exe, whose counts are normally high. A process at 3,000 handles or more, or nonpaged pool at 10 percent or more of physical memory, needs attention. A process at 10,000 handles or more that is also the process holding the most ports in step 4, or holds 20 percent or more of the sockets in the range, fails.",
+          "pass": {
+            "meaning": "No process has an unusual number of handles, and the nonpaged pool is a small share of memory."
+          },
+          "attention": {
+            "meaning": "A process holds many handles, or the nonpaged pool is large. On a machine that cannot make outgoing connections the process at fault often has more than 10,000 handles, and most of them are sockets. Handle counts include files and other objects, so read this with step 4. A port needs a handle from nonpaged pool, so an exhausted pool gives the same symptom as exhausted ports.",
+            "next": "Read step 4 for the process, and step 6 for pool events. For a large nonpaged pool, look for the driver or program that leaks pool memory.",
+            "sources": [
+              "ms-port-exhaustion",
+              "ms-askds-port-exhaustion"
+            ]
+          },
+          "fail": {
+            "meaning": "A process with more than 10,000 handles also holds the most ports, or a fifth of them. That is the pattern of a process that opens sockets and does not close them.",
+            "next": "Contact the vendor of the process. For a Veeam program, collect its logs for the time of the failure and open a case.",
+            "sources": [
+              "ms-port-exhaustion",
+              "ms-askds-port-exhaustion"
+            ]
+          }
+        },
+        {
+          "title": "Pool exhaustion events",
+          "check": "events.counts",
+          "params": {
+            "group": "pool"
+          },
+          "decisive": false,
+          "does": "Reads the System event log on this machine for the last 7 days and counts the events with id 2019 or 2020 from the provider Srv: the Server service could not allocate from the nonpaged pool (2019) or the paged pool (2020) because the pool was empty. Any such event needs attention, and one within the last 24 hours fails the step.",
+          "pass": {
+            "meaning": "No pool exhaustion event was logged in the last 7 days."
+          },
+          "attention": {
+            "meaning": "The Server service could not get memory from a system pool because the pool was empty. An empty pool also stops new sockets, so it looks like port exhaustion.",
+            "next": "Look for the driver or program that leaks pool memory, and read step 5.",
+            "sources": [
+              "ms-paged-pool",
+              "ms-askds-port-exhaustion"
+            ]
+          },
+          "fail": {
+            "meaning": "The Server service could not get memory from a system pool within the last 24 hours because the pool was empty. An empty pool also stops new sockets, so it looks like port exhaustion.",
+            "next": "Look for the driver or program that leaks pool memory, and read step 5.",
+            "sources": [
+              "ms-paged-pool",
+              "ms-askds-port-exhaustion"
+            ]
+          }
+        },
+        {
+          "title": "RPC services",
+          "check": "service.states",
+          "params": {},
+          "decisive": true,
+          "does": "Reads the Service Control Manager state of RpcSs (Remote Procedure Call), RpcEptMapper (RPC Endpoint Mapper) and DcomLaunch. All three running passes. A service that is not installed, is disabled, or is not running although it starts automatically fails the step, and one that is stopped with manual start needs attention.",
+          "pass": {
+            "meaning": "RpcSs, RpcEptMapper and DcomLaunch are running."
+          },
+          "attention": {
+            "meaning": "An RPC service is stopped and set to start manually. RPC cannot register or find endpoints while a service it needs is stopped.",
+            "next": "Read the System event log for the reason the service is stopped.",
+            "sources": [
+              "ms-service-overview"
+            ]
+          },
+          "fail": {
+            "meaning": "An RPC service is missing, disabled or stopped. RPC cannot register or find endpoints without these services, so the steps after this one are not meaningful.",
+            "next": "Read the System event log for the reason the service stopped, and correct it with the machine's administrator.",
+            "sources": [
+              "ms-service-overview"
+            ]
+          }
+        },
+        {
+          "title": "RPC dynamic port restriction",
+          "check": "rpc.internet_ports",
+          "params": {},
+          "decisive": false,
+          "does": "Reads the registry key HKLM\\Software\\Microsoft\\Rpc\\Internet in the 64-bit view: the values Ports (a list of ports and ranges such as 5000-5100), PortsInternetAvailable and UseInternetPorts. Without the key RPC is not restricted and takes its ports from the dynamic range in step 1, which passes. With a Ports list the row counts the ports and how many of them a TCP socket holds. A list with fewer than 100 ports, or an entry that is not a port or a range of 0 to 65535, fails. A list of 100 ports or more with 80 percent or more of them in use, or PortsInternetAvailable and UseInternetPorts that disagree, needs attention. A Netlogon event 5820 in the last 7 days is added to the row.",
+          "pass": {
+            "meaning": "RPC is not restricted to a list of ports, or the list is large enough and has free ports."
+          },
+          "attention": {
+            "meaning": "Most of the ports RPC may use are in use, or the default policy points at ports outside the list. Computers with high traffic can run out of RPC ports when the list is short.",
+            "next": "Widen the list or remove the restriction as the Microsoft page describes, and keep the firewall rules in step with it.",
+            "sources": [
+              "ms-rpc-dynamic-ports",
+              "kb1174"
+            ]
+          },
+          "fail": {
+            "meaning": "RPC is limited to too few ports, or the list cannot be read. Microsoft's guidance is at least 100 ports, because several system services use them. With too few ports, or an entry RPC cannot read, the endpoint mapper cannot register servers.",
+            "next": "Correct the Ports value as the Microsoft page describes.",
+            "sources": [
+              "ms-rpc-dynamic-ports",
+              "kb1174"
+            ]
+          }
+        },
+        {
+          "title": "Windows Firewall for RPC",
+          "check": "firewall.rpc",
+          "params": {},
+          "decisive": false,
+          "does": "Reads the Windows Defender Firewall service (mpssvc), the profiles in force with their inbound defaults, and the inbound rules. For each active profile it tests inbound TCP 135 for the RPC endpoint mapper, with the program and service that listen on it, and inbound TCP to the dynamic range from step 1 against the rules that name RPC Dynamic Ports, a range that holds the dynamic range, or any port. A profile with the firewall off passes. A profile that blocks inbound by default with no allow rule for 135 or for the dynamic range, or a block rule that covers either, fails. An active Public profile, group policy that manages the rules, or a third-party firewall that Windows reports needs attention, and a third-party firewall is named and not read. The rules read are those of this machine, so a firewall between two machines is not visible here.",
+          "pass": {
+            "meaning": "Inbound RPC is allowed on every active profile, or the firewall is off."
+          },
+          "attention": {
+            "meaning": "Veeam lists a network on the Public location as a cause of error 1722. Group policy can change the rules read here, and another firewall in use is not read.",
+            "next": "Set the network location that fits the network, and compare group policy and any other firewall with the rules shown.",
+            "sources": [
+              "kb1174",
+              "ms-firewall-rpc-rules"
+            ]
+          },
+          "fail": {
+            "meaning": "The firewall blocks inbound RPC on an active profile, so a remote RPC call to this machine cannot complete. Veeam components such as the guest interaction proxy reach a Windows guest on TCP 135 and, for Hyper-V and application-aware processing, on the dynamic RPC range.",
+            "next": "Allow the RPC Endpoint Mapper and RPC Dynamic Ports inbound rules for the profile, or restore the default firewall settings.",
+            "sources": [
+              "ms-firewall-rpc-rules",
+              "kb1174",
+              "vbr13-ports"
+            ]
+          }
+        },
+        {
+          "title": "RPC endpoint mapper on the other machine",
+          "check": "rpc.epmap",
+          "params": {
+            "host": "$target",
+            "system": "windows"
+          },
+          "decisive": false,
+          "does": "Connects from this machine to TCP port 135 on the server in Remote server for the RPC test and sends a DCE/RPC bind request to the RPC endpoint mapper, which a working RPC service answers with a bind acknowledgement. Each stage waits up to 5 seconds, and the row names the stage that failed, the connection or the bind. Only port 135 is tested. The dynamic port a call is sent to afterwards is outside this step. Left empty, the step reads Could not check.",
+          "pass": {
+            "meaning": "The endpoint mapper on the server answered. If the RPC call still fails, the error is in the dynamic port the call is sent to next, which this step does not test."
+          },
+          "fail": {
+            "meaning": "The server did not accept a bind on port 135. Error 1722, The RPC server is unavailable, is logged when a lower layer cannot connect: name resolution, a blocked port 135, or a service that is not running on the server.",
+            "next": "Run this scenario on the server to read its own ports, and check the firewalls on the path.",
+            "sources": [
+              "ms-rpc-1722",
+              "kb1174",
+              "kb1926"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

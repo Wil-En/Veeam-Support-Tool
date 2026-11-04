@@ -1,0 +1,394 @@
+{
+  "schema": 1,
+  "about": "What to prepare before a Tools operation runs, and on which machine, shown as SETUP on the operation's hint card before its fields. An entry names the operation by the title its form shows (titles, with the operation's mode number in modes and its page), so a renamed operation fails the check in tools/test_operation_setup.py. setup holds the lines for every edition, in order; setup_windows or setup_linux adds lines after them on that edition. platform limits an entry to windows or linux. An operation that needs nothing prepared has no entry. Each line names the machine it is done on, and the text follows what the operation does: a listener's Duration, the account a test connects as, the rights a check reads. The Guided Diagnostics scenarios carry their own setup in scenarios.json.",
+  "sources": {
+    "vbr13-ports": {
+      "title": "Ports (Veeam Backup & Replication 13 User Guide)",
+      "url": "https://helpcenter.veeam.com/docs/vbr/userguide/used_ports.html?ver=13",
+      "reviewed": "2026-10-12"
+    },
+    "vbr13-permissions": {
+      "title": "Permissions (Veeam Backup & Replication 13 User Guide)",
+      "url": "https://helpcenter.veeam.com/docs/vbr/userguide/required_permissions.html?ver=13",
+      "reviewed": "2026-10-12"
+    },
+    "kb2127": {
+      "title": "Veeam KB2127",
+      "url": "https://www.veeam.com/kb2127",
+      "reviewed": "2026-10-13"
+    }
+  },
+  "operations": [
+    {
+      "id": "remote-port-checker-tcp",
+      "page": "network_tools",
+      "titles": ["TCP connectivity test"],
+      "modes": [0],
+      "setup": [
+        "A plain connection test needs nothing started on the other machine: the port has to accept connections from this machine, through every firewall between the two.",
+        "To check the SAT listener and the payload (the Validate an in-memory payload check box), first start SAT on the other machine: open Tools > Network Tools, choose the TCP listener operation, set Listen port to the port tested and Duration seconds to cover the test, and choose Listen. Then run this test from this machine.",
+        "Tick Accept multiple connections until timeout on that listener. This test connects once for each address family of the name and once for each adapter chosen, and a listener left to stop after its first connection is closed to the others."
+      ],
+      "setup_windows": [
+        "On the machine with the listener, Windows can ask whether to allow SAT to listen on the network: allow it for the network this machine connects over. The answer stays as a firewall rule."
+      ],
+      "setup_linux": [
+        "On the machine with the listener, a port below 1024 needs SAT run as root."
+      ]
+    },
+    {
+      "id": "remote-port-checker-udp",
+      "page": "network_tools",
+      "titles": ["UDP connectivity test"],
+      "modes": [16],
+      "setup": [
+        "UDP has no handshake, so a test with no answer reads INDETERMINATE. Only a SAT UDP listener on the other machine makes the result VERIFIED.",
+        "To verify, first start SAT on the other machine: open Tools > Network Tools, choose the UDP listener operation, set Listen port to the port tested and Duration seconds to cover the test, and choose Listen UDP. Then tick Verify a cooperating SAT UDP listener here and run this test from this machine."
+      ],
+      "setup_windows": [
+        "On the machine with the listener, Windows can ask whether to allow SAT to listen on the network: allow it for the network this machine connects over. The answer stays as a firewall rule."
+      ],
+      "setup_linux": [
+        "On the machine with the listener, a port below 1024 needs SAT run as root."
+      ]
+    },
+    {
+      "id": "tcp-listener",
+      "page": "network_tools",
+      "titles": ["TCP listener"],
+      "modes": [1],
+      "setup": [
+        "Run this on the machine that receives the test, and start it before the test begins on the other machine, which tests this machine's address and the Listen port.",
+        "Set Duration seconds to cover the whole test. The listener stops when that time ends, and after its first connection unless Accept multiple connections until timeout is ticked.",
+        "Every firewall between the two machines has to allow the Listen port towards this machine."
+      ],
+      "setup_windows": [
+        "Windows can ask whether to allow SAT to listen on the network the first time: allow it for the network the other machine connects over. The answer stays as a firewall rule, and the rules that name SAT are listed when the listener stops."
+      ],
+      "setup_linux": [
+        "A port below 1024 needs SAT run as root."
+      ]
+    },
+    {
+      "id": "udp-listener",
+      "page": "network_tools",
+      "titles": ["UDP listener"],
+      "modes": [17],
+      "setup": [
+        "Run this on the machine that receives the test, and start it before the test begins on the other machine.",
+        "Set Listen port to the port the other machine tests and Duration seconds to cover the whole test. On the other machine, choose UDP connectivity test, tick Verify a cooperating SAT UDP listener and test this machine's address.",
+        "Every firewall between the two machines has to allow the port towards this machine."
+      ],
+      "setup_windows": [
+        "Windows can ask whether to allow SAT to listen on the network the first time: allow it for the network the other machine connects over. The answer stays as a firewall rule, and the rules that name SAT are listed when the listener stops."
+      ],
+      "setup_linux": [
+        "A port below 1024 needs SAT run as root."
+      ]
+    },
+    {
+      "id": "grpc-listener",
+      "page": "network_tools",
+      "titles": ["gRPC listener"],
+      "modes": [22],
+      "setup": [
+        "Run this on the machine that receives the test, and start it before gRPC connectivity runs on the other machine.",
+        "Set Listen port to the port that test will use and Duration seconds to cover it, and choose Listen for gRPC transport. Accept multiple connections until timeout is ticked to begin with, so a second test can follow.",
+        "Every firewall between the two machines has to allow the port towards this machine."
+      ],
+      "setup_windows": [
+        "Windows can ask whether to allow SAT to listen on the network the first time: allow it for the network the other machine connects over. The answer stays as a firewall rule."
+      ],
+      "setup_linux": [
+        "A port below 1024 needs SAT run as root."
+      ]
+    },
+    {
+      "id": "grpc-connectivity",
+      "page": "network_tools",
+      "titles": ["gRPC connectivity"],
+      "modes": [21],
+      "setup": [
+        "The transport test needs a gRPC or HTTP/2 service on the port tested.",
+        "For a positive check that SAT is at the far end, first start SAT on the other machine: open Tools > Network Tools, choose the gRPC listener operation, set Listen port to the port tested and Duration seconds to cover the test, and choose Listen for gRPC transport. Then run this test from this machine."
+      ]
+    },
+    {
+      "id": "windows-rpc",
+      "page": "network_tools",
+      "titles": ["Windows RPC connectivity"],
+      "modes": [20],
+      "setup": [
+        "The target is a Windows computer. Nothing has to be started on it: the test connects to its RPC Endpoint Mapper on TCP 135 and asks for a bind.",
+        "TCP 135 has to be open from this machine to the target through every firewall between them. Services reached through RPC then use dynamic ports, which a firewall can still block after 135 passes."
+      ]
+    },
+    {
+      "id": "native-throughput-server",
+      "page": "network_tools",
+      "titles": ["Native throughput server"],
+      "modes": [15],
+      "setup": [
+        "Run this on the machine that receives the data, and start it first: set Listen port to the port the client will use and choose Start server. It waits for the client for the Connection timeout, 60 seconds to begin with.",
+        "Then, on the sending machine, run Native throughput client with this machine's address and the same port.",
+        "Every firewall between the two machines has to allow the port towards this machine."
+      ],
+      "setup_windows": [
+        "Windows can ask whether to allow SAT to listen on the network the first time: allow it for the network the other machine connects over. The answer stays as a firewall rule."
+      ],
+      "setup_linux": [
+        "A port below 1024 needs SAT run as root."
+      ]
+    },
+    {
+      "id": "native-throughput-client",
+      "page": "network_tools",
+      "titles": ["Native throughput client"],
+      "modes": [14],
+      "setup": [
+        "Start Native throughput server on the other machine first (Tools > Network Tools there), then run this test with that machine's address and the Listen port it uses, before its Connection timeout ends.",
+        "The test loads the network between the two machines while it runs."
+      ]
+    },
+    {
+      "id": "iperf-server",
+      "page": "network_tools",
+      "platform": "windows",
+      "titles": ["iPerf one-shot server (optional)"],
+      "modes": [12],
+      "setup": [
+        "iPerf3 has to be on this machine: get it on the Integrations page, or name the folder that holds it in Optional tools folder.",
+        "Start this server first, then run iPerf client on the other machine, which also needs iPerf3. The server takes a single run."
+      ],
+      "setup_windows": [
+        "Windows can ask whether to allow iPerf3 to listen on the network the first time: allow it for the network the other machine connects over."
+      ]
+    },
+    {
+      "id": "iperf-client",
+      "page": "network_tools",
+      "platform": "windows",
+      "titles": ["iPerf client (optional)"],
+      "modes": [11],
+      "setup": [
+        "iPerf3 has to be on this machine: get it on the Integrations page, or name the folder that holds it in Optional tools folder.",
+        "Start iPerf one-shot server first on the other machine, which also needs iPerf3, with the same Port, then run this test."
+      ]
+    },
+    {
+      "id": "smb-connectivity",
+      "page": "network_tools",
+      "platform": "windows",
+      "titles": ["SMB connectivity test"],
+      "modes": [24],
+      "setup": [
+        "Have the target's name or address and an account that is an administrator of it: the test path is under C$, which only administrators of the target can open.",
+        "The test connects as the account SAT runs as. To use another account, tick the alternate credentials check box and Windows asks for it. Windows keeps one set of credentials for each server, so an existing connection to the target made with other credentials has to be closed first.",
+        "The test path has to be an existing folder under C$ (C$\\Windows\\Veeam to begin with). The test writes a small file there, reads it back and deletes it, so the account needs write access to the folder.",
+        "TCP 445 has to be open from this machine to the target through every firewall between them."
+      ]
+    },
+    {
+      "id": "packet-capture",
+      "page": "network_tools",
+      "platform": "windows",
+      "titles": ["Packet capture"],
+      "modes": [5],
+      "setup": [
+        "Run SAT as administrator, or approve the administrator prompt when you choose Start capture. One approval covers Start capture and Stop capture.",
+        "Start the capture on the machine whose traffic is wanted, before the problem is reproduced. IP filter and Port filter are optional and narrow the capture to one address or one port.",
+        "Choose Stop capture, the same button, to finish: the capture is converted to PCAPNG and its notable events are listed. Closing SAT with a capture running asks what to do with it."
+      ]
+    },
+    {
+      "id": "veeam-service-channel",
+      "page": "network_tools",
+      "titles": ["Veeam Service Channel"],
+      "modes": [27],
+      "sources": ["kb2127"],
+      "setup": [],
+      "setup_windows": [
+        "On the computer that runs the Veeam service, start SAT as the user who sees the error. The service, its pipe and the HTTP/2 handshake on the pipe are tested from this machine as the account running SAT.",
+        "To read a collected bundle's logs in place of this machine's, name the folder of the product's logs in Log folder and tick Read the logs only."
+      ],
+      "setup_linux": [
+        "Copy the folder of the product's logs to this machine, such as a collected bundle's Endpoint folder, and name it in Log folder. This edition reads the logs only."
+      ]
+    },
+    {
+      "id": "wmi-health",
+      "page": "wmi_diagnostics",
+      "platform": "windows",
+      "titles": ["WMI health"],
+      "modes": [26],
+      "setup": [
+        "Run it on the machine whose WMI you are checking. The Repository stage runs only when SAT runs as administrator."
+      ]
+    },
+    {
+      "id": "wmi-cluster",
+      "page": "wmi_diagnostics",
+      "platform": "windows",
+      "titles": ["WMI cluster test"],
+      "modes": [3],
+      "setup": [
+        "Run it on a cluster node, or name one in Machine. A machine without the failover cluster role reads NOT CLUSTERED.",
+        "Run SAT as an account that administers the cluster, as WMI refuses other accounts. A node on another machine is reached over DCOM, so TCP 135 and the dynamic RPC ports have to be open from this machine to it."
+      ]
+    },
+    {
+      "id": "wmi-custom-query",
+      "page": "wmi_diagnostics",
+      "platform": "windows",
+      "titles": ["WMI custom query"],
+      "modes": [4],
+      "setup": [
+        "Machine is a dot for this machine, or another machine's name or address, reached over DCOM (TCP 135 and the dynamic RPC ports) with the account SAT runs as. WMI on that machine has to allow the account, usually an administrator of it.",
+        "The shadow storage and shadow copy examples, and BitLocker's namespace, need SAT run as administrator."
+      ]
+    },
+    {
+      "id": "process-inventory-windows",
+      "page": "general_tools",
+      "platform": "windows",
+      "titles": ["Process inventory"],
+      "modes": [13],
+      "setup": [
+        "Run SAT as administrator to read every process's path and command line. Without it, WMI often gives none for system processes and for other accounts' processes."
+      ]
+    },
+    {
+      "id": "process-inventory-linux",
+      "page": "general_tools",
+      "platform": "linux",
+      "titles": ["Process inventory"],
+      "modes": [13],
+      "setup": [
+        "Run SAT as root to read other accounts' executables. Without it they read path not readable."
+      ]
+    },
+    {
+      "id": "running-vbr-jobs",
+      "page": "vbr_diagnostics",
+      "platform": "windows",
+      "titles": ["Running VBR Jobs"],
+      "modes": [23],
+      "setup": [
+        "Run it on the backup server: the list is read through the local Veeam PowerShell module.",
+        "The Windows account SAT runs as needs a role in the backup server's Users and Roles, as for the Veeam console. No administrator rights are needed."
+      ]
+    },
+    {
+      "id": "sql-tools",
+      "page": "sql_tools",
+      "titles": ["Permission check", "Server shape", "Backups and log chain", "Database files and volumes", "Read-only query"],
+      "modes": [0, 1, 2, 3, 4],
+      "setup": [
+        "Have the instance name as clients connect to it, such as SQLHOST01\\VEEAMSQL2016.",
+        "For SQL Server, Microsoft's ODBC Driver 18 or 17 for SQL Server has to be installed on the machine SAT runs on.",
+        "For PostgreSQL, set Engine to PostgreSQL. psql has to be available: place it in the Tools folder on the Integrations page, or install the PostgreSQL client tools.",
+        "Use logged-in user connects as the account running SAT, so run SAT as the account whose access is in question. Clear it to be asked for a SQL login, which is used for that run and not saved."
+      ],
+      "setup_windows": [
+        "The older SQL Server driver in Windows is tried after the two ODBC drivers."
+      ],
+      "setup_linux": [
+        "unixODBC is needed as well as the driver. Use logged-in user needs a Kerberos ticket for the account, so a SQL login is the default."
+      ]
+    },
+    {
+      "id": "sql-permission-check",
+      "page": "sql_tools",
+      "titles": ["Permission check"],
+      "modes": [0],
+      "sources": ["vbr13-permissions"],
+      "setup": [
+        "To check the account Veeam uses, run SAT as that account. Another account is looked up in the catalog and needs VIEW ANY DEFINITION or sysadmin for the account connecting; its Windows groups are not expanded."
+      ]
+    },
+    {
+      "id": "sql-files",
+      "page": "sql_tools",
+      "titles": ["Database files and volumes"],
+      "modes": [3],
+      "setup": [
+        "To see each file's volume (kind, bus, file system and sector size), run SAT on the SQL host."
+      ]
+    },
+    {
+      "id": "system-differences-capture",
+      "page": "filesystem_change",
+      "titles": ["File Differences"],
+      "modes": [0],
+      "setup": [
+        "Choose the folder to capture and a file name in Save capture as. A capture file holds one capture, so an existing file is replaced after a question.",
+        "Make the change after the capture finishes, then choose Compare."
+      ],
+      "setup_windows": [
+        "Run SAT as administrator. Places that need administrator rights are listed as Skipped without it, and the capture also records where the NTFS change journal stood, which lets the compare list files created and removed in between."
+      ],
+      "setup_linux": [
+        "Run SAT as root to include places that need it. They are listed as Skipped without it."
+      ]
+    },
+    {
+      "id": "system-differences-compare",
+      "page": "filesystem_change",
+      "titles": ["File Differences"],
+      "modes": [0],
+      "setup": [
+        "Have the capture file from Capture, and make the change before comparing.",
+        "Compare with Now reads the folder again with the same settings, so the folder has to be where it was captured. A second capture file compares the two captures instead."
+      ],
+      "setup_windows": [
+        "Run SAT as administrator for the compare as well. Reading the NTFS change journal needs it, and the result line says when it was not read."
+      ]
+    },
+    {
+      "id": "host-checks",
+      "page": "general_tools",
+      "titles": ["Host Checks"],
+      "modes": [28],
+      "setup": [],
+      "setup_windows": [
+        "Run SAT as administrator for VSS shadow storage. The other checks run as a standard user."
+      ],
+      "setup_linux": [
+        "Run SAT as root for the kernel log; the file is readable by root on most systems. The other checks run as an ordinary user."
+      ]
+    },
+    {
+      "id": "log-collection",
+      "page": "log_collection",
+      "titles": ["Universal / detected products", "Custom paths"],
+      "modes": [0, 1],
+      "setup": [
+        "Run any diagnostic tools whose results belong in the case first: the collection takes the output of the tools run on this machine."
+      ],
+      "setup_windows": [
+        "Run SAT as administrator for the full set. With administrator rights the collection also gathers VSS providers, shadow copies, shadow storage and writers, filesystem minifilters, boot configuration and Windows servicing packages. Without them it still runs, and the sections that could not be collected are recorded in the bundle. When SAT is not elevated, it asks once whether to run the collection with administrator rights."
+      ]
+    },
+    {
+      "id": "vss-writers",
+      "page": "vss_tools",
+      "platform": "windows",
+      "titles": ["Enumerate writers"],
+      "modes": [0],
+      "setup": [
+        "Run it on the machine whose snapshots fail. Reading the writers needs administrator rights: Windows asks for approval once."
+      ]
+    },
+    {
+      "id": "vss-test-snapshot",
+      "page": "vss_tools",
+      "platform": "windows",
+      "titles": ["Create / hold / release test snapshot"],
+      "modes": [1],
+      "setup": [
+        "Run it on the machine whose snapshots fail. The test takes a temporary shadow copy of each volume entered, holds it for the seconds given and releases it, then checks that it is gone.",
+        "The test runs in the privileged helper, so Windows asks for administrator approval."
+      ]
+    }
+  ]
+}

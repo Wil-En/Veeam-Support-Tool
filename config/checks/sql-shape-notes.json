@@ -1,0 +1,137 @@
+{
+  "schema": 1,
+  "about": "What Veeam's guides say about a SQL Server shape or a database file location, shown beside the facts SQL Tools reads and only when that shape is present. The notes state the guide's sentence; they do not decide whether a setup is supported. A shape with no Veeam page behind it has no note: Server shape describes the setup and gives no support statement. The topology table names the Microsoft page that describes each kind of availability group.",
+  "sources": {
+    "vbr13-alwayson-vm": {
+      "title": "Always On Availability Groups support (Veeam Backup & Replication 13 User Guide)",
+      "url": "https://helpcenter.veeam.com/archive/vbr/13.0.2/userguide/alwayson_support.html",
+      "reviewed": "2026-10-17"
+    },
+    "vbr13-alwayson-agent": {
+      "title": "Backup of Always On Availability Groups (Veeam Agent, Veeam Backup & Replication 13 User Guide)",
+      "url": "https://helpcenter.veeam.com/docs/vbr/userguide/agents_cluster_always_on_hiw.html",
+      "reviewed": "2026-10-17"
+    },
+    "vbr13-agent-cluster": {
+      "title": "Failover Cluster Support (Veeam Agent, Veeam Backup & Replication 13 User Guide)",
+      "url": "https://helpcenter.veeam.com/archive/vbr/13.0.2/userguide/agents_cluster_support.html",
+      "reviewed": "2026-10-17"
+    },
+    "vbr13-plugin-ag": {
+      "title": "Support for Availability Groups (Veeam Plug-In for Microsoft SQL Server)",
+      "url": "https://helpcenter.veeam.com/docs/backup/plugins/mssql_plugin_aon.html",
+      "reviewed": "2026-10-17"
+    },
+    "vbr13-plugin-requirements": {
+      "title": "System Requirements (Veeam Plug-In for Microsoft SQL Server)",
+      "url": "https://helpcenter.veeam.com/docs/backup/plugins/system_requirements_mssql.html",
+      "reviewed": "2026-10-17"
+    },
+    "vbr13-sql-log-settings": {
+      "title": "Microsoft SQL Server Transaction Log Settings (Veeam Backup & Replication 13 User Guide)",
+      "url": "https://helpcenter.veeam.com/docs/vbr/userguide/backup_job_vss_sql_vm.html",
+      "reviewed": "2026-10-12"
+    },
+    "vaw-system-requirements": {
+      "title": "System Requirements (Veeam Agent for Microsoft Windows User Guide)",
+      "url": "https://helpcenter.veeam.com/docs/agentforwindows/userguide/system_requirements.html",
+      "reviewed": "2026-10-12"
+    },
+    "kb2117": {
+      "title": "KB2117: Collected SQL Server transaction logs do not match any existing database backup",
+      "url": "https://www.veeam.com/kb2117",
+      "reviewed": "2026-10-12"
+    },
+    "kb2027": {
+      "title": "KB2027: Failed to truncate Microsoft SQL Server transaction logs",
+      "url": "https://www.veeam.com/kb2027",
+      "reviewed": "2026-10-21"
+    },
+    "ms-availability-groups": {
+      "title": "sys.availability_groups (Microsoft Learn)",
+      "url": "https://learn.microsoft.com/en-us/sql/relational-databases/system-catalog-views/sys-availability-groups-transact-sql",
+      "reviewed": "2026-10-17"
+    },
+    "ms-basic-ag": {
+      "title": "Basic availability groups for a single database (Microsoft Learn)",
+      "url": "https://learn.microsoft.com/en-us/sql/database-engine/availability-groups/windows/basic-availability-groups-always-on-availability-groups",
+      "reviewed": "2026-10-17"
+    },
+    "ms-distributed-ag": {
+      "title": "Distributed availability groups (Microsoft Learn)",
+      "url": "https://learn.microsoft.com/en-us/sql/database-engine/availability-groups/windows/distributed-availability-groups",
+      "reviewed": "2026-10-17"
+    },
+    "ms-read-scale-ag": {
+      "title": "Read-scale availability groups without a cluster (Microsoft Learn)",
+      "url": "https://learn.microsoft.com/en-us/sql/database-engine/availability-groups/windows/read-scale-availability-groups",
+      "reviewed": "2026-10-17"
+    },
+    "ms-contained-ag": {
+      "title": "What is a contained availability group (Microsoft Learn)",
+      "url": "https://learn.microsoft.com/en-us/sql/database-engine/availability-groups/windows/contained-availability-groups-overview",
+      "reviewed": "2026-10-17"
+    },
+    "ms-linux-ag": {
+      "title": "Availability groups for SQL Server on Linux (Microsoft Learn)",
+      "url": "https://learn.microsoft.com/en-us/sql/linux/sql-server-linux-availability-group-overview",
+      "reviewed": "2026-10-17"
+    }
+  },
+  "topology": {
+    "default": "ms-availability-groups",
+    "distributed": "ms-distributed-ag",
+    "clusterless": "ms-read-scale-ag",
+    "external": "ms-linux-ag",
+    "basic": "ms-basic-ag",
+    "contained": "ms-contained-ag"
+  },
+  "notes": [
+    {"shape": "secondary_replica", "source": "vbr13-alwayson-agent",
+     "text": "On a node that is a secondary replica of an availability group, Veeam Agent takes a copy-only VSS snapshot."},
+    {"shape": "backup_preference", "source": "vbr13-alwayson-vm",
+     "text": "A node is processed only when its backup preference allows it; the primary must not be excluded or limited by Secondary only, and logs are taken from one node per interval."},
+    {"shape": "wsfc_ag", "source": "vbr13-alwayson-vm",
+     "text": "VM backup supports availability groups based on a Windows Server Failover Cluster."},
+    {"shape": "wsfc_ag", "source": "vbr13-alwayson-agent",
+     "text": "Veeam Agent backs up an availability group through a backup job for the failover cluster."},
+    {"shape": "wsfc_ag", "source": "vbr13-plugin-ag",
+     "text": "Veeam Plug-In for Microsoft SQL Server supports Always On availability groups."},
+    {"shape": "clusterless_ag", "source": "vbr13-alwayson-vm",
+     "text": "VM backup supports a clusterless availability group (cluster type NONE)."},
+    {"shape": "clusterless_ag", "source": "vbr13-agent-cluster",
+     "text": "Veeam Agent's failover cluster limitations list availability groups with no underlying failover cluster (clusterless) as not supported."},
+    {"shape": "clusterless_ag", "source": "vbr13-plugin-requirements",
+     "text": "Veeam Plug-In for Microsoft SQL Server supports Always On clusterless availability groups."},
+    {"shape": "distributed_ag", "source": "vbr13-alwayson-vm",
+     "text": "For VM backup of a distributed availability group, choose either the primary or the secondary distributed availability group when processing transaction logs, or the log chain of its databases can become inconsistent. For other distributed availability groups use copy-only mode."},
+    {"shape": "distributed_ag", "source": "vbr13-agent-cluster",
+     "text": "Veeam Agent's failover cluster limitations list distributed availability groups as not supported."},
+    {"shape": "distributed_ag", "source": "vbr13-plugin-requirements",
+     "text": "Veeam Plug-In for Microsoft SQL Server does not support distributed availability groups."},
+    {"shape": "contained_ag", "source": "vbr13-plugin-ag",
+     "text": "Veeam Plug-In for Microsoft SQL Server supports contained availability groups for their user databases only; the system databases have to be excluded from the backup scope, or the backup session fails."},
+    {"shape": "ag_on_fci", "source": "vbr13-alwayson-vm",
+     "text": "VM backup does not support availability groups based on failover cluster instances."},
+    {"shape": "ag_on_fci", "source": "vbr13-agent-cluster",
+     "text": "Veeam Agent's failover cluster limitations list availability groups based on failover cluster instances as not supported."},
+    {"shape": "fci", "source": "vbr13-agent-cluster",
+     "text": "Veeam Agent does not support a failover cluster instance whose databases are on a cluster disk when any node has a local disk with the same mount point."},
+    {"shape": "configuration_database_in_ag", "source": "vbr13-sql-log-settings",
+     "text": "A configuration database in an availability group must be excluded from application-aware processing by hand, or jobs fail with Failed to freeze guest over network, wait timeout."},
+    {"shape": "file_removable", "source": "vaw-system-requirements",
+     "text": "Veeam Agent does not support USB sticks and SD cards as a backup source."},
+    {"shape": "file_sector_size", "source": "vaw-system-requirements",
+     "text": "Veeam Agent supports hard drives with 512-byte and 4 KB sectors only."},
+    {"shape": "file_cluster_shared_volume", "source": "vbr13-agent-cluster",
+     "text": "Veeam Agent in a failover cluster does not back up cluster shared volumes; cluster disks used as CSV are excluded."},
+    {"shape": "file_network", "source": "",
+     "text": "This file is on a network share or a mapped drive. The Veeam pages read for SQL Tools do not cover database files on network storage."},
+    {"shape": "foreign_backup", "source": "kb2117",
+     "text": "Native backups can run beside Veeam's log backup only when they are copy-only; another full or log backup breaks Veeam's chain."},
+    {"shape": "no_current_backup", "source": "kb2027",
+     "text": "BACKUP LOG cannot be performed because there is no current database backup: a full backup has to exist first."},
+    {"shape": "log_waiting", "source": "vbr13-sql-log-settings",
+     "text": "With Do not truncate logs on a database in FULL or BULK_LOGGED recovery, the log grows until the disk is full unless it is backed up."}
+  ]
+}

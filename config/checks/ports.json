@@ -1,0 +1,306 @@
+{
+  "schema": 1,
+  "about": "The ports each Veeam role listens on, from the ports pages of the Veeam Backup & Replication 12 and 13 guides, and the ports a backup server's services hold on the loopback address only, read on a version 13 backup server (the guides list none). The Local Port Checker offers each role as a preset: the ports a machine in that role should hold. 'versions' lists the Veeam Backup & Replication versions (12, 13) whose guide lists the entry; an entry without it applies to both, and with no version chosen an entry of one version is shown as VBR 12 only or VBR 13 only. 'from' is who connects; 'optional' marks a port the guide calls optional or needs only in some setups; 'dynamic' marks a range checked as one row, held only while a job or a failover uses it; 'programs' names the program that holds it, for the firewall verdict while none of it is held (Windows' Veeam rules allow a program on any port); 'loopback' marks a port the service holds on the loopback address only; 'any_program' marks a range any program may hold, such as dynamic RPC, whose holders are not told apart from the data mover's; 'platform' limits an entry to Windows or Linux machines in that role.",
+  "sources": {
+    "vbr13-ports": {
+      "title": "Ports, Veeam Backup & Replication 13 User Guide",
+      "url": "https://helpcenter.veeam.com/docs/vbr/userguide/used_ports.html?ver=13",
+      "guide_build": "13.1.1.18",
+      "reviewed": "2026-09-28"
+    },
+    "vbr13-lab-loopback": {
+      "title": "Loopback listeners read on a Veeam Backup & Replication 13.1.4 server (Windows Server 2025), with the port settings Veeam records in HKLM\\SOFTWARE\\Veeam and its service settings files",
+      "read_on": "Veeam Backup & Replication 13.1.4, Windows Server 2025",
+      "reviewed": "2026-10-22"
+    },
+    "vbr13-agent-ports": {
+      "title": "Ports for Veeam Agents, Veeam Backup & Replication 13 User Guide",
+      "url": "https://helpcenter.veeam.com/docs/vbr/userguide/agents_used_ports.html?ver=13",
+      "guide_build": "13.1.1.18",
+      "page_updated": "2026-09-07",
+      "reviewed": "2026-09-28"
+    },
+    "vbr12-ports": {
+      "title": "Ports, Veeam Backup & Replication 12 User Guide for VMware vSphere",
+      "url": "https://helpcenter.veeam.com/docs/backup/vsphere/used_ports.html?ver=120",
+      "guide_build": "12.3.2.4934",
+      "page_updated": "2026-02-19",
+      "reviewed": "2026-10-27"
+    },
+    "vbr12-hyperv-ports": {
+      "title": "Ports, Veeam Backup & Replication 12 User Guide for Microsoft Hyper-V",
+      "url": "https://helpcenter.veeam.com/docs/backup/hyperv/used_ports.html?ver=120",
+      "guide_build": "12.3.2.4934",
+      "page_updated": "2026-02-19",
+      "reviewed": "2026-10-27"
+    },
+    "vbr12-agent-ports": {
+      "title": "Ports, Veeam Backup & Replication 12 Veeam Agent Management Guide",
+      "url": "https://helpcenter.veeam.com/docs/backup/agents/used_ports.html?ver=120",
+      "guide_build": "12.3.2.4934",
+      "page_updated": "2025-05-02",
+      "reviewed": "2026-10-27"
+    }
+  },
+  "roles": [
+    {
+      "id": "backup-server",
+      "name": "Backup server",
+      "listens": [
+        { "protocol": "tcp", "ports": "443", "from": "Web UI and Host Management console, Veeam Backup & Replication console, mount server, Veeam Infrastructure Appliance, REST clients", "versions": ["13"], "source": "vbr13-ports", "section": "Backup Server" },
+        { "protocol": "tcp", "ports": "9420", "from": "Veeam Backup & Replication console", "note": "Windows-based backup servers only: console automatic update (12.3.2 P1 and later).", "platform": "windows", "source": "vbr13-ports", "section": "Backup Server" },
+        { "protocol": "tcp", "ports": "6162", "from": "Backup proxies, backup repositories, gateway servers, mount servers, file servers, tape servers", "versions": ["13"], "source": "vbr13-ports", "section": "Backup Server" },
+        { "protocol": "tcp", "ports": "2500-3300", "from": "The same components, when port 6162 is unavailable", "dynamic": true, "programs": ["%ProgramFiles%\\Veeam\\Backup Transport\\x64\\VeeamAgent.exe", "%ProgramFiles%\\Veeam\\Backup and Replication\\Backup\\WinAgent\\VeeamAgent.exe"], "versions": ["13"], "source": "vbr13-ports", "section": "Backup Server" },
+        { "protocol": "tcp", "ports": "2500-3300", "from": "Backup proxies (malware detection metadata), Linux backup repositories (copy backup), tape servers", "note": "Data transmission channels: one port of the range for every TCP connection a job uses; components added before version 10.0 keep 2500-5000.", "dynamic": true, "programs": ["%ProgramFiles%\\Veeam\\Backup Transport\\x64\\VeeamAgent.exe", "%ProgramFiles%\\Veeam\\Backup and Replication\\Backup\\WinAgent\\VeeamAgent.exe"], "versions": ["12"], "source": "vbr12-ports", "section": "Backup Proxy; Backup Repositories: Microsoft Windows/Linux-based Backup Repository; Tape Server" },
+        { "protocol": "tcp", "ports": "10005", "from": "Veeam Agent for Microsoft Windows computers in managed mode", "source": "vbr13-agent-ports", "section": "Components" },
+        { "protocol": "tcp", "ports": "10006", "from": "Veeam Agent computers (Linux, Unix, macOS) in managed mode", "source": "vbr13-agent-ports", "section": "Components" },
+        { "protocol": "tcp", "ports": "10001", "from": "Veeam Agent for Microsoft Windows computers", "note": "Direct connection to the backup server using credentials, for example during bare metal restore from a backup created in managed mode.", "optional": true, "versions": ["12"], "source": "vbr12-agent-ports", "section": "Communication Between Veeam Backup & Replication Components" },
+        { "protocol": "tcp", "ports": "10002", "from": "Veeam Agent for Linux computers", "note": "Communication with the backup server. By default, port 10002 is used only by Veeam Agent version 1.x.", "optional": true, "versions": ["12"], "source": "vbr12-agent-ports", "section": "Communication Between Veeam Backup & Replication Components" },
+        { "protocol": "tcp", "ports": "9419", "from": "REST clients", "note": "Required for Swagger; the REST API listens on 443 now.", "optional": true, "source": "vbr13-ports", "section": "Backup Server" },
+        { "protocol": "tcp", "ports": "10443", "from": "Web UI and Host Management console", "note": "Veeam Software Appliance only.", "optional": true, "platform": "linux", "versions": ["13"], "source": "vbr13-ports", "section": "Backup Server" },
+        { "protocol": "tcp", "ports": "80", "from": "Web UI", "note": "Optional: redirects HTTP to HTTPS for the web UI.", "optional": true, "versions": ["13"], "source": "vbr13-ports", "section": "Backup Server" },
+        { "protocol": "tcp", "ports": "33034", "from": "CDP proxies, ESXi hosts, vCenter Server", "note": "Continuous data protection only.", "optional": true, "source": "vbr13-ports", "section": "CDP Components: Backup Server" },
+        { "protocol": "tcp", "ports": "33035", "from": "vCenter Server, ESXi hosts", "note": "Continuous data protection only.", "optional": true, "source": "vbr13-ports", "section": "CDP Components: Backup Server" },
+        { "protocol": "tcp", "ports": "8008,8500", "from": "The other Backup Server Cluster member", "note": "High availability cluster only.", "optional": true, "platform": "linux", "versions": ["13"], "source": "vbr13-ports", "section": "High Availability (HA) Cluster Components" },
+        { "protocol": "tcp", "ports": "22", "from": "Remote access PC", "note": "Troubleshooting a Veeam Software Appliance only.", "optional": true, "platform": "linux", "versions": ["13"], "source": "vbr13-ports", "section": "Backup Server" },
+        { "protocol": "tcp+udp", "ports": "3389", "from": "Remote access PC", "note": "Troubleshooting a Windows-based backup server only.", "optional": true, "platform": "windows", "source": "vbr13-ports", "section": "Backup Server" },
+        { "protocol": "tcp", "ports": "9392", "from": "Veeam Backup & Replication console", "note": "Used with port 9420 by the console to communicate with the backup server. Both ports are required.", "versions": ["12"], "source": "vbr12-ports", "section": "Backup & Replication Console" },
+        { "protocol": "tcp", "ports": "9396", "from": "Veeam Backup & Replication console", "note": "Used by the Veeam.Backup.UIService process for managing database connections.", "versions": ["12"], "source": "vbr12-ports", "section": "Backup & Replication Console" },
+        { "protocol": "tcp", "ports": "9401", "from": "Veeam Backup & Replication console (remote console only), mount server", "note": "Console: Windows file-level recovery, required for Copy to and Mount to console operations. Mount server: communication with the Veeam Backup Service.", "optional": true, "versions": ["12"], "source": "vbr12-ports", "section": "Backup & Replication Console; Recovery Components: Mount Server Connections" },
+        { "protocol": "tcp", "ports": "10003", "from": "Veeam Backup & Replication console (remote console only)", "note": "Used only when managing the Veeam Cloud Connect infrastructure.", "optional": true, "versions": ["12"], "source": "vbr12-ports", "section": "Backup & Replication Console" },
+        { "protocol": "tcp", "ports": "8732", "from": "SCVMM", "note": "Used by Veeam PowerShell Manager to communicate between Veeam Backup & Replication components and the VMM server.", "optional": true, "versions": ["12"], "source": "vbr12-hyperv-ports", "section": "Backup Server: Communication with Virtualization Servers" },
+        { "protocol": "tcp", "ports": "8543", "from": "Veeam Backup & Replication console", "note": "Nutanix AHV plug-in. Opened by default after you install Veeam Backup & Replication; keeping it open speeds up the console loading time even if the plug-in is not used.", "optional": true, "versions": ["12"], "source": "vbr12-ports", "section": "Backup & Replication Console" },
+        { "protocol": "tcp", "ports": "8544", "from": "Veeam Backup & Replication console", "note": "oVirt KVM plug-in. Opened by default after you install Veeam Backup & Replication; keeping it open speeds up the console loading time even if the plug-in is not used.", "optional": true, "versions": ["12"], "source": "vbr12-ports", "section": "Backup & Replication Console" },
+        { "protocol": "tcp", "ports": "8545", "from": "Veeam Backup & Replication console", "note": "Proxmox Virtual Environment plug-in. Opened by default after you install Veeam Backup & Replication; keeping it open speeds up the console loading time even if the plug-in is not used.", "optional": true, "versions": ["12"], "source": "vbr12-ports", "section": "Backup & Replication Console" },
+        { "protocol": "tcp", "ports": "9402", "from": "Veeam Backup & Replication console", "note": "AWS plug-in. Opened by default after you install Veeam Backup & Replication; keeping it open speeds up the console loading time even if the plug-in is not used.", "optional": true, "versions": ["12"], "source": "vbr12-ports", "section": "Backup & Replication Console" },
+        { "protocol": "tcp", "ports": "9403", "from": "Veeam Backup & Replication console", "note": "Google Cloud plug-in. Opened by default after you install Veeam Backup & Replication; keeping it open speeds up the console loading time even if the plug-in is not used.", "optional": true, "versions": ["12"], "source": "vbr12-ports", "section": "Backup & Replication Console" },
+        { "protocol": "tcp", "ports": "9404", "from": "Veeam Backup & Replication console", "note": "Kasten plug-in. Opened by default after you install Veeam Backup & Replication; keeping it open speeds up the console loading time even if the plug-in is not used.", "optional": true, "versions": ["12"], "source": "vbr12-ports", "section": "Backup & Replication Console" },
+        { "protocol": "tcp", "ports": "20443", "from": "Veeam Backup & Replication console", "note": "Microsoft Azure plug-in. Opened by default after you install Veeam Backup & Replication; keeping it open speeds up the console loading time even if the plug-in is not used.", "optional": true, "versions": ["12"], "source": "vbr12-ports", "section": "Backup & Replication Console" },
+        { "protocol": "tcp", "ports": "9392", "from": "Veeam Backup Service (VeeamBackupSvc): the console and the other Veeam services on this machine", "note": "Loopback only. Setting: BackupServerPort.", "loopback": true, "platform": "windows", "versions": ["13"], "source": "vbr13-lab-loopback", "section": "Backup server, loopback" },
+        { "protocol": "tcp", "ports": "9393", "from": "Veeam Backup Catalog Data Service (VeeamCatalogSvc)", "note": "Loopback only. Setting: CatalogPort.", "loopback": true, "platform": "windows", "source": "vbr13-lab-loopback", "section": "Backup server, loopback" },
+        { "protocol": "tcp", "ports": "10003", "from": "Veeam Cloud Connect Service (VeeamCloudSvc)", "note": "Loopback only. Setting: CloudServerPort.", "loopback": true, "platform": "windows", "versions": ["13"], "source": "vbr13-lab-loopback", "section": "Backup server, loopback" },
+        { "protocol": "tcp", "ports": "6172", "from": "Veeam Backup Server database provider (Veeam.Backup.ExternalInfrastructure.DbProvider.exe)", "note": "Loopback only. Setting: API\\DbProvider Port.", "loopback": true, "platform": "windows", "source": "vbr13-lab-loopback", "section": "Backup server, loopback" },
+        { "protocol": "tcp", "ports": "50000", "from": "Veeam Data Integration Service (Veeam.Backup.DataIntegrationService.exe), gRPC", "note": "Loopback only. Its log: GRPC service started. Listening port 50000.", "loopback": true, "platform": "windows", "versions": ["13"], "source": "vbr13-lab-loopback", "section": "Backup server, loopback" },
+        { "protocol": "tcp", "ports": "13136", "from": "Veeam Updater Service (VeeamUpdaterSvc)", "note": "Loopback only. Setting: the updater's reverse proxy address, 127.0.0.1:13136.", "loopback": true, "platform": "windows", "versions": ["13"], "source": "vbr13-lab-loopback", "section": "Backup server, loopback" },
+        { "protocol": "tcp", "ports": "5432", "from": "PostgreSQL, when the configuration database is on this machine", "note": "Loopback only. Setting: DatabaseConfigurations\\PostgreSql SqlHostPort.", "optional": true, "loopback": true, "platform": "windows", "source": "vbr13-lab-loopback", "section": "Backup server, loopback" },
+        { "protocol": "tcp", "ports": "8543", "from": "Nutanix AHV plug-in service (VeeamAHVSvc)", "note": "Loopback only. Setting: Plugins Platform Service\\AHV ServicePort.", "optional": true, "loopback": true, "platform": "windows", "versions": ["13"], "source": "vbr13-lab-loopback", "section": "Backup server, loopback" },
+        { "protocol": "tcp", "ports": "8544", "from": "KVM plug-in service (VeeamKVMSvc)", "note": "Loopback only. Setting: Plugins Platform Service\\KVM ServicePort.", "optional": true, "loopback": true, "platform": "windows", "versions": ["13"], "source": "vbr13-lab-loopback", "section": "Backup server, loopback" },
+        { "protocol": "tcp", "ports": "8545", "from": "Proxmox VE plug-in service (VeeamPVESvc)", "note": "Loopback only. Setting: Plugins Platform Service\\PVE ServicePort.", "optional": true, "loopback": true, "platform": "windows", "versions": ["13"], "source": "vbr13-lab-loopback", "section": "Backup server, loopback" },
+        { "protocol": "tcp", "ports": "8546", "from": "XenServer plug-in service (VeeamXenSvc)", "note": "Loopback only. Setting: Plugins Platform Service\\XEN ServicePort.", "optional": true, "loopback": true, "platform": "windows", "versions": ["13"], "source": "vbr13-lab-loopback", "section": "Backup server, loopback" },
+        { "protocol": "tcp", "ports": "8547", "from": "Scale Computing HyperCore plug-in service (VeeamHyperCoreSvc)", "note": "Loopback only. Setting: Plugins Platform Service\\SCP ServicePort.", "optional": true, "loopback": true, "platform": "windows", "versions": ["13"], "source": "vbr13-lab-loopback", "section": "Backup server, loopback" },
+        { "protocol": "tcp", "ports": "8548", "from": "HPE Morpheus VM Essentials plug-in service (VeeamHpeMorpheusVmeSvc)", "note": "Loopback only. Setting: Plugins Platform Service\\HPE Morpheus VME ServicePort.", "optional": true, "loopback": true, "platform": "windows", "versions": ["13"], "source": "vbr13-lab-loopback", "section": "Backup server, loopback" },
+        { "protocol": "tcp", "ports": "8551", "from": "Universal hypervisor plug-in service, VRG (VeeamVrgSvc)", "note": "Loopback only. Setting: Plugins Platform Service\\VRG ServicePort.", "optional": true, "loopback": true, "platform": "windows", "versions": ["13"], "source": "vbr13-lab-loopback", "section": "Backup server, loopback" },
+        { "protocol": "tcp", "ports": "8554", "from": "Universal hypervisor plug-in service, PL9 (VeeamPl9Svc)", "note": "Loopback only. Setting: Plugins Platform Service\\PL9 ServicePort.", "optional": true, "loopback": true, "platform": "windows", "versions": ["13"], "source": "vbr13-lab-loopback", "section": "Backup server, loopback" },
+        { "protocol": "tcp", "ports": "9402", "from": "AWS plug-in service (VeeamAWSSvc)", "note": "Loopback only. Setting: Plugins Platform Service\\AWS ServicePort.", "optional": true, "loopback": true, "platform": "windows", "versions": ["13"], "source": "vbr13-lab-loopback", "section": "Backup server, loopback" },
+        { "protocol": "tcp", "ports": "9403", "from": "Google Cloud plug-in service (VeeamGCPSvc)", "note": "Loopback only. Setting: Plugins Platform Service\\Google ServicePort.", "optional": true, "loopback": true, "platform": "windows", "versions": ["13"], "source": "vbr13-lab-loopback", "section": "Backup server, loopback" },
+        { "protocol": "tcp", "ports": "9404", "from": "Kasten plug-in service (VeeamKastenSvc)", "note": "Loopback only. Setting: Plugins Platform Service\\Kasten ServicePort.", "optional": true, "loopback": true, "platform": "windows", "versions": ["13"], "source": "vbr13-lab-loopback", "section": "Backup server, loopback" },
+        { "protocol": "tcp", "ports": "20443", "from": "Microsoft Azure plug-in service (VeeamAzureSvc)", "note": "Loopback only. Setting: Plugins Platform Service\\Azure ServicePort.", "optional": true, "loopback": true, "platform": "windows", "versions": ["13"], "source": "vbr13-lab-loopback", "section": "Backup server, loopback" },
+        { "protocol": "tcp", "ports": "34813", "from": "Veeam Web Service, gateway API (VeeamWebSvc)", "note": "Loopback only. Its log: Now listening on: http://localhost:34813. No setting found.", "optional": true, "loopback": true, "platform": "windows", "versions": ["13"], "source": "vbr13-lab-loopback", "section": "Backup server, loopback" },
+        { "protocol": "tcp", "ports": "9396", "from": "Veeam Backup UI server (Veeam.Backup.UIServer.exe)", "note": "Loopback only. Seen listening; no setting found.", "optional": true, "loopback": true, "platform": "windows", "versions": ["13"], "source": "vbr13-lab-loopback", "section": "Backup server, loopback" },
+        { "protocol": "tcp", "ports": "9405,9406", "from": "Veeam Backup Service (VeeamBackupSvc)", "note": "Loopback only. Seen listening; no setting found.", "optional": true, "loopback": true, "platform": "windows", "versions": ["13"], "source": "vbr13-lab-loopback", "section": "Backup server, loopback" },
+        { "protocol": "tcp", "ports": "9501", "from": "Veeam Broker Service (VeeamBrokerSvc)", "note": "Loopback only. Seen listening; no setting found.", "optional": true, "loopback": true, "platform": "windows", "source": "vbr13-lab-loopback", "section": "Backup server, loopback" },
+        { "protocol": "tcp", "ports": "9509", "from": "Veeam CDP Coordinator Service (VeeamBackupCdpSvc)", "note": "Loopback only. Seen listening; no setting found.", "optional": true, "loopback": true, "platform": "windows", "source": "vbr13-lab-loopback", "section": "Backup server, loopback" },
+        { "protocol": "tcp", "ports": "13137", "from": "Veeam Updater package manager (VeeamUpdaterPackageManagerSvc)", "note": "Loopback only. Seen listening; no setting found.", "optional": true, "loopback": true, "platform": "windows", "versions": ["13"], "source": "vbr13-lab-loopback", "section": "Backup server, loopback" }
+      ]
+    },
+    {
+      "id": "backup-proxy",
+      "name": "Backup proxy (VMware)",
+      "listens": [
+        { "protocol": "tcp", "ports": "6162", "from": "Backup server, backup proxies, backup repositories, mount servers, gateway servers", "source": "vbr13-ports", "section": "Backup Proxies" },
+        { "protocol": "tcp", "ports": "2500-3300", "from": "The same components, when port 6162 is unavailable", "dynamic": true, "programs": ["%ProgramFiles%\\Veeam\\Backup Transport\\x64\\VeeamAgent.exe", "%ProgramFiles(x86)%\\Veeam\\Backup Transport\\x64\\VeeamAgent.exe"], "versions": ["13"], "source": "vbr13-ports", "section": "Backup Proxies" },
+        { "protocol": "tcp", "ports": "2500-3300", "from": "Backup server, other backup proxies (replication jobs), cache repository", "note": "Data transmission channels: one port of the range for every TCP connection a job uses; components added before version 10.0 keep 2500-5000.", "dynamic": true, "programs": ["%ProgramFiles%\\Veeam\\Backup Transport\\x64\\VeeamAgent.exe", "%ProgramFiles(x86)%\\Veeam\\Backup Transport\\x64\\VeeamAgent.exe"], "versions": ["12"], "source": "vbr12-ports", "section": "Backup Proxy: Communication with Backup Server; Other Communications" },
+        { "protocol": "tcp", "ports": "6160", "from": "Backup server", "source": "vbr13-ports", "section": "Backup Proxies" },
+        { "protocol": "tcp", "ports": "445", "from": "Backup server", "note": "Not required when the Veeam Deployment Kit is installed.", "optional": true, "platform": "windows", "source": "vbr13-ports", "section": "Backup Proxies" },
+        { "protocol": "tcp", "ports": "137,139", "from": "Backup server", "note": "Legacy NetBIOS ports beside 445; not needed when the components do not use SMB 1.0, or with the Veeam Deployment Kit installed.", "optional": true, "platform": "windows", "versions": ["13"], "source": "vbr13-ports", "section": "Backup Proxies" },
+        { "protocol": "tcp", "ports": "135", "from": "Backup server", "note": "Required for deploying Veeam Backup & Replication components, with port 445.", "optional": true, "platform": "windows", "versions": ["12"], "source": "vbr12-ports", "section": "Backup Proxy: Communication with Backup Server" },
+        { "protocol": "tcp", "ports": "49152-65535", "from": "Backup server", "note": "Dynamic RPC for Microsoft Windows 2008 and later. Needed open only with firewall settings other than Windows' defaults, or when application-aware processing fails with the 'RPC function call failed' error.", "dynamic": true, "any_program": true, "optional": true, "platform": "windows", "versions": ["12"], "source": "vbr12-ports", "section": "Backup Proxy: Communication with Backup Server" },
+        { "protocol": "tcp", "ports": "22", "from": "Backup server", "platform": "linux", "source": "vbr13-ports", "section": "Backup Proxies" },
+        { "protocol": "tcp", "ports": "6210", "from": "Windows-based backup server", "note": "VSS snapshot during SMB file share backup.", "optional": true, "platform": "windows", "source": "vbr13-ports", "section": "Unstructured Data: Other Backup Infrastructure Components" }
+      ]
+    },
+    {
+      "id": "backup-repository",
+      "name": "Backup repository (Windows or Linux, hardened included)",
+      "listens": [
+        { "protocol": "tcp", "ports": "6162", "from": "Backup server (Linux repository), backup proxies, mount servers, the console, Hyper-V hosts and off-host proxies, source repositories of backup copy jobs", "source": "vbr13-ports", "section": "Backup Repositories: Microsoft Windows/Linux-Based Backup Repositories" },
+        { "protocol": "tcp", "ports": "2500-3300", "from": "The same components, when port 6162 is unavailable", "dynamic": true, "programs": ["%ProgramFiles%\\Veeam\\Backup Transport\\x64\\VeeamAgent.exe", "%ProgramFiles(x86)%\\Veeam\\Backup Transport\\x64\\VeeamAgent.exe"], "versions": ["13"], "source": "vbr13-ports", "section": "Backup Repositories: Microsoft Windows/Linux-Based Backup Repositories" },
+        { "protocol": "tcp", "ports": "2500-3300", "from": "Backup server (Linux repository), backup proxies, source backup repositories (backup copy jobs, copy backup), Hyper-V hosts and off-host proxies, mount servers, tape servers", "note": "Data transmission channels: one port of the range for every TCP connection a job uses; components added before version 10.0 keep 2500-5000.", "dynamic": true, "programs": ["%ProgramFiles%\\Veeam\\Backup Transport\\x64\\VeeamAgent.exe", "%ProgramFiles(x86)%\\Veeam\\Backup Transport\\x64\\VeeamAgent.exe"], "versions": ["12"], "source": "vbr12-ports", "section": "Backup Repositories: Microsoft Windows/Linux-based Backup Repository" },
+        { "protocol": "tcp", "ports": "6160", "from": "Backup server", "source": "vbr13-ports", "section": "Backup Repositories: Microsoft Windows/Linux-Based Backup Repositories" },
+        { "protocol": "tcp", "ports": "445", "from": "Backup server", "note": "Not required when the Veeam Deployment Kit is installed.", "optional": true, "platform": "windows", "source": "vbr13-ports", "section": "Backup Repositories: Microsoft Windows/Linux-Based Backup Repositories" },
+        { "protocol": "tcp", "ports": "137,139", "from": "Backup server", "note": "Legacy NetBIOS ports beside 445; not needed when the components do not use SMB 1.0, or with the Veeam Deployment Kit installed.", "optional": true, "platform": "windows", "versions": ["13"], "source": "vbr13-ports", "section": "Backup Repositories: Microsoft Windows/Linux-Based Backup Repositories" },
+        { "protocol": "tcp", "ports": "135", "from": "Backup server", "note": "Required for deploying Veeam Backup & Replication components, with port 445.", "optional": true, "platform": "windows", "versions": ["12"], "source": "vbr12-ports", "section": "Backup Repositories: Microsoft Windows/Linux-based Backup Repository" },
+        { "protocol": "tcp", "ports": "49152-65535", "from": "Backup server", "note": "Dynamic RPC for Microsoft Windows 2008 and later. Needed open only with firewall settings other than Windows' defaults, or when application-aware processing fails with the 'RPC function call failed' error.", "dynamic": true, "any_program": true, "optional": true, "platform": "windows", "versions": ["12"], "source": "vbr12-ports", "section": "Backup Repositories: Microsoft Windows/Linux-based Backup Repository" },
+        { "protocol": "tcp", "ports": "22", "from": "Backup server", "platform": "linux", "source": "vbr13-ports", "section": "Backup Repositories: Microsoft Windows/Linux-Based Backup Repositories" }
+      ]
+    },
+    {
+      "id": "gateway-server",
+      "name": "Gateway server",
+      "listens": [
+        { "protocol": "tcp", "ports": "6162", "from": "Backup server, backup proxies, Hyper-V hosts and off-host proxies, repositories, guest interaction proxies, log shipping servers", "source": "vbr13-ports", "section": "Gateway Servers" },
+        { "protocol": "tcp", "ports": "2500-3300", "from": "The same components, when port 6162 is unavailable", "dynamic": true, "programs": ["%ProgramFiles%\\Veeam\\Backup Transport\\x64\\VeeamAgent.exe", "%ProgramFiles(x86)%\\Veeam\\Backup Transport\\x64\\VeeamAgent.exe"], "versions": ["13"], "source": "vbr13-ports", "section": "Gateway Servers" },
+        { "protocol": "tcp", "ports": "2500-3300", "from": "Backup server, backup proxies, Hyper-V hosts and off-host proxies", "note": "Data transmission channels: one port of the range for every TCP connection a job uses; components added before version 10.0 keep 2500-5000.", "dynamic": true, "programs": ["%ProgramFiles%\\Veeam\\Backup Transport\\x64\\VeeamAgent.exe", "%ProgramFiles(x86)%\\Veeam\\Backup Transport\\x64\\VeeamAgent.exe"], "versions": ["12"], "source": "vbr12-ports", "section": "Gateway Server" },
+        { "protocol": "tcp", "ports": "6160", "from": "Backup server", "source": "vbr13-ports", "section": "Gateway Servers" },
+        { "protocol": "tcp", "ports": "445", "from": "Backup server", "note": "Not required when the Veeam Deployment Kit is installed.", "optional": true, "platform": "windows", "source": "vbr13-ports", "section": "Gateway Servers" },
+        { "protocol": "tcp", "ports": "137,139", "from": "Backup server", "note": "Legacy NetBIOS ports beside 445; not needed when the components do not use SMB 1.0, or with the Veeam Deployment Kit installed.", "optional": true, "platform": "windows", "versions": ["13"], "source": "vbr13-ports", "section": "Gateway Servers" },
+        { "protocol": "tcp", "ports": "135", "from": "Backup server", "note": "Required for deploying Veeam Backup & Replication components, with port 445.", "optional": true, "platform": "windows", "versions": ["12"], "source": "vbr12-ports", "section": "Gateway Server" },
+        { "protocol": "tcp", "ports": "22", "from": "Backup server", "platform": "linux", "source": "vbr13-ports", "section": "Gateway Servers" }
+      ]
+    },
+    {
+      "id": "mount-server",
+      "name": "Mount server (with vPower NFS)",
+      "listens": [
+        { "protocol": "tcp", "ports": "6162", "from": "Backup server, the console, backup repositories and gateway servers", "source": "vbr13-ports", "section": "Mount Servers" },
+        { "protocol": "tcp", "ports": "2500-3300", "from": "The same components, when port 6162 is unavailable", "dynamic": true, "programs": ["%ProgramFiles%\\Veeam\\Backup Transport\\x64\\VeeamAgent.exe", "%ProgramFiles(x86)%\\Veeam\\Backup Transport\\x64\\VeeamAgent.exe"], "versions": ["13"], "source": "vbr13-ports", "section": "Mount Servers" },
+        { "protocol": "tcp", "ports": "2500-3300", "from": "Backup server, the console (remote console only, when the mount server is not on the console), backup repositories and gateway servers", "note": "Data transmission channels: one port of the range for every TCP connection a job uses; components added before version 10.0 keep 2500-5000.", "dynamic": true, "programs": ["%ProgramFiles%\\Veeam\\Backup Transport\\x64\\VeeamAgent.exe", "%ProgramFiles(x86)%\\Veeam\\Backup Transport\\x64\\VeeamAgent.exe"], "versions": ["12"], "source": "vbr12-ports", "section": "Backup & Replication Console; Recovery Components: Mount Server Connections and Veeam vPower NFS Service" },
+        { "protocol": "tcp", "ports": "6160", "from": "Backup server", "source": "vbr13-ports", "section": "Mount Servers" },
+        { "protocol": "tcp", "ports": "6170", "from": "Backup server", "source": "vbr13-ports", "section": "Mount Servers" },
+        { "protocol": "tcp", "ports": "445", "from": "Backup server", "note": "Not required when the Veeam Deployment Kit is installed.", "optional": true, "platform": "windows", "source": "vbr13-ports", "section": "Mount Servers" },
+        { "protocol": "tcp", "ports": "49152-65535", "from": "Backup server", "note": "Dynamic RPC for Microsoft Windows 2008 and later. Needed open only with firewall settings other than Windows' defaults, or when application-aware processing fails with the 'RPC function call failed' error.", "dynamic": true, "any_program": true, "optional": true, "platform": "windows", "versions": ["12"], "source": "vbr12-ports", "section": "Recovery Components: Mount Server Connections" },
+        { "protocol": "tcp", "ports": "6161", "from": "Backup server", "note": "vPower NFS Service.", "source": "vbr13-ports", "section": "Mount Servers: vPower NFS Service" },
+        { "protocol": "tcp+udp", "ports": "111", "from": "ESXi hosts", "note": "vPower NFS Service.", "source": "vbr13-ports", "section": "Mount Servers: vPower NFS Service" },
+        { "protocol": "tcp+udp", "ports": "1058,1063", "from": "ESXi hosts", "note": "vPower NFS mount port: 1058 on the backup server, 1063 on a separate machine, or the next free port.", "one_of": true, "source": "vbr13-ports", "section": "Mount Servers: vPower NFS Service" },
+        { "protocol": "tcp", "ports": "443", "from": "Backup server", "note": "Instant File Share Recovery only.", "optional": true, "versions": ["13"], "source": "vbr13-ports", "section": "Unstructured Data: Other Backup Infrastructure Components" },
+        { "protocol": "tcp+udp", "ports": "2049", "from": "ESXi hosts", "note": "vPower NFS, or the next free port.", "source": "vbr13-ports", "section": "Mount Servers: vPower NFS Service" },
+        { "protocol": "tcp", "ports": "6175", "from": "Mount server components on this machine", "note": "Local only: communication with the Veeam Threat Hunter Service. Local ports do not require specific firewall rules.", "optional": true, "loopback": true, "versions": ["12"], "source": "vbr12-ports", "section": "Recovery Components: Mount Server Connections" }
+      ]
+    },
+    {
+      "id": "wan-accelerator",
+      "name": "WAN accelerator",
+      "listens": [
+        { "protocol": "tcp", "ports": "6160", "from": "Backup server", "source": "vbr13-ports", "section": "WAN Acceleration Components" },
+        { "protocol": "tcp", "ports": "6162", "from": "Backup server", "source": "vbr13-ports", "section": "WAN Acceleration Components" },
+        { "protocol": "tcp", "ports": "6164", "from": "Backup server and the other WAN accelerators", "source": "vbr13-ports", "section": "WAN Acceleration Components" },
+        { "protocol": "tcp", "ports": "6165", "from": "The WAN accelerators at the other site", "source": "vbr13-ports", "section": "WAN Acceleration Components" },
+        { "protocol": "tcp", "ports": "445", "from": "Backup server", "note": "Not required when the Veeam Deployment Kit is installed.", "optional": true, "platform": "windows", "source": "vbr13-ports", "section": "WAN Acceleration Components" },
+        { "protocol": "tcp", "ports": "137,139", "from": "Backup server", "note": "Legacy NetBIOS ports beside 445; not needed when the components do not use SMB 1.0, or with the Veeam Deployment Kit installed.", "optional": true, "platform": "windows", "versions": ["13"], "source": "vbr13-ports", "section": "WAN Acceleration Components" },
+        { "protocol": "tcp", "ports": "135", "from": "Backup server", "note": "Required for deploying Veeam Backup & Replication components, with port 445.", "optional": true, "platform": "windows", "versions": ["12"], "source": "vbr12-ports", "section": "WAN Accelerator" },
+        { "protocol": "tcp", "ports": "49152-65535", "from": "Backup server", "note": "Dynamic RPC for Microsoft Windows 2008 and later. Needed open only with firewall settings other than Windows' defaults, or when application-aware processing fails with the 'RPC function call failed' error.", "dynamic": true, "any_program": true, "optional": true, "platform": "windows", "versions": ["12"], "source": "vbr12-ports", "section": "WAN Accelerator" },
+        { "protocol": "tcp", "ports": "6220", "from": "Backup server", "note": "Target WAN accelerators in Veeam Cloud Connect only: traffic control for tenants.", "optional": true, "source": "vbr13-ports", "section": "WAN Acceleration Components" }
+      ]
+    },
+    {
+      "id": "tape-server",
+      "name": "Tape server",
+      "listens": [
+        { "protocol": "tcp", "ports": "6160", "from": "Backup server", "source": "vbr13-ports", "section": "Tape Device Support Components" },
+        { "protocol": "tcp", "ports": "6162", "from": "Backup server", "source": "vbr13-ports", "section": "Tape Device Support Components" },
+        { "protocol": "tcp", "ports": "2500-3300", "from": "Backup server, when port 6162 is unavailable", "dynamic": true, "programs": ["%ProgramFiles%\\Veeam\\Backup Transport\\x64\\VeeamAgent.exe", "%ProgramFiles(x86)%\\Veeam\\Backup Transport\\x64\\VeeamAgent.exe"], "versions": ["13"], "source": "vbr13-ports", "section": "Tape Device Support Components" },
+        { "protocol": "tcp", "ports": "2500-3300", "from": "Backup server", "note": "Data transmission channels: one port of the range for every TCP connection a job uses; components added before version 10.0 keep 2500-5000.", "dynamic": true, "programs": ["%ProgramFiles%\\Veeam\\Backup Transport\\x64\\VeeamAgent.exe", "%ProgramFiles(x86)%\\Veeam\\Backup Transport\\x64\\VeeamAgent.exe"], "versions": ["12"], "source": "vbr12-ports", "section": "Tape Server" },
+        { "protocol": "tcp", "ports": "6166", "from": "Backup server", "source": "vbr13-ports", "section": "Tape Device Support Components" },
+        { "protocol": "tcp", "ports": "445", "from": "Backup server", "note": "Not required when the Veeam Deployment Kit is installed.", "optional": true, "platform": "windows", "source": "vbr13-ports", "section": "Tape Device Support Components" },
+        { "protocol": "tcp", "ports": "137,139", "from": "Backup server", "note": "Legacy NetBIOS ports beside 445; not needed when the components do not use SMB 1.0, or with the Veeam Deployment Kit installed.", "optional": true, "platform": "windows", "versions": ["13"], "source": "vbr13-ports", "section": "Tape Device Support Components" },
+        { "protocol": "tcp", "ports": "135", "from": "Backup server", "note": "Required for deploying Veeam Backup & Replication components, with port 445.", "optional": true, "platform": "windows", "versions": ["12"], "source": "vbr12-ports", "section": "Tape Server" },
+        { "protocol": "tcp", "ports": "49152-65535", "from": "Backup server", "note": "Dynamic RPC for Microsoft Windows 2008 and later. Needed open only with firewall settings other than Windows' defaults, or when application-aware processing fails with the 'RPC function call failed' error.", "dynamic": true, "any_program": true, "optional": true, "platform": "windows", "versions": ["12"], "source": "vbr12-ports", "section": "Tape Server" },
+        { "protocol": "tcp", "ports": "22", "from": "Backup server", "platform": "linux", "versions": ["13"], "source": "vbr13-ports", "section": "Tape Device Support Components" }
+      ]
+    },
+    {
+      "id": "hyper-v-host",
+      "name": "Hyper-V host or off-host backup proxy",
+      "listens": [
+        { "protocol": "tcp", "ports": "6160", "from": "Backup server", "source": "vbr13-ports", "section": "Hyper-V: Virtualization Servers" },
+        { "protocol": "tcp", "ports": "6162", "from": "Backup server, backup repositories, other Hyper-V hosts and off-host proxies", "source": "vbr13-ports", "section": "Hyper-V: Virtualization Servers" },
+        { "protocol": "tcp", "ports": "2500-3300", "from": "The same components, when port 6162 is unavailable", "dynamic": true, "programs": ["%ProgramFiles%\\Veeam\\Backup Transport\\x64\\VeeamAgent.exe", "%ProgramFiles(x86)%\\Veeam\\Backup Transport\\x64\\VeeamAgent.exe"], "versions": ["13"], "source": "vbr13-ports", "section": "Hyper-V: Virtualization Servers" },
+        { "protocol": "tcp", "ports": "2500-3300", "from": "Backup server (jobs and log collection), other Hyper-V hosts and off-host proxies (replication jobs), backup repositories and gateway servers (SureBackup), Microsoft SMB3 servers (CBT information)", "note": "Data transmission channels: one port of the range for every TCP connection a job uses; components added before version 10.0 keep 2500-5000.", "dynamic": true, "programs": ["%ProgramFiles%\\Veeam\\Backup Transport\\x64\\VeeamAgent.exe", "%ProgramFiles(x86)%\\Veeam\\Backup Transport\\x64\\VeeamAgent.exe"], "versions": ["12"], "source": "vbr12-hyperv-ports", "section": "Backup Server: Communication with Virtualization Servers; Backup Proxy; Other Communications; SureBackup" },
+        { "protocol": "tcp", "ports": "6163", "from": "Backup server", "source": "vbr13-ports", "section": "Hyper-V: Virtualization Servers" },
+        { "protocol": "tcp", "ports": "445,135", "from": "Backup server", "note": "Not required when the Veeam Deployment Kit is installed.", "optional": true, "source": "vbr13-ports", "section": "Hyper-V: Virtualization Servers" },
+        { "protocol": "tcp", "ports": "137,139", "from": "Backup server", "note": "Legacy NetBIOS ports beside 445; not needed when the components do not use SMB 1.0, or with the Veeam Deployment Kit installed.", "optional": true, "versions": ["13"], "source": "vbr13-ports", "section": "Hyper-V: Virtualization Servers" },
+        { "protocol": "tcp", "ports": "2179", "from": "Backup server", "note": "Instant Recovery to Hyper-V and Recovery Verification.", "optional": true, "versions": ["13"], "source": "vbr13-ports", "section": "Hyper-V: Virtualization Servers" },
+        { "protocol": "tcp", "ports": "49152-65535", "from": "Backup server", "note": "Dynamic RPC. Needed open only with firewall settings other than Windows' defaults.", "dynamic": true, "any_program": true, "optional": true, "source": "vbr13-ports", "section": "Hyper-V: Virtualization Servers" },
+        { "protocol": "tcp", "ports": "6210", "from": "Backup server", "note": "Off-host backup proxies: VSS snapshot during SMB file share backup.", "optional": true, "source": "vbr13-ports", "section": "Hyper-V: Off-Host Backup Proxies" }
+      ]
+    },
+    {
+      "id": "guest-interaction-proxy",
+      "name": "Guest interaction proxy",
+      "listens": [
+        { "protocol": "tcp", "ports": "6160", "from": "Backup server", "versions": ["13"], "source": "vbr13-ports", "section": "Guest Processing: Guest Interaction Proxies" },
+        { "protocol": "tcp", "ports": "6190", "from": "Backup server", "note": "Non-persistent runtime components.", "source": "vbr13-ports", "section": "Guest Processing: Guest Interaction Proxies" },
+        { "protocol": "tcp", "ports": "6290", "from": "Backup server", "note": "Used as a control channel for communication with the guest interaction proxy.", "versions": ["12"], "source": "vbr12-ports", "section": "Guest Processing Components: Connections with Non-Persistent Runtime Components" },
+        { "protocol": "tcp", "ports": "445", "from": "Backup server", "note": "Adding Windows machines with local administrator credentials.", "optional": true, "platform": "windows", "source": "vbr13-ports", "section": "Guest Processing: Guest Interaction Proxies" },
+        { "protocol": "tcp", "ports": "135", "from": "Backup server", "note": "Adding Windows machines with local administrator credentials.", "optional": true, "platform": "windows", "versions": ["13"], "source": "vbr13-ports", "section": "Guest Processing: Guest Interaction Proxies" },
+        { "protocol": "tcp", "ports": "22", "from": "Backup server", "note": "Adding Linux machines with SSH credentials.", "platform": "linux", "versions": ["13"], "source": "vbr13-ports", "section": "Guest Processing: Guest Interaction Proxies" }
+      ]
+    },
+    {
+      "id": "cdp-proxy",
+      "name": "CDP proxy",
+      "listens": [
+        { "protocol": "tcp", "ports": "33032", "from": "Source ESXi hosts (VMware CDP) or source workloads (universal CDP)", "source": "vbr13-ports", "section": "CDP Components: CDP Proxies" },
+        { "protocol": "tcp", "ports": "33033", "from": "The source CDP proxy (on a target CDP proxy)", "source": "vbr13-ports", "section": "CDP Components: CDP Proxies" },
+        { "protocol": "tcp", "ports": "6182", "from": "Backup server", "source": "vbr13-ports", "section": "CDP Components: CDP Proxies" }
+      ]
+    },
+    {
+      "id": "cache-repository",
+      "name": "Cache repository (unstructured data)",
+      "listens": [
+        { "protocol": "tcp", "ports": "6162", "from": "Backup server, file servers, backup proxies", "versions": ["13"], "source": "vbr13-ports", "section": "Unstructured Data: Cache Repositories" },
+        { "protocol": "tcp", "ports": "2500-3300", "from": "The same components, when port 6162 is unavailable", "dynamic": true, "programs": ["%ProgramFiles%\\Veeam\\Backup Transport\\x64\\VeeamAgent.exe", "%ProgramFiles(x86)%\\Veeam\\Backup Transport\\x64\\VeeamAgent.exe"], "versions": ["13"], "source": "vbr13-ports", "section": "Unstructured Data: Cache Repositories" },
+        { "protocol": "tcp", "ports": "2500-3300", "from": "Backup proxies", "note": "Data transmission channels: one port of the range for every TCP connection a job uses; components added before version 10.0 keep 2500-5000.", "dynamic": true, "programs": ["%ProgramFiles%\\Veeam\\Backup Transport\\x64\\VeeamAgent.exe", "%ProgramFiles(x86)%\\Veeam\\Backup Transport\\x64\\VeeamAgent.exe"], "versions": ["12"], "source": "vbr12-ports", "section": "Unstructured Data Backup Components: Cache Repository Connections" },
+        { "protocol": "tcp", "ports": "6160", "from": "Backup server", "versions": ["13"], "source": "vbr13-ports", "section": "Unstructured Data: Cache Repositories" },
+        { "protocol": "tcp", "ports": "22", "from": "Backup server", "platform": "linux", "versions": ["13"], "source": "vbr13-ports", "section": "Unstructured Data: Cache Repositories" }
+      ]
+    },
+    {
+      "id": "log-shipping-server",
+      "name": "Log shipping server",
+      "listens": [
+        { "protocol": "tcp", "ports": "6160", "from": "Backup server", "source": "vbr13-ports", "section": "Guest Processing: Log Shipping Servers" },
+        { "protocol": "tcp", "ports": "6162", "from": "Backup server, the database VMs, Hyper-V hosts (PowerShell Direct)", "source": "vbr13-ports", "section": "Guest Processing: Log Shipping Servers" },
+        { "protocol": "tcp", "ports": "2500-3300", "from": "The same components, when port 6162 is unavailable", "dynamic": true, "programs": ["%ProgramFiles%\\Veeam\\Backup Transport\\x64\\VeeamAgent.exe", "%ProgramFiles(x86)%\\Veeam\\Backup Transport\\x64\\VeeamAgent.exe"], "versions": ["13"], "source": "vbr13-ports", "section": "Guest Processing: Log Shipping Servers" },
+        { "protocol": "tcp", "ports": "2500-3300", "from": "MS SQL, Oracle and PostgreSQL VM guest OS (log backups), Hyper-V hosts (PowerShell Direct only)", "note": "Data transmission channels: one port of the range for every TCP connection a job uses; components added before version 10.0 keep 2500-5000.", "dynamic": true, "programs": ["%ProgramFiles%\\Veeam\\Backup Transport\\x64\\VeeamAgent.exe", "%ProgramFiles(x86)%\\Veeam\\Backup Transport\\x64\\VeeamAgent.exe"], "versions": ["12"], "source": "vbr12-ports", "section": "Log Shipping Components: MS SQL, Oracle and PostgreSQL Guest OS Connections" },
+        { "protocol": "tcp", "ports": "445,135", "from": "Backup server", "note": "Not required when the Veeam Deployment Kit is installed.", "optional": true, "platform": "windows", "source": "vbr13-ports", "section": "Guest Processing: Log Shipping Servers" },
+        { "protocol": "tcp", "ports": "137,139", "from": "Backup server", "note": "Legacy NetBIOS ports beside 445; not needed when the components do not use SMB 1.0, or with the Veeam Deployment Kit installed.", "optional": true, "platform": "windows", "versions": ["13"], "source": "vbr13-ports", "section": "Guest Processing: Log Shipping Servers" },
+        { "protocol": "tcp", "ports": "49152-65535", "from": "Backup server", "note": "Dynamic RPC for Microsoft Windows 2008 and later. Needed open only with firewall settings other than Windows' defaults, or when application-aware processing fails with the 'RPC function call failed' error.", "dynamic": true, "any_program": true, "optional": true, "platform": "windows", "versions": ["12"], "source": "vbr12-ports", "section": "Log Shipping Components: Log Shipping Server Connections" }
+      ]
+    },
+    {
+      "id": "agent-windows",
+      "name": "Veeam Agent computer, Windows (managed by Veeam Backup & Replication)",
+      "listens": [
+        { "protocol": "tcp", "ports": "6184-6195", "from": "Backup server", "note": "Veeam Agent for Microsoft Windows Service: 6184, or the next free port in the range.", "one_of": true, "versions": ["13"], "source": "vbr13-agent-ports", "section": "Components" },
+        { "protocol": "tcp", "ports": "6184-6194", "from": "Backup server", "note": "Veeam Agent for Microsoft Windows Service: 6184, or the next free port in the range.", "one_of": true, "versions": ["12"], "source": "vbr12-agent-ports", "section": "Communication Between Veeam Backup & Replication Components" },
+        { "protocol": "tcp", "ports": "6160", "from": "Backup server", "note": "Veeam Installer Service: deployment and volume-level restore.", "source": "vbr13-agent-ports", "section": "Components" },
+        { "protocol": "tcp", "ports": "6162", "from": "Backup server, backup repositories, gateway and mount servers", "note": "Veeam Data Mover; restores.", "source": "vbr13-agent-ports", "section": "Components" },
+        { "protocol": "tcp", "ports": "11731", "from": "Backup server", "note": "Veeam Installer Service of Veeam Agent versions earlier than 13.0.1 only.", "optional": true, "source": "vbr13-agent-ports", "section": "Components" },
+        { "protocol": "tcp", "ports": "445,135", "from": "Backup server", "note": "Deployment with credentials, WMI queries (failover clusters, file-level restore). Not required with certificate-based authentication.", "optional": true, "source": "vbr13-agent-ports", "section": "Components" },
+        { "protocol": "tcp", "ports": "6167", "from": "Backup server", "note": "SQL Server log collection, Always On availability groups.", "optional": true, "source": "vbr13-agent-ports", "section": "Components" },
+        { "protocol": "tcp", "ports": "2500-3300", "from": "Backup server", "note": "SQL Server log collection.", "dynamic": true, "programs": ["%ProgramFiles%\\Veeam\\Endpoint Backup\\x64\\VeeamAgent.exe"], "optional": true, "source": "vbr13-agent-ports", "section": "Components" },
+        { "protocol": "tcp", "ports": "5985", "from": "Linux-based backup server", "note": "Failover cluster configuration over WinRM.", "optional": true, "versions": ["13"], "source": "vbr13-agent-ports", "section": "Components" },
+        { "protocol": "tcp", "ports": "139", "from": "Backup server", "note": "Veeam Installer Service over NetBIOS.", "optional": true, "source": "vbr13-agent-ports", "section": "Components" },
+        { "protocol": "udp", "ports": "137,138", "from": "Backup server", "note": "Veeam Installer Service over NetBIOS.", "optional": true, "source": "vbr13-agent-ports", "section": "Components" },
+        { "protocol": "tcp", "ports": "49152-65535", "from": "Distribution server", "note": "Dynamic RPC. Required for communication with the Veeam Installer Service.", "dynamic": true, "any_program": true, "versions": ["12"], "source": "vbr12-agent-ports", "section": "Communication Between Veeam Backup & Replication Components" },
+        { "protocol": "tcp", "ports": "9395,6183", "from": "Veeam Agent components on this computer", "note": "Local only: communication between Veeam Agent components and the Veeam Agent for Microsoft Windows Service. If port 9395 or 6183 is in use, the service takes the next port number.", "optional": true, "loopback": true, "versions": ["12"], "source": "vbr12-agent-ports", "section": "Communication Between Veeam Agent Components" }
+      ]
+    },
+    {
+      "id": "distribution-server",
+      "name": "Distribution server (Veeam Agents)",
+      "listens": [
+        { "protocol": "tcp", "ports": "9380", "from": "Veeam backup server", "note": "Veeam Distribution Service.", "source": "vbr13-agent-ports", "section": "Components" },
+        { "protocol": "tcp", "ports": "6160", "from": "Backup server", "note": "Veeam Installer Service (Windows) or Veeam Deployer Service (Linux).", "source": "vbr13-agent-ports", "section": "Components" },
+        { "protocol": "tcp", "ports": "11731", "from": "Backup server", "note": "Veeam Installer Service of Veeam Agent versions earlier than 13.0.1 only.", "optional": true, "platform": "windows", "source": "vbr13-agent-ports", "section": "Components" },
+        { "protocol": "tcp", "ports": "445", "from": "Backup server", "note": "Deployment with local administrator credentials.", "optional": true, "platform": "windows", "source": "vbr13-agent-ports", "section": "Components" },
+        { "protocol": "tcp", "ports": "135", "from": "Backup server", "note": "Optional: provides faster Veeam Agent deployment.", "optional": true, "platform": "windows", "versions": ["12"], "source": "vbr12-agent-ports", "section": "Communication Between Veeam Backup & Replication Components" },
+        { "protocol": "tcp+udp", "ports": "137,138,139", "from": "Backup server", "note": "NetBIOS, used by backup infrastructure components if NetBIOS is used in your infrastructure.", "optional": true, "platform": "windows", "versions": ["12"], "source": "vbr12-agent-ports", "section": "Communication Between Veeam Backup & Replication Components" },
+        { "protocol": "tcp", "ports": "49152-65535", "from": "Backup server", "note": "Dynamic RPC.", "dynamic": true, "any_program": true, "optional": true, "platform": "windows", "versions": ["12"], "source": "vbr12-agent-ports", "section": "Communication Between Veeam Backup & Replication Components" },
+        { "protocol": "tcp", "ports": "22", "from": "Backup server", "note": "Deployment with an account with root privileges.", "platform": "linux", "versions": ["13"], "source": "vbr13-agent-ports", "section": "Components" }
+      ]
+    },
+    {
+      "id": "agent-linux",
+      "name": "Veeam Agent computer, Linux (managed by Veeam Backup & Replication)",
+      "listens": [
+        { "protocol": "tcp", "ports": "6160", "from": "Backup server, backup repositories, gateway and mount servers", "note": "Veeam Deployer Service.", "source": "vbr13-agent-ports", "section": "Components" },
+        { "protocol": "tcp", "ports": "6162", "from": "Backup server, backup repositories, gateway and mount servers", "note": "Veeam Transport Service (Data Mover).", "source": "vbr13-agent-ports", "section": "Components" },
+        { "protocol": "tcp", "ports": "22", "from": "Backup server", "note": "Not required when the Veeam Deployment Kit is installed.", "optional": true, "source": "vbr13-agent-ports", "section": "Components" },
+        { "protocol": "tcp", "ports": "2500-3300", "from": "Backup server", "note": "Data transfer between Veeam Agent components.", "dynamic": true, "optional": true, "source": "vbr13-agent-ports", "section": "Components" }
+      ]
+    }
+  ]
+}

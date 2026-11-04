@@ -1,0 +1,13 @@
+<!--
+  Icons compiled INTO the binary.
+
+  SAT ships as a self-contained folder and leaves nothing behind, so the window icon cannot be a
+  file the application looks for at runtime - it would be one more thing to lose, and a missing
+  icon is how the Linux build ended up showing the toolkit's default penguin.
+-->
+<RCC>
+  <qresource prefix="/icons">
+    <file alias="SupportAssistTool.png">../../resources/icons/SupportAssistTool.png</file>
+    <file alias="SupportAssistTool.svg">../../resources/icons/SupportAssistTool.svg</file>
+  </qresource>
+</RCC>

@@ -1,0 +1,1025 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/><title>Support Assist Tool v0.5.0: CLI User Guide</title><style>:root{
+  --bg:#071719;
+  --panel:#0b2123;
+  --panel2:#102b2d;
+  --panel3:#153638;
+  --text:#e8f0ed;
+  --muted:#9fb4ae;
+  --line:#27484a;
+  --green:#55d96b;
+  --green2:#20b95a;
+  --green3:#0c7a43;
+  --blue:#67b8ff;
+  --amber:#f2c35d;
+  --red:#f17878;
+  --soft:#0e292b;
+  --code:#081315;
+  --shadow:0 10px 28px rgba(0,0,0,.28);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  color:var(--text);
+  background:var(--bg);
+  font:15px/1.62 "Segoe UI",Inter,Arial,sans-serif;
+}
+a{color:#7bd5ff;text-decoration:none}
+a:hover{text-decoration:underline}
+code,kbd{
+  font-family:"Cascadia Mono",Consolas,monospace;
+  background:#0a1a1c;
+  border:1px solid #294447;
+  border-radius:3px;
+  padding:1px 5px;
+  color:#d9efea;
+}
+kbd{box-shadow:inset 0 -1px 0 #456467}
+.topbar{
+  position:sticky;top:0;z-index:50;
+  height:58px;
+  display:flex;align-items:center;gap:20px;
+  padding:0 24px;
+  background:#061315;
+  border-bottom:1px solid var(--line);
+  box-shadow:0 4px 16px rgba(0,0,0,.25);
+}
+.brand{
+  display:flex;align-items:center;gap:11px;min-width:290px;
+  font-weight:650;letter-spacing:.01em;
+}
+.brandmark{
+  width:28px;height:28px;border-radius:5px;
+  background:linear-gradient(145deg,#64e67a,#14964b);
+  color:#06230f;display:grid;place-items:center;
+  font-weight:800;font-size:12px;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.35);
+}
+.version-badge{
+  font-size:12px;color:#b9d7cd;border:1px solid #315658;
+  background:#0b2628;border-radius:999px;padding:3px 9px;
+}
+.topbar .spacer{flex:1}
+.toplink{font-size:13px;color:#b7cdc7}
+.shell{
+  display:grid;
+  grid-template-columns:310px minmax(0,1fr) 250px;
+  min-height:calc(100vh - 58px);
+  max-width:1900px;
+  margin:0 auto;
+}
+.sidebar{
+  position:sticky;top:58px;height:calc(100vh - 58px);
+  overflow:auto;
+  border-right:1px solid var(--line);
+  background:#081b1d;
+  padding:20px 16px 36px;
+}
+.sidebar .guide-title{
+  font-size:13px;text-transform:uppercase;letter-spacing:.09em;color:#8facaa;
+  margin:0 7px 12px;
+}
+.search{
+  width:100%;
+  border:1px solid #35595b;
+  background:#0d2628;
+  color:var(--text);
+  border-radius:4px;
+  padding:10px 11px;
+  outline:none;
+  margin-bottom:14px;
+}
+.search:focus{border-color:var(--green)}
+.navgroup{
+  border-bottom:1px solid #173638;
+  padding:2px 0 7px;
+}
+.navgroup summary{
+  list-style:none;cursor:pointer;
+  padding:9px 8px;
+  color:#eef6f3;font-weight:650;
+  display:flex;gap:8px;align-items:center;
+}
+.navgroup summary::-webkit-details-marker{display:none}
+.navgroup summary:before{
+  content:"›";color:var(--green);font-size:19px;line-height:1;
+  transform:rotate(0deg);transition:transform .15s ease;
+}
+.navgroup[open] > summary:before{transform:rotate(90deg)}
+.navlinks{padding:0 0 4px 20px}
+.navlinks a{
+  display:block;
+  color:#b7cbc6;
+  padding:6px 8px;
+  border-left:2px solid transparent;
+  border-radius:2px;
+  font-size:13px;
+}
+.navlinks a:hover,.navlinks a.active{
+  color:#fff;background:#113537;border-left-color:var(--green);
+  text-decoration:none;
+}
+/* A navgroup nested inside another (e.g. Network Tools under Tools): indent it, lighten the header,
+   and drop the divider so it reads as a child of its parent rather than a peer category. */
+.navgroup .navgroup{border-bottom:none;padding:0 0 2px 12px}
+.navgroup .navgroup summary{font-weight:600;font-size:13px;color:#cfe0dc;padding:6px 8px}
+.navgroup .navgroup summary:before{font-size:16px}
+.navgroup .navgroup .navlinks{padding-left:28px}
+.main{
+  min-width:0;
+  padding:34px 50px 90px;
+  background:linear-gradient(180deg,#0a1d1f 0,#09191b 230px,#071719 1000px);
+}
+.content{max-width:1050px;margin:0 auto}
+.hero{
+  border:1px solid #2d5052;
+  background:
+    radial-gradient(circle at 80% 10%,rgba(85,217,107,.12),transparent 34%),
+    linear-gradient(135deg,#102b2d,#0a2022);
+  border-radius:8px;
+  padding:32px 34px;
+  margin-bottom:34px;
+  box-shadow:var(--shadow);
+}
+.hero .eyebrow{
+  color:#91dca1;text-transform:uppercase;letter-spacing:.12em;font-size:12px;font-weight:700
+}
+.hero h1{font-size:37px;line-height:1.18;margin:7px 0 8px;font-weight:650}
+.hero p{max-width:820px;color:#c3d5d0;margin:0 0 14px}
+.alpha{
+  display:inline-flex;align-items:center;gap:7px;
+  color:#f6d77d;background:#3b321b;border:1px solid #765e23;
+  border-radius:3px;padding:5px 9px;font-size:12px;font-weight:600;
+}
+.breadcrumb{
+  color:#7fa19a;font-size:13px;margin-bottom:8px;
+}
+.article{
+  scroll-margin-top:82px;
+  margin:0 0 54px;
+}
+.article h2{
+  font-size:29px;font-weight:620;margin:0 0 16px;
+  border-bottom:1px solid #315052;padding-bottom:10px;
+}
+.article h3{
+  scroll-margin-top:82px;
+  color:#8be39b;font-size:21px;font-weight:620;
+  margin:31px 0 10px;
+}
+.article h4{
+  scroll-margin-top:82px;
+  color:#dceae6;font-size:16px;margin:24px 0 8px;
+}
+.article p,.article li{max-width:920px}
+.article ul,.article ol{padding-left:24px}
+.article li{margin:.34rem 0}
+.lead{font-size:17px;color:#c8d9d4}
+.callout{
+  margin:18px 0;
+  padding:14px 16px;
+  border:1px solid;
+  border-left-width:4px;
+  border-radius:4px;
+  background:#0d2426;
+}
+.callout strong:first-child{display:block;margin-bottom:3px}
+.callout.note{border-color:#376d72;border-left-color:#5cb7d3}
+.callout.important{border-color:#6a5729;border-left-color:var(--amber);background:#272312}
+.callout.warning{border-color:#6f3636;border-left-color:var(--red);background:#291819}
+.callout.tip{border-color:#2c633d;border-left-color:var(--green);background:#0e2717}
+.procedure{
+  border:1px solid #315052;
+  border-radius:6px;
+  overflow:hidden;
+  margin:20px 0 26px;
+  background:#0a1d1f;
+}
+.procedure .proc-head{
+  padding:13px 16px;
+  background:#102d2f;
+  border-bottom:1px solid #315052;
+  font-weight:650;
+}
+.procedure .proc-body{padding:15px 20px 18px}
+.procedure ol{margin:0}
+.result{
+  margin-top:14px;padding:11px 13px;
+  border-left:3px solid var(--green);
+  background:#0d2a18;
+  color:#cfe7d5;
+}
+.cards{
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin:17px 0 22px;
+}
+.card{
+  border:1px solid #2c4c4e;
+  background:#0c2224;
+  border-radius:5px;
+  padding:15px 16px;
+}
+.card h4{margin:0 0 5px;color:#9ee7aa}
+.card p{margin:0;color:#b8cbc6;font-size:14px}
+.tablewrap{
+  overflow:auto;border:1px solid #2b4c4e;border-radius:5px;margin:16px 0 24px;
+}
+table{border-collapse:collapse;width:100%;min-width:720px}
+th{
+  background:#123235;color:#b5edbd;text-align:left;
+  font-weight:650;
+}
+th,td{padding:9px 11px;border-bottom:1px solid #244346;vertical-align:top}
+tbody tr:nth-child(even){background:#0a2022}
+tbody tr:hover{background:#103033}
+.symptom{
+  border:1px solid #3a595b;border-radius:5px;overflow:hidden;margin:18px 0;
+}
+.symptom .row{display:grid;grid-template-columns:150px 1fr;border-bottom:1px solid #284749}
+.symptom .row:last-child{border-bottom:0}
+.symptom .key{background:#102c2e;padding:9px 11px;color:#92b8b0;font-weight:600}
+.symptom .val{padding:9px 11px;background:#0b2022}
+.steps-flow{
+  display:flex;gap:7px;align-items:stretch;flex-wrap:wrap;margin:18px 0 22px
+}
+.flowbox{
+  flex:1 1 145px;border:1px solid #315153;border-radius:4px;padding:11px 12px;background:#0c2426;
+  min-width:145px
+}
+.flowarrow{align-self:center;color:var(--green);font-size:20px}
+.related{
+  margin-top:28px;padding-top:17px;border-top:1px solid #2b484a
+}
+.related h4{margin:0 0 8px;color:#b8d9d0}
+.related a{display:block;margin:4px 0}
+.ext{
+  display:inline-block;font-size:11px;margin-left:5px;color:#85a8a0
+}
+.ontoc{
+  position:sticky;top:58px;height:calc(100vh - 58px);
+  overflow:auto;
+  border-left:1px solid var(--line);
+  background:#081719;
+  padding:24px 18px;
+}
+.ontoc strong{
+  display:block;text-transform:uppercase;letter-spacing:.09em;
+  font-size:11px;color:#87a6a0;margin-bottom:12px
+}
+.ontoc a{
+  display:block;padding:5px 7px;color:#9eb8b1;font-size:12px;
+  border-left:2px solid transparent;
+}
+.ontoc a.sub{padding-left:18px}
+.ontoc a:hover,.ontoc a.active{
+  color:#fff;border-left-color:var(--green);text-decoration:none;background:#0d2b2d
+}
+.footer{
+  margin-top:60px;border-top:1px solid #2a4749;padding:24px 0;color:#789790;font-size:12px
+}
+hr{border:0;border-top:1px solid #284648;margin:30px 0}
+.hidden{display:none!important}
+@media(max-width:1250px){
+  .shell{grid-template-columns:285px minmax(0,1fr)}
+  .ontoc{display:none}
+}
+@media(max-width:860px){
+  .topbar{position:relative}
+  .brand{min-width:0}
+  .shell{display:block}
+  .sidebar{position:relative;top:0;height:auto;border-right:0;border-bottom:1px solid var(--line)}
+  .main{padding:25px 19px 65px}
+  .hero{padding:25px 22px}
+  .cards{grid-template-columns:1fr}
+  .topbar .toplink{display:none}
+}
+@media print{
+  body{background:white;color:#111}
+  .topbar,.sidebar,.ontoc{display:none!important}
+  .shell{display:block}
+  .main{background:white;padding:0}
+  .content{max-width:none}
+  .hero,.procedure,.card,.callout,.symptom{box-shadow:none;background:white;color:#111;border-color:#999}
+  .hero p,.lead,.card p{color:#333}
+  .article h2,.article h3,.article h4{color:#111}
+  th{background:#eee;color:#111}
+  tbody tr:nth-child(even){background:#f7f7f7}
+  td,.symptom .key,.symptom .val{background:white;color:#111}
+  a{color:#111;text-decoration:none}
+}
+
+/* Figures ------------------------------------------------------------------------------
+   Screenshots are captured at the application's own width - around 1385px - and the content
+   column is narrower than that on most screens. Without a max-width the image overflows the
+   column and the page scrolls sideways, so the constraint is not decoration.
+
+   The image is also a link target in spirit: an engineer reading the guide wants to see the
+   screen, so it is given room and a border that separates it from the prose rather than a heavy
+   frame that competes with it. */
+figure.shot{
+  margin:22px 0 26px;
+  padding:0;
+}
+figure.shot img{
+  display:block;
+  width:100%;
+  max-width:100%;
+  height:auto;
+  border:1px solid var(--line);
+  border-radius:6px;
+  box-shadow:var(--shadow);
+  background:var(--code);
+}
+/* A command too long for the column scrolls inside its block instead of running over the page. */
+.article pre{
+  max-width:100%;
+  overflow-x:auto;
+}
+
+/* Terminal output shown as text: what the command printed, scrolled sideways when a line is long
+   and within a height, as a terminal would show it. */
+figure.shot.transcript pre{
+  margin:0;
+  padding:14px 16px;
+  max-height:520px;
+  overflow:auto;
+  border:1px solid var(--line);
+  border-radius:6px;
+  background:var(--code);
+  font-size:12.5px;
+  line-height:1.45;
+  white-space:pre;
+}
+figure.shot.transcript pre code{
+  border:0;
+  background:none;
+  padding:0;
+  box-shadow:none;
+  font-size:inherit;
+}
+figure.shot figcaption{
+  margin-top:9px;
+  color:var(--muted);
+  font-size:13.5px;
+  line-height:1.5;
+  font-style:italic;
+}
+
+/* A screenshot is captured at the application's own width, which is wider than the column it is
+   read in - around 44% scale at a 1280px window. That is fine for seeing where a thing is on the
+   page and useless for reading what it says, so a figure can be expanded to its natural size and
+   scrolled. Click it, or press Enter when it has focus. */
+figure.shot img{
+  cursor:zoom-in;
+}
+figure.shot img:focus-visible{
+  outline:2px solid var(--green);
+  outline-offset:2px;
+}
+figure.shot.expanded{
+  overflow-x:auto;
+}
+figure.shot.expanded img{
+  width:auto;
+  max-width:none;
+  cursor:zoom-out;
+}
+figure.shot .shot-hint{
+  color:var(--muted);
+  font-size:12px;
+  font-style:normal;
+  opacity:.8;
+}
+
+/* Section-at-a-time reading (paged navigation, see sat-guide.js).
+   Only the selected section is shown, so the guide reads as a short page per topic instead of one
+   long scroll. The 'paged' class is added by the script, so without JavaScript the full page still
+   renders (graceful fallback); printing always shows every section. */
+body.paged .article{display:none}
+body.paged .article.shown{display:block}
+@media print{body.paged .article{display:block!important}}
+</style></head><body>
+<div class="topbar"><div class="brand"><div class="brandmark">SAT</div><span>Support Assist Tool</span></div><span class="version-badge">v0.5.0</span><div class="spacer"></div><a class="toplink" href="#top">Top</a></div>
+<div class="shell"><aside class="sidebar"><div class="guide-title">CLI User Guide</div><input aria-label="Search guide topics" class="search" id="navSearch" placeholder="Search guide topics" type="search"/><details class="navgroup" open=""><summary>Introduction</summary><div class="navlinks"><a href="#about">About this guide</a><a href="#whats-new">What’s New</a><a href="#requirements">Requirements</a><a href="#install">Run the CLI</a><a href="#shape">Command shape and exit codes</a></div></details><details class="navgroup" open=""><summary>Evidence</summary><div class="navlinks"><a href="#case">Create a case</a><a href="#gather">Gather support logs</a><a href="#collect">Targeted collection</a><a href="#review">Review a bundle</a><a href="#search">Search logs</a><a href="#reconstruct">Rebuild from a collection</a><a href="#tools-review">Review tool output</a></div></details><details class="navgroup" open=""><summary>Host checks</summary><div class="navlinks"><a href="#identify">Identify the host</a><a href="#health">Health snapshot</a><a href="#diagnostics">Diagnostics</a><a href="#checksum">File checksums</a></div></details><details class="navgroup" open=""><summary>Tools</summary><div class="navlinks"><a href="#network">Network tools</a><a href="#guided">Guided Diagnostics</a><a href="#service-channel">Veeam Service Channel</a><a href="#quick-checks">Quick checks</a><a href="#storage">Storage checks</a><a href="#change">Change analysis</a><a href="#sql">SQL Tools</a><a href="#windows-only">Windows-only verbs</a><a href="#thirdparty">Third-party integrations</a></div></details><details class="navgroup" open=""><summary>Reference</summary><div class="navlinks"><a href="#automation">Using SAT from a script</a><a href="#privacy">What is collected</a><a href="#open-source">Open-Source Components</a><a href="#troubleshooting">Troubleshooting</a></div></details></aside>
+<main class="main"><div class="content"><section class="hero" id="top"><div class="eyebrow">CLI User Guide</div><h1>Support Assist Tool v0.5.0: CLI User Guide</h1><p>The command line for Veeam support casework: gathering evidence from a customer machine, parsing a bundle, checking a file, and proving a connection.</p></section><section class="article" id="about"><div class="breadcrumb">Introduction</div><h2>About this guide</h2><p class="lead">This guide covers the command line of Support Assist Tool 0.5.0. The same verbs exist on Windows and Linux, except those listed under <a href="#windows-only">Windows-only verbs</a>.</p><figure class="shot transcript"><pre><code>$ SupportAssistTool version
+
+Support Assist Tool 0.5.0.6 (built 2026-10-28)
+
+[exit 0]</code></pre><figcaption>version prints the full version and the date the build was made. Give that full version when you report an issue.</figcaption></figure><p>The CLI is the same executable as the graphical application. Run with no arguments, it opens the GUI; run with a command, it runs the command. Run with only file or folder paths, which is what the desktop passes when files are dropped on the executable, it opens the GUI with them: each file's SHA-256 is shown and a folder is offered to Log Review.</p><p>Use the CLI when there is no desktop to run a GUI on, when the work is done over SSH, or when the same collection has to be repeated the same way on several machines.</p><p>The changes of 0.5.0 are listed in <a href="#whats-new">What’s New</a>.</p></section><section class="article" id="whats-new"><div class="breadcrumb">Introduction &gt; What’s New in v0.5.0</div><h2>What’s New in v0.5.0</h2><p class="lead">Support Assist Tool 0.5.0 is the first release of the 0.5 line, the Beta. This article lists the changes to the command line. The other changes are in the Windows User Guide and the Linux User Guide.</p><h3 id="whats-new-cli">Command Line</h3><ul><li><strong>SQL Tools.</strong> <code>sql check</code>, <code>shape</code>, <code>backups</code>, <code>files</code> and <code>query</code>, with <code>--engine postgres</code> and <code>--show-sql</code>; <code>sql instances</code> and <code>sql databases</code>.<ul><li><code>sql query</code> prints its statement first, then a table or a block per row. <code>--format table|records|tsv</code> chooses the layout.</li><li><code>--query</code> takes a named query's name, such as Backup audit (this database) for SQL Server or Backup readiness (WAL archiving and slots) for PostgreSQL.</li></ul></li><li><strong>Guided Diagnostics.</strong> <code>guided scenarios</code> and <code>guided run</code>. <code>--input vbr_version=12</code> tests the ports of VBR 12; left out, the managed server scenario tests both versions.</li><li><strong>Ports.</strong> <code>network presets</code> lists the ports of VBR 12 and VBR 13 for each role and marks a port only one version lists as VBR 12 only or VBR 13 only.</li><li><strong>Host checks.</strong> <code>system host-checks</code>, <code>system pipes</code> (named pipes on Windows, Unix sockets on Linux), <code>system installer-cache</code> on Windows, and <code>network service-channel</code>.</li><li><strong>WMI.</strong> <code>wmi health</code>, and <code>wmi query --user</code>, which reads the password from SAT_WMI_PASSWORD.</li><li><strong>Packets.</strong> <code>packet events</code> lists the notable events in a .pcapng or .pcap.</li><li><strong>Change analysis.</strong> <code>files compare</code> and <code>registry compare</code> take <code>--keep</code>, which keeps the compare in the capture file. <code>baseline inspect</code> lists a capture, how it was read and the compares kept in it.</li><li><strong>Collections.</strong> <code>logs gather</code> and <code>logs universal</code> include the kept tool output in the collection.</li><li><strong>Integrations.</strong> <code>tools run</code> runs the guided runs of Integrations: iPerf3, tcpdump on Linux and ETL2PCAPNG on Windows.</li><li><strong>Diagnostics.</strong> <code>diagnostics</code> prints what the tools need on this machine.</li></ul><h3 id="whats-new-security">Security and Downloads</h3><ul><li><strong>Libraries.</strong> The packages on Windows and Linux carry OpenSSL 3.5.9 and libarchive 3.8.10.</li></ul><div class="related"><h4>Related topics</h4><a href="#shape">Command shape and exit codes</a><a href="#requirements">Requirements</a></div></section><section class="article" id="requirements"><div class="breadcrumb">Introduction</div><h2>Requirements</h2><p class="lead">SAT runs with no installation and leaves nothing behind. It is copied onto a machine, run, and removed. Nothing is installed, no service is registered, and no runtime has to be present first.</p><figure class="shot transcript"><pre><code>$ SupportAssistTool capabilities --json
+
+{&quot;registry&quot;:false,&quot;filesystem&quot;:true,&quot;network_tools&quot;:true,&quot;log_collection&quot;:true,&quot;case_workspace&quot;:true,&quot;vss&quot;:false,&quot;usn&quot;:false,&quot;windows_event_log&quot;:false,&quot;re2&quot;:false,&quot;archives&quot;:true}
+
+[exit 0]</code></pre><figcaption>capabilities reports what this build can do on this host, as JSON for a script to read.</figcaption></figure><h3>Supported operating systems</h3><table><thead><tr><th>Package</th><th>Built on</th><th>Runs on</th></tr></thead><tbody><tr><td>Windows (<code>SupportAssistTool.exe</code>)</td><td>Windows x64, statically linked</td><td>Windows 10, Windows 11 and Windows Server 2016 or newer, x64</td></tr><tr><td>Linux CLI (<code>-linux-x64-cli</code>)</td><td>glibc <strong>2.28</strong> (AlmaLinux 8 / RHEL 8 family)</td><td>Any x86-64 Linux with glibc 2.28 or newer: RHEL, CentOS, Alma and Rocky 8 or newer, Debian 10+, Ubuntu 18.04+, SLES 15+</td></tr><tr><td>Linux GUI (<code>-linux-x64</code>)</td><td>glibc <strong>2.34</strong> (AlmaLinux 9 / RHEL 9 family)</td><td>Any x86-64 Linux with glibc 2.34 or newer, with X11 or Wayland</td></tr></tbody></table><p>A binary runs on the glibc it was built against and on newer ones. That is why the CLI is built on the older base: it covers the wider range of customer machines. The graphical package needs a newer distribution than the command-line one.</p><h3>Third-party software you must install</h3><p><strong>None.</strong> There is nothing to install to run SAT, on either platform.</p><ul><li><strong>Windows</strong> links its dependencies statically. No Visual C++ redistributable and no .NET runtime is required.</li><li><strong>Linux</strong> carries its own libraries in <code>./lib</code> beside the executable, resolved through an <code>$ORIGIN/lib</code> runpath. The CLI package bundles libarchive, OpenSSL (libssl and libcrypto), SQLite, zlib, zstd, lzma and bzip2. The GUI package adds libssh2 for Remote (SSH), unixODBC for SQL Tools, libxml2, Qt 6, X11/XCB, Wayland, fontconfig, FreeType, HarfBuzz and ICU. <code>lib/RUNTIME-LIBRARIES.txt</code> lists what a package carries, and <code>lib/Verify-Runtime.sh</code> shows how each one resolves. Only glibc and the ELF loader come from the host.</li></ul><p>Because the libraries travel with the package, copy the whole folder. The executable does not start without the <code>lib</code> directory beside it.</p><h3>Optional third-party tools</h3><p>Some diagnostics can drive tools that are not part of the package. They are optional: the related verb reports the tool as unavailable and everything else keeps working. <code>tools source</code> prints where to obtain each one.</p><table><thead><tr><th>Tool</th><th>Used for</th><th>Platform</th></tr></thead><tbody><tr><td>iPerf3</td><td>Third-party throughput measurement alongside SAT's own</td><td>Windows and Linux</td></tr><tr><td>Wireshark / tshark</td><td>Packet capture analysis</td><td>Windows and Linux</td></tr><tr><td>SQLCMD</td><td>SQL Server queries for plug-in cases</td><td>Windows and Linux</td></tr><tr><td>DiskSpd</td><td>Disk Speed Test</td><td>Windows only</td></tr><tr><td>fio</td><td>Disk Speed Test</td><td>Linux only</td></tr><tr><td>tcpdump</td><td>Packet capture through <code>tools run</code></td><td>Linux only</td></tr><tr><td>psql</td><td>PostgreSQL checks</td><td>Windows and Linux</td></tr><tr><td>Process Monitor</td><td>File and registry activity tracing</td><td>Windows only</td></tr><tr><td>Packet Monitor (pktmon)</td><td>Built-in Windows packet capture</td><td>Windows only</td></tr><tr><td>ETL2PCAPNG</td><td>Converting an ETL capture to pcapng</td><td>Windows only</td></tr><tr><td>VSS Trace</td><td>Shadow-copy provider tracing</td><td>Windows only</td></tr></tbody></table><h3>Privileges</h3><p>SAT runs as an ordinary user. Some readings need elevation: Windows servicing-package inventory needs an administrator, and some Linux host details need root. When a reading is skipped for that reason, the command names it and continues. Run as an ordinary user unless a reading says it needs elevation.</p></section><section class="article" id="install"><div class="breadcrumb">Introduction</div><h2>Run the CLI</h2><p class="lead">Unpack and run. There is no installer and no uninstall.</p><h3 id="install-setup">Before You Begin</h3><ul><li>Linux: an x86-64 machine with glibc 2.28 or newer for the command-line package. See <a href="#requirements">Requirements</a>.</li><li>Windows: nothing. <code>SupportAssistTool.exe</code> is the whole program.</li></ul><div class="procedure"><div class="proc-head">To run the CLI on Linux, do the following:</div><div class="proc-body"><ol><li>Extract the package: <code>tar xzf Support-Assist-Tool-0.5.0.6-linux-x64-cli.tar.gz</code>.</li><li>Change into the folder: <code>cd Support-Assist-Tool-0.5.0.6-linux-x64-cli</code>.</li><li>Run <code>./SupportAssistTool version</code>.</li></ol><div class="result"><strong>Expected result.</strong> The command prints the full version and the date the build was made.</div></div></div><div class="procedure"><div class="proc-head">To run the CLI on Windows, do the following:</div><div class="proc-body"><ol><li>Open a command prompt or PowerShell in the folder that holds <code>SupportAssistTool.exe</code>.</li><li>Run a command, for example <code>SupportAssistTool.exe capabilities &gt; capabilities.json</code>.</li></ol><div class="result"><strong>Expected result.</strong> Output can be redirected and piped normally.</div></div></div><p>To remove SAT, delete the folder. Case data, reports and collections are written only where you point them.</p><div class="related"><h4>Related topics</h4><a href="#shape">Command shape and exit codes</a><a href="#requirements">Requirements</a></div></section><section class="article" id="shape"><div class="breadcrumb">Introduction</div><h2>Command shape and exit codes</h2><p class="lead">Commands are <code>SupportAssistTool &lt;area&gt; &lt;verb&gt; [options]</code>. <code>--help</code> lists every verb available on the current platform.</p><figure class="shot transcript"><pre><code>$ SupportAssistTool --help
+
+Support Assist Tool 0.5.0.6 (built 2026-10-28) - command line for Veeam support casework
+
+Usage:
+  SupportAssistTool version
+  SupportAssistTool capabilities [--json]
+  SupportAssistTool diagnostics [--json] [--include-user]
+      # also lists what the tools need on this machine
+  SupportAssistTool health sample [--output system-health.txt]
+  SupportAssistTool health load --input system-health.txt|COLLECTION_DIR [--output summary.txt]
+      # a directory is read as a log collection: its own saved snapshot if it has one,
+      # otherwise a snapshot rebuilt from the raw evidence it carries.
+      # opens a health report captured on any platform, including one from the GUI.
+  SupportAssistTool products detect [--json]
+
+Case workspace:
+  SupportAssistTool case create --parent DIR --id CASE-ID
+      [--title TEXT] [--engineer NAME] [--notes TEXT]
+
+Tools:
+  SupportAssistTool tools review --source DIR [--machine NAME] [--json] [--note]
+      # reviews Customer/Lab tool output, grouped by machine and ordered in UTC.
+      # --note formats the result for pasting into a case note.
+  SupportAssistTool network interfaces
+  SupportAssistTool network test --host HOST --port PORT [--timeout-ms 5000]
+      [--source IP] [--interface NAME] [--all-interfaces] [--include-virtual]
+      [--sat-payload 50M | --no-sat-payload] [--no-sat-handshake]
+  SupportAssistTool network listen --port PORT [--seconds 30] [--multiple] [--banner TEXT]
+      # the banner defaults to &quot;SAT - listening on %port%&quot;, with the port filled in;
+      # --banner &quot;&quot; sends none.
+  SupportAssistTool network udp test --host HOST --port PORT [--timeout-ms 2000]
+      [--sat-listener] [--source IP] [--all-interfaces] [--include-virtual]
+  SupportAssistTool network udp listen --port PORT [--seconds 30] [--single]
+  SupportAssistTool network service-channel [--product agent|vbr] [--folder LOGS] [--hours 24] [--logs-only]
+      # The channel Veeam&#x27;s processes use to reach their service: the service, its named pipe and
+      # an HTTP/2 handshake on it as this account (Windows), then the gRPC lines the product
+      # logged. --logs-only reads a log folder, such as a collected bundle&#x27;s, on any machine.
+  SupportAssistTool network tls --host HOST --port PORT [--sni NAME] [--source IP]
+      [--interface NAME] [--all-interfaces] [--include-virtual]
+      [--expected-fingerprint HEX] [--version auto|1.2|1.3]
+      [--compare-versions] [--timeout-ms 10000] [--no-system-trust]
+  SupportAssistTool network throughput client --host HOST [--port 2500] [--bytes 1G]
+      [--connect-timeout-ms 10000] [--idle-timeout-ms 30000]
+  SupportAssistTool network throughput server [--port 2500]
+      [--connect-timeout-ms 60000] [--idle-timeout-ms 30000]
+  SupportAssistTool packet events --input capture.pcapng
+      # The notable events in a .pcapng or .pcap, with their times: TCP retransmissions, duplicate
+      # ACKs, keep-alives, resets, zero windows and missing segments, and TLS handshake messages and
+      # alerts. Copies of one packet logged at several pktmon components count once.
+  SupportAssistTool iperf client --host HOST [--port 2500] [--payload 1G]
+      [--tools-root DIR] [--arg VALUE]    # needs iperf3; see &#x27;tools source --id iperf3&#x27;
+  SupportAssistTool iperf server [--port 2500] [--tools-root DIR] [--arg VALUE]
+
+Quick checks (the tools of the F2, F6, F7, F8, F9, F10 and F12 windows):
+  SupportAssistTool network transfer-time --size 20TB --link 10G | --adapter NAME [--mtu 9000] [--ipv6]
+                    [--timestamps] [--share 100] [--reduced-to 100] [--network-speed 6Gb/s]
+                    [--storage-speed 520MB/s]
+                    [--host HOST [--port 2500] [--bytes 1G]]
+                    [--host HOST --iperf3 [--port 5201] [--streams 4] [--tools-root DIR]]
+                    [--storage-result result.json] [--email] [--json]
+      # how long a transfer takes, worked out step by step: the link in bytes, less the Ethernet and
+      # TCP/IP overhead, per hour, then the size. Sizes are as Windows counts them (1 TB = 1,024 GB).
+      # --host measures the network to SAT&#x27;s listener (or the throughput server) on that port, or with
+      # --iperf3 to an iPerf3 server started there; --storage-result takes the speed a Disk Speed Test
+      # kept. The lowest speed sets the time.
+      # --share is the link throttle: the % of the link this transfer can use as a Veeam network
+      # traffic rule throttles it or other traffic shares it. --reduced-to is the % of the data sent after Veeam&#x27;s
+      # compression and deduplication: a job session&#x27;s Transferred / Read x 100.
+      # --email prints the email text only.
+  SupportAssistTool network adapters [--json]
+      # this machine&#x27;s network adapters: link speed, MTU, addresses, errors and discards.
+  SupportAssistTool network local-ports PORTS [--udp] [--tcp] [--json]
+  SupportAssistTool network local-ports --preset ROLE | --process NAME|PID [--json]
+      # PORTS is a list such as 999,123,22-23. Reads this machine&#x27;s sockets and firewall, and
+      # gives each port a verdict: Open, Blocked here, Local only, Closed, Closed and blocked.
+  SupportAssistTool network presets
+      # the Veeam roles --preset takes, with their ports from the Veeam Backup &amp; Replication guide.
+  SupportAssistTool network name NAME [--json]
+      # the addresses a name resolves to, where the answer came from first, each DNS server&#x27;s
+      # answer and the reverse lookup of each address.
+  SupportAssistTool time check [--server HOST] [--json]
+  SupportAssistTool time convert TIMESTAMP [--log FILE] [--zone &quot;Eastern Time&quot; | --offset -05:00]
+                    [--show-in &quot;Mountain Time&quot;] [--json]
+      # TIMESTAMP is a time or a whole line from a log. --log reads the offset from that log&#x27;s own
+      # headers (its UTC time, its UTC offset or the zone it names). Otherwise --zone or --offset
+      # names the zone the log was written in, and this machine&#x27;s offset is used when neither is
+      # given. A --zone applies that zone&#x27;s daylight saving on the date read. --show-in gives the
+      # same moment in another zone, such as another machine&#x27;s.
+  SupportAssistTool time log-clock FILE [--json]
+      # what a log records of its own clock: each header&#x27;s UTC offset and daylight saving state,
+      # the zone it names, and the listed zones on that offset.
+  SupportAssistTool time zones
+      # the zones --zone takes, with their offset now.
+  SupportAssistTool files lock --path FILE|FOLDER [--json]
+      # the processes holding a file open; for a folder, every file and folder under it.
+  SupportAssistTool volume list [--json]
+      # every volume: what it sits on (bus, disk, controller and driver, LUN or share), its file
+      # system, space, compression, encryption, and Fast Clone on ReFS and XFS.
+  SupportAssistTool volume check --path DIR [--json]
+      # the volume a folder is on, with the folder&#x27;s own compression and encryption.
+  SupportAssistTool storage tests
+  SupportAssistTool storage speed-test --custom --folder DIR | --file PATH [--write-percent 0-100] [--random]
+                    [--threads N] [--outstanding N] [--warmup SECONDS] [--caching] [--block 64K]
+                    [--size 4G] [--seconds 60] [--role repository|source|other] [--tools-root DIR] [--json]
+      # the DiskSpd wizard&#x27;s own mix. A test that writes needs --folder, where SAT writes its own test
+      # file and removes it; --file reads an existing file only (--write-percent 0).
+  SupportAssistTool storage speed-test --test ID --folder DIR | --file PATH [--size 25G] [--block 512K]
+      [--seconds 600] [--role repository|source|other] [--tools-root DIR] [--json]
+      # Veeam&#x27;s KB2014 tests on DiskSpd (Windows) or fio (Linux). A write test writes only SAT&#x27;s
+      # own new file in the folder and removes it; a read test opens the file for reading only.
+      # --role says what the storage is, for what the result means: a backup repository (the
+      # default for --test), the source a backup reads, or other.
+  SupportAssistTool watch [--filter veeam] [--seconds 0] [--interval-ms 2000]
+      # lists the matching services and processes; with --seconds, prints what starts,
+      # ends or changes until then.
+  SupportAssistTool system pending-restart [--json]
+      # which restart marker is set, when, and the events that name the cause. Exits 3 when
+      # the system needs a restart.
+  SupportAssistTool system host-checks [--checks events,drivers,shadow-storage,dotnet-tls,kernel-log] [--days N] [--json]
+      # read-only checks of what most often explains a failed snapshot or backup. Windows: backup
+      # events (volsnap, VSS, disk, NTFS) in the last --days (7 by default), the Veeam drivers, VSS
+      # shadow storage, and the .NET and TLS registry values. Linux: the Veeam snapshot module and
+      # the kernel log. Without --checks every check for this system runs. Exits 3 on a finding.
+  SupportAssistTool system pipes [--veeam] [--json]
+      # Windows: every named pipe in \\.\pipe\ by name, with its current and maximum instances. The
+      # Veeam, SQL Server and PostgreSQL pipes SAT knows show their product, purpose and service, and
+      # a pipe whose name carries a process ID shows that process. Linux: every Unix domain socket
+      # with a path, its type, whether it listens and the process that holds it. --veeam lists the
+      # Veeam and database ones only. No pipe or socket is opened or connected to.
+
+Log collection and analysis:
+  SupportAssistTool logs gather --output DIR [--no-third-party-errors] [--no-platform-context] [--no-archive]
+      [--official-exporters]
+      # detects the installed Veeam products and collects their support logs.
+      # The vendor&#x27;s own exporters are not run unless --official-exporters is given.
+  SupportAssistTool logs collect --profile universal|vaw|vbr|sql-plugin|rman-plugin|custom [--no-windows-context]
+      --output DIR [--source DIR] [--from DATE] [--to DATE] [--no-archive]
+  SupportAssistTool logs review --path DIR|FILE|ARCHIVE [--path DIR|FILE|ARCHIVE ...]
+      [--profile auto|vaw|vbr|sql-plugin|rman-plugin|generic]
+      [--output report.txt|DIR] [--case CASE_ROOT] [--full-scan] [--multi-machine-source]
+      [--cache-dir DIR] [--no-cache] [--json]
+      [--from DATE --to DATE --date-order mdy|dmy|iso|system|auto]
+      [--assumed-offset-minutes N] [--context 4] [--max-incidents N]
+      [--find TEXT] [--case-sensitive] [--discover-veeam]
+      [--workers N | --single-thread] [--no-warnings] [--no-archives]
+      # without --output or --case, the report goes to Log-Collections/Log-Review beside SAT.
+  SupportAssistTool logs reconstruct --path COLLECTION_DIR [--output DIR]
+      # rebuilds environment.log and &lt;MACHINE&gt;-SystemHealth.txt from a collection that carries
+      # only raw evidence, so the Environment and Health pages can load it. Reports what it
+      # could not rebuild and why.
+  SupportAssistTool logs search [--path DIR ... | --discover-veeam] [--text TEXT | --regex REGEX]
+      [--pattern GLOB] [--severity VALUE] [--case-sensitive] [--max-results N]
+      [--from DATE --to DATE --date-order mdy|dmy|iso|system|auto]
+      [--assumed-offset-minutes N] [--context 4] [--no-archives]
+      [--output FILE] [--format text|html|json|csv]
+
+SQL tools:
+  SupportAssistTool sql check --server INSTANCE [--against guest|config] [--config-database NAME]
+      [--account LOGIN] [--login LOGIN] [--trust-certificate]
+      # An account&#x27;s rights against Veeam&#x27;s Permissions page: guest processing (sysadmin, or the
+      # minimal list) or the configuration database. Without --account, the account connecting.
+  SupportAssistTool sql shape --server INSTANCE
+      # Failover cluster instance, availability groups, replicas, listeners, backup preference.
+  SupportAssistTool sql backups --server INSTANCE [--database NAME] [--days 14]
+      # msdb&#x27;s backup history: whose backups they are, log chain gaps, restarts and forks.
+  SupportAssistTool sql files --server INSTANCE
+      # Every database file, and on the SQL host the volume it is on.
+  SupportAssistTool sql query --server INSTANCE [--database master] --query &quot;SELECT ...&quot; [--format table|records|tsv]
+      # One query that reads data, or a named query by its name. The statement prints first, then the result:
+      # 8 columns or fewer as a table, wider as a block per row; --format chooses (tsv prints the result
+      # only). Every sql command connects as the account running SAT; with
+      # --login it uses that SQL login and reads the password from SQLCMDPASSWORD. Exits 3 when
+      # a check fails.
+  SupportAssistTool sql check|shape|backups|files|query [--engine sqlserver|postgres] --show-sql [--server ...]
+      # Prints the SQL the check runs, in order, before its results; without --server it prints
+      # the SQL only and connects to nothing.
+  SupportAssistTool sql instances [--engine sqlserver|postgres]
+      # The SQL Server and PostgreSQL instances on this machine.
+  SupportAssistTool sql databases --server INSTANCE [--engine sqlserver|postgres] [--login LOGIN]
+      [--trust-certificate] [--tools-root DIR]
+      # The databases of one server, one per line.
+  SupportAssistTool sql check --engine postgres --server HOST[:PORT] [--config-database NAME]
+      [--account ROLE] [--login ROLE] [--tools-root DIR]
+  SupportAssistTool sql shape|backups|files --engine postgres --server HOST[:PORT] [--login ROLE]
+  SupportAssistTool sql query --engine postgres --server HOST[:PORT] [--database postgres] --query &quot;SELECT ...&quot;
+      # The same five checks for PostgreSQL, run through psql: the Tools folder (--tools-root), the
+      # PATH or the PostgreSQL install folders. Without --login the account running SAT connects (on
+      # Windows as the postgres role that Veeam&#x27;s installer maps its Windows accounts to); with
+      # --login the password is read from PGPASSWORD. The session is read only.
+
+Third-party integrations:
+  SupportAssistTool tools status [--root DIR] [--json]
+  SupportAssistTool tools source --id iperf3|wireshark|sqlcmd|psql|tcpdump|fio
+  SupportAssistTool tools run --id iperf3 [--mode Client|Server] [--host HOST] [--direction Upload|Download]
+                  [--streams Single|Multiple] [--stream-count 5] [--duration 20] [--port 5201]
+                  [--protocol TCP|UDP] [--root DIR]
+  SupportAssistTool tools run --id tcpdump [--interface any] [--host HOST] [--port PORT] [--count 500] [--root DIR]
+      # the Integrations Run window&#x27;s guided run: the same fields, the same command line. The Run
+      # window&#x27;s CLI button prints it.
+
+Change analysis (compares file and registry metadata between two points in time):
+  SupportAssistTool files baseline --path /path/to/vendor --output before.satsnap
+      [--hash none|all|below-size|extensions] [--hash-max-bytes N]
+      [--hash-extension .log] [--exclude pattern] [--maximum-depth N]
+      [--maximum-objects N] [--batch-size N] [--follow-reparse]
+  SupportAssistTool files compare --baseline before.satsnap [--baseline-id ID]
+      (--other after.satsnap [--other-id ID] | --live)
+      [--timestamp-tolerance-100ns N] [--no-move-detection] [--no-hash-inference]
+      [--no-journal] [--keep] [--output FILE --format text|html|json|csv]
+      # --keep stores the result in the baseline file; baseline inspect lists the stored comparisons.
+
+Guided Diagnostics:
+  SupportAssistTool guided scenarios
+      # The scenarios for this machine, each with its inputs.
+  SupportAssistTool guided run --scenario ID [--input NAME=VALUE ...] [--machine HOST] [--continue]
+      # Runs the scenario&#x27;s read-only checks in order and stops at the first decisive failure;
+      # --continue runs every step. --machine HOST is --input target=HOST. Prints each step, then
+      # the block for the case note. Exits 3 when a step fails.
+
+Other diagnostics:
+  SupportAssistTool baseline inspect --file baseline.satsnap [--baseline-id ID]
+  SupportAssistTool snapshot inspect --file baseline.satsnap [--baseline-id ID]
+  SupportAssistTool baselines list [--folder PATH]
+  SupportAssistTool snapshots list [--folder PATH]
+
+File checksums:
+  SupportAssistTool files hash --path FILE [--path FILE ...] [--expect SHA256] [--json]
+  SupportAssistTool files hash --check SHA256SUMS [--check LIST ...] [--json]
+      # the SHA-256 of each file, read in place. --expect compares each result with a published
+      # value; --check reads a SHA256SUMS list and checks every file it names, found beside the
+      # list. Exits 3 when a file does not match or is missing.
+
+Exit codes:
+  0  success, or completed with no findings
+  2  not available on this host, or not applicable
+  3  completed and found something (comparison and diagnostic commands only)
+  64 the command line was wrong
+  70 the operation failed
+  74 tools review only: the source could not be read
+  130 cancelled
+
+[exit 0]</code></pre><figcaption>--help on Linux. Windows-only verbs are not listed on Linux.</figcaption></figure><p>Exit codes are meant to be tested in a script:</p><table><thead><tr><th>Code</th><th>Meaning</th></tr></thead><tbody><tr><td>0</td><td>Success, or completed with no findings</td></tr><tr><td>2</td><td>Not available on this host, or not applicable</td></tr><tr><td>3</td><td>Completed and found something (comparison and diagnostic commands only)</td></tr><tr><td>64</td><td>The command line was wrong</td></tr><tr><td>70</td><td>The operation failed</td></tr><tr><td>74</td><td><code>tools review</code> only: the source could not be read</td></tr><tr><td>130</td><td>Cancelled</td></tr></tbody></table><p>Exit 3 is not an error. It means the command completed and found something, such as findings in a log review or a file that does not match its expected SHA-256. Test for it explicitly in a script.</p><p><code>help</code> and <code>--help</code> print the commands and their options, and <code>version</code> or <code>--version</code> prints the full version. A command or option that is not known is named on the error stream with the words <code>Unknown command</code> or <code>Unknown option</code>, and the nearest option is suggested; the exit code is 64.</p><p>Paths are read as typed, in any language. On Windows a file or folder named with characters outside the system code page, such as Japanese or Polish letters, works in every command.</p><div class="procedure"><div class="proc-head">To test a command's result in a script, do the following:</div><div class="proc-body"><ol><li>Run the command.</li><li>Read <code>$?</code> in a shell, or <code>%ERRORLEVEL%</code> in a command prompt.</li><li>Treat 0 and 3 as a completed run, and 2, 64, 70, 74 and 130 as listed in the table.</li></ol><div class="result"><strong>Expected result.</strong> Exit 3 is a completed run that found something. See <a href="#automation">Using SAT from a script</a>.</div></div></div></section><section class="article" id="case"><div class="breadcrumb">Evidence</div><h2>Create a case</h2><p class="lead"><code>case create</code> makes a case workspace: a folder named for the case ID under the parent folder, holding the logs, captures, reports, parsed data, parser cache and baselines folders the rest of SAT writes into.</p><h3 id="case-setup">Before You Begin</h3><ul><li>Choose a parent folder that the account can write to.</li><li>Have the case ID. The folder takes its name.</li></ul><div class="procedure"><div class="proc-head">To create a case, do the following:</div><div class="proc-body"><ol><li>Run <code>case create</code> with the parent folder and the case ID.</li><li>Read the paths the command prints: the workspace and its Logs, Captures, Reports, Parsed, Parser cache and Baselines folders.</li></ol><div class="result"><strong>Expected result.</strong> The case workspace exists and the other commands can write into it with <code>--case</code> or <code>--output</code>.</div></div></div><pre><code>SupportAssistTool case create --parent D:\cases --id 05412345 \
+    --title "VAW backup failure" --engineer "A. Engineer"</code></pre><div class="tablewrap"><table><thead><tr><th>Option</th><th>What it does</th></tr></thead><tbody><tr><td><code>--parent DIR</code></td><td>The folder the case folder is created in. Required.</td></tr><tr><td><code>--id CASE-ID</code></td><td>The case identifier, used as the folder name. Required.</td></tr><tr><td><code>--title TEXT</code></td><td>A readable title, stored in the case record.</td></tr><tr><td><code>--engineer NAME</code></td><td>The engineer's name, stored in the case record.</td></tr><tr><td><code>--notes TEXT</code></td><td>A note stored in the case record, <code>case.json</code>.</td></tr></tbody></table></div><p>The graphical application opens the same workspace from Case Manager.</p><div class="related"><h4>Related topics</h4><a href="#gather">Gather support logs</a><a href="#review">Review a bundle</a></div></section><section class="article" id="gather"><div class="breadcrumb">Evidence</div><h2>Gather support logs</h2><p class="lead"><code>logs gather</code> detects the Veeam products present and collects their support logs, plus enough platform context to interpret them. <code>logs universal</code> is the same command.</p><figure class="shot transcript"><pre><code>$ SupportAssistTool logs gather --output C:\Users\USER\AppData\Local\Temp\sat-cli-09dee69a0e2a431db3d6fee917387684\gather --no-archive
+
+Platform: windows
+Detected products/roles: 1
+Collection: C:\Users\USER\AppData\Local\Temp\sat-cli-09dee69a0e2a431db3d6fee917387684\gather\SAT-VAW-WORKSTATION-2026-10-28_07-22-04.250
+Primary collected files: 105
+Official exporter runs: 0
+Sanitized third-party error logs: 0
+Clock: (UTC-06:00) Central Time (US &amp; Canada), UTC-05:00, daylight saving time, 3.191 s behind time.windows.com
+
+Platform context | 0 items | 0 errors | 0/s | C:\Users\USER\AppData\Local\Temp\sat-cli-09dee69a0e2a431db3d6fee917387684\gather\SAT-VAW-WORKSTATION-20
+
+
+[exit 0]</code></pre><figcaption>Gathering on a machine with Veeam Agent installed.</figcaption></figure><figure class="shot transcript"><pre><code>$ SupportAssistTool logs gather --output /tmp/tmp.eR5fjitZGj/gather --no-archive
+
+Sanitizing third-party error log | 0 items | 0 errors | 0/s | /var/log/postgresql/postgresql-18-main.log
+Platform: linux
+Detected products/roles: 0
+Collection: /tmp/tmp.eR5fjitZGj/gather/SAT-universal-unknown-2026-10-28_07-21-41.125
+Primary collected files: 1
+Official exporter runs: 0
+Sanitized third-party error logs: 1
+Clock: (UTC-06:00) Central Time (US &amp; Canada), UTC-05:00, daylight saving time, 3.188 s behind 1.ntp.ubuntu.com
+Warning: No Veeam log directories were detected; collecting system/support context only.
+
+[exit 0]</code></pre><figcaption>The same command on a host with no Veeam product: context only, and it says so.</figcaption></figure><h3 id="gather-setup">Before You Begin</h3><ul><li>Run on the machine whose logs are wanted. An ordinary user collects what that account can read; some logs need administrator or root.</li><li>Run the tools whose output belongs in the collection first. The collection takes the tool output kept beside SAT in <code>Log-Collections/Tools</code>, archives it with the logs and removes it after a finished archive.</li><li>Choose an output folder, such as the case's <code>logs</code> folder.</li></ul><div class="procedure"><div class="proc-head">To gather the support logs of a machine, do the following:</div><div class="proc-body"><ol><li>Run <code>logs gather --output DIR</code>.</li><li>Read the summary: the platform, the detected products and roles, the collection folder, the files collected, the exporter runs and the third-party error logs.</li><li>Read the clock line and the archive path, then transfer the archive.</li></ol><div class="result"><strong>Expected result.</strong> The command exits 0 when the collection finished. A warning is printed on its own line.</div></div></div><pre><code>SupportAssistTool logs gather --output D:\cases\05412345\logs</code></pre><div class="tablewrap"><table><thead><tr><th>Option</th><th>What it does</th></tr></thead><tbody><tr><td><code>--output DIR</code></td><td>Where the collection is written. Required.</td></tr><tr><td><code>--no-archive</code></td><td>Leaves the collection as a folder and makes no archive.</td></tr><tr><td><code>--days N</code></td><td>Collects the logs of the last N days, from 1 to 3650.</td></tr><tr><td><code>--official-exporters</code></td><td>Also runs the vendor's own log exporters. They take considerably longer and can load a production machine, so they run only when this option is given.</td></tr><tr><td><code>--no-third-party-errors</code>, <code>--no-platform-context</code></td><td>Narrow what is collected.</td></tr></tbody></table></div><p>If no Veeam product is found, the command still collects system and support context and says so. That is the normal result on a repository or an NFS/SMB target, which holds backups without running Veeam software locally.</p><div class="related"><h4>Related topics</h4><a href="#collect">Targeted collection</a><a href="#review">Review a bundle</a><a href="#privacy">What is collected</a></div></section><section class="article" id="collect"><div class="breadcrumb">Evidence</div><h2>Targeted collection</h2><p class="lead"><code>logs collect</code> is the narrower form, for when you know which product's logs you want and over which period.</p><h3 id="collect-setup">Before You Begin</h3><ul><li>Know the profile: <code>universal</code>, <code>vaw</code>, <code>vbr</code>, <code>sql-plugin</code>, <code>rman-plugin</code> or <code>custom</code>.</li><li>Have the period as dates, or collect everything the profile covers.</li></ul><div class="procedure"><div class="proc-head">To collect one product's logs for a period, do the following:</div><div class="proc-body"><ol><li>Run <code>logs collect</code> with <code>--profile</code> and <code>--output</code>.</li><li>Add <code>--from</code> and <code>--to</code> to bound the period.</li><li>Transfer the archive the command prints.</li></ol><div class="result"><strong>Expected result.</strong> The collection holds the profile's logs for the period.</div></div></div><pre><code>SupportAssistTool logs collect --profile vaw \
+    --output D:\cases\05412345\logs --from 2026-08-01 --to 2026-08-10</code></pre><div class="tablewrap"><table><thead><tr><th>Option</th><th>What it does</th></tr></thead><tbody><tr><td><code>--profile NAME</code></td><td>The product profile. Required.</td></tr><tr><td><code>--output DIR</code></td><td>Where the collection is written. Required.</td></tr><tr><td><code>--source DIR</code></td><td>Collects from a folder you already have, not from the live machine.</td></tr><tr><td><code>--from DATE</code>, <code>--to DATE</code></td><td>The period to collect.</td></tr><tr><td><code>--no-windows-context</code></td><td>Leaves out the Windows context.</td></tr><tr><td><code>--no-archive</code></td><td>Keeps a folder.</td></tr></tbody></table></div><div class="related"><h4>Related topics</h4><a href="#gather">Gather support logs</a><a href="#review">Review a bundle</a></div></section><section class="article" id="review"><div class="breadcrumb">Evidence</div><h2>Review a bundle</h2><p class="lead"><code>logs review</code> parses a bundle and writes the report an engineer reads. It accepts a folder, an archive, or several of either.</p><figure class="shot transcript"><pre><code>$ SupportAssistTool logs review --path C:\ProgramData\Veeam\Endpoint --output C:\Users\USER\AppData\Local\Temp\sat-cli-09dee69a0e2a431db3d6fee917387684\review.txt
+
+
+VEEAM LOG REVIEW SUMMARY
+============================================================
+Product Type Found: Veeam Agent for Microsoft Windows [Verified]
+Machines Identified: 1
+Structured Sessions Identified: 125
+  Backup Runs: 125
+  Related Activities: 0
+  Infrastructure Rescans: 0
+  - WORKSTATION (Protected Machine - VAW): 125 backup run(s), 0 related activity session(s), 0 rescan(s), 22 identified source file(s)
+
+LATEST BACKUP JOB
+------------------------------------------------------------
+Machine: WORKSTATION
+Job Name: Job WORKSTATION
+Job Type: volume level backup
+Result: Success
+Started: 2026-08-26T12:24:01.406Z
+Completed: 2026-08-26T12:25:12.459Z
+Target Backup Repository / Path: D:\VeeamBackup\
+
+Grouped Errors: 95
+Grouped Warnings: 17
+Files Reviewed: 22
+Lines Reviewed: 310180
+Workers Used: 8
+Elapsed: 1.11 seconds
+Throughput: 282739 lines/second
+Report: C:\Users\USER\AppData\Local\Temp\sat-cli-09dee69a0e2a431db3d6fee917387684\review.txt
+
+Review complete | 22 items | 0 errors | 20/s | 22/42 files scanned | 121 grouped finding(s)
+
+
+[exit 3]</code></pre><figcaption>Reviewing a Veeam Agent bundle: machine, product, runs and grouped findings.</figcaption></figure><pre><code>SupportAssistTool logs review --path ./Support-Assist-Tool-vaw-2026-08-10.zip \
+    --output review.txt
+SupportAssistTool logs review --path ./vbr-bundle --path ./agent-bundle \
+    --profile auto --case D:\cases\05412345 --json</code></pre><p>By default it builds a fast index first: the high-value identity, service, job and rescan logs are parsed immediately and the data-mover logs are catalogued but deferred. <code>--full-scan</code> includes everything.</p><table><thead><tr><th>Option</th><th>Effect</th></tr></thead><tbody><tr><td><code>--profile</code></td><td><code>auto</code> (the default) detects each source's product; <code>vaw</code>, <code>vbr</code>, <code>sql-plugin</code>, <code>rman-plugin</code> or <code>generic</code> forces one parser.</td></tr><tr><td><code>--case CASE_ROOT</code></td><td>Saves the review into that case workspace.</td></tr><tr><td><code>--from</code>, <code>--to</code>, <code>--date-order</code></td><td>Bound the review to a period. <code>--date-order</code> (<code>mdy</code>, <code>dmy</code>, <code>iso</code>, <code>system</code> or <code>auto</code>) says how to read a date that could be day-first or month-first.</td></tr><tr><td><code>--assumed-offset-minutes N</code></td><td>The UTC offset applied to log timestamps that carry none.</td></tr><tr><td><code>--find TEXT</code>, <code>--case-sensitive</code></td><td>Adds the lines that contain the text to the review as informational findings.</td></tr><tr><td><code>--context N</code>, <code>--max-incidents N</code></td><td>Lines of context kept before and after each finding (5 by default), and a ceiling on grouped findings.</td></tr><tr><td><code>--cache-dir DIR</code>, <code>--no-cache</code></td><td>Where parsed results are cached between runs, or no cache.</td></tr><tr><td><code>--multi-machine-source</code></td><td>Treats one source as holding several machines. Without it, each source is one primary machine.</td></tr><tr><td><code>--discover-veeam</code></td><td>Reviews the Veeam log folders found on this machine.</td></tr><tr><td><code>--no-archives</code>, <code>--no-warnings</code></td><td>Skips archives inside the sources, or leaves warnings out of the report.</td></tr></tbody></table><div class="procedure"><div class="proc-head">To review a bundle, do the following:</div><div class="proc-body"><ol><li>Run <code>logs review</code> with one <code>--path</code> for each folder, archive or file.</li><li>Add <code>--case CASE_ROOT</code> to save the review into a case, or <code>--output</code> to name the report.</li><li>Read the summary, then the report.</li></ol><div class="result"><strong>Expected result.</strong> The report holds the machine, the product, the runs and the grouped findings. The exit code is 3 when findings were present.</div></div></div><p>The report is the same on every platform. The same bundle parsed on Windows and on Linux produces byte-identical output, so a report made on one can be compared with, or continued on, the other.</p><p>Exit code 3 means findings were present, which is the usual outcome for a case.</p><h3 id="review-workers">Worker threads, CPU and how long a review takes</h3><p>Log Review parses files in parallel. By default SAT uses one worker per logical processor, capped at eight and never more than the number of files it found. The cap leaves room for the other work a customer machine is doing.</p><p><strong>Consider the host before raising it.</strong> On a backup server inside its backup window, on a proxy that is moving data, or on a repository under load, extra parser threads compete with the customer's own jobs. On a machine with slow storage the review is bound by disk, and more workers do not help.</p><p>Every review reports what it used: <em>Workers Used</em>, <em>Elapsed</em> and <em>Throughput</em> in lines per second are printed with the summary and written into the report. Run once, read those three numbers, and adjust only if they justify it.</p><div class="tablewrap"><table><thead><tr><th>Setting</th><th>Effect</th></tr></thead><tbody><tr><td>Default</td><td>One worker per logical processor, capped at eight and at the file count.</td></tr><tr><td><code>--workers N</code></td><td>Fixes the worker count. Clamped to at least one and never above the file count.</td></tr><tr><td><code>--single-thread</code></td><td>One worker. Use on a production host under load, or when isolating a parser problem.</td></tr></tbody></table></div></section><section class="article" id="search"><div class="breadcrumb">Evidence</div><h2>Search logs</h2><p class="lead"><code>logs search</code> looks through logs in place, without building a review index. Use it when you already know what you are looking for.</p><figure class="shot transcript"><pre><code>$ SupportAssistTool logs search --path /mnt/e/VeeamSupportTool-SAT/Claudesrc/Tool-Cases/casework/WORKSTATION-VAW-003/logs --text error --max-results 12
+
+log-search | 1 items | 0 errors | 11/s | /mnt/e/VeeamSupportTool-SAT/Claudesrc/Tool-Cases/casework/WORKSTATION-VAW-003/logs/SAT-vaw-WORKSTATION-2026-08
+/mnt/e/VeeamSupportTool-SAT/Claudesrc/Tool-Cases/casework/WORKSTATION-VAW-003/logs/SAT-vaw-WORKSTATION-2026-08-26_16-50-06.526/1-Endpoint/2026-08-24_Svc.VeeamEndpointBackup.zip!2026-08-24T175351_Svc.VeeamEndpointBackup.log:47 [error] [05.08.2026 13:51:52.289]    &lt;05&gt;    Info (1)    Service options: [Dispatch loop wait on error: [5 sec], Stop service: [20 sec], Stop all running jobs: True, Stop all running jobs: [00:05:00 sec], Stop service: [20 sec], Log jobs info: [60 min], JobStartedCheckTimeout: [5 sec], JobFinishedCheckTimeout: [30 sec], JobStartedMaxTime: [360 sec], PeriodicallyGarbageCollect: [False].VolumesDiscoverThreadsNumber: [5].VolumesDiscoverPeriodicallyHours: [4].SanRescanPeriodicallyDays: [1].PeriodicallyHvCtpScanner: [1] day.CatCatalogPeriodicallyHours: [24].LicenseCheckTimeout: [60 min].RpcTransportPort: [6183 min].RpcDeployerPort: [6183 min].]
+/mnt/e/VeeamSupportTool-SAT/Claudesrc/Tool-Cases/casework/WORKSTATION-VAW-003/logs/SAT-vaw-WORKSTATION-2026-08-26_16-50-06.526/1-Endpoint/2026-08-24_Svc.VeeamEndpointBackup.zip!2026-08-24T175351_Svc.VeeamEndpointBackup.log:79 [error] [05.08.2026 13:51:52.402]    &lt;05&gt;    Info (1)    [SQLITE] &gt; LoggerOptions=Message, Warning, Error, Debug, Trace
+/mnt/e/VeeamSupportTool-SAT/Claudesrc/Tool-Cases/casework/WORKSTATION-VAW-003/logs/SAT-vaw-WORKSTATION-2026-08-26_16-50-06.526/1-Endpoint/2026-08-24_Svc.VeeamEndpointBackup.zip!2026-08-24T175351_Svc.VeeamEndpointBackup.log:87 [error] [05.08.2026 13:51:52.409]    &lt;05&gt;   Error (1)    [SQLITE] Database VeeamBackup does not exist on DB Server local. (Veeam.Backup.DBCreator.DatabaseException)
+/mnt/e/VeeamSupportTool-SAT/Claudesrc/Tool-Cases/casework/WORKSTATION-VAW-003/logs/SAT-vaw-WORKSTATION-2026-08-26_16-50-06.526/1-Endpoint/2026-08-24_Svc.VeeamEndpointBackup.zip!2026-08-24T175351_Svc.VeeamEndpointBackup.log:482 [error] [05.08.2026 13:53:47.756]    &lt;04&gt;    Info (1)    [SQLITE] &gt; LoggerOptions=Message, Warning, Error, Debug, Trace
+/mnt/e/VeeamSupportTool-SAT/Claudesrc/Tool-Cases/casework/WORKSTATION-VAW-003/logs/SAT-vaw-WORKSTATION-2026-08-26_16-50-06.526/1-Endpoint/2026-08-24_Svc.VeeamEndpointBackup.zip!2026-08-24T175351_Svc.VeeamEndpointBackup.log:501 [error] [05.08.2026 13:53:47.833]    &lt;04&gt;    Info (1)    [SQLITE] &gt; LoggerOptions=Message, Warning, Error, Debug, Trace
+/mnt/e/VeeamSupportTool-SAT/Claudesrc/Tool-Cases/casework/WORKSTATION-VAW-003/logs/SAT-vaw-WORKSTATION-2026-08-26_16-50-06.526/1-Endpoint/2026-08-24_Svc.VeeamEndpointBackup.zip!2026-08-24T175351_Svc.VeeamEndpointBackup.log:608 [error] [05.08.2026 13:54:10.596]    &lt;05&gt;    Info (1)    Service options: [Dispatch loop wait on error: [5 sec], Stop service: [20 sec], Stop all running jobs: True, Stop all running jobs: [00:05:00 sec], Stop service: [20 sec], Log jobs info: [60 min], JobStartedCheckTimeout: [5 sec], JobFinishedCheckTimeout: [30 sec], JobStartedMaxTime: [360 sec], PeriodicallyGarbageCollect: [False].VolumesDiscoverThreadsNumber: [5].VolumesDiscoverPeriodicallyHours: [4].SanRescanPeriodicallyDays: [1].PeriodicallyHvCtpScanner: [1] day.CatCatalogPeriodicallyHours: [24].LicenseCheckTimeout: [60 min].RpcTransportPort: [6183 min].RpcDeployerPort: [6183 min].]
+/mnt/e/VeeamSupportTool-SAT/Claudesrc/Tool-Cases/casework/WORKSTATION-VAW-003/logs/SAT-vaw-WORKSTATION-2026-08-26_16-50-06.526/1-Endpoint/2026-08-24_Svc.VeeamEndpointBackup.zip!2026-08-24T175351_Svc.VeeamEndpointBackup.log:696 [error] [05.08.2026 13:54:10.751]    &lt;05&gt;    Info (1)    [SQLITE] &gt; LoggerOptions=Message, Warning, Error, Debug, Trace
+/mnt/e/VeeamSupportTool-SAT/Claudesrc/Tool-Cases/casework/WORKSTATION-VAW-003/logs/SAT-vaw-WORKSTATION-2026-08-26_16-50-06.526/1-Endpoint/2026-08-24_Svc.VeeamEndpointBackup.zip!2026-08-24T175351_Svc.VeeamEndpointBackup.log:1024 [error] [05.08.2026 14:01:03.450]    &lt;04&gt;    Info (1)    [SQLITE] &gt; LoggerOptions=Message, Warning, Error, Debug, Trace
+/mnt/e/VeeamSupportTool-SAT/Claudesrc/Tool-Cases/casework/WORKSTATION-VAW-003/logs/SAT-vaw-WORKSTATION-2026-08-26_16-50-06.526/1-Endpoint/2026-08-24_Svc.VeeamEndpointBackup.zip!2026-08-24T175351_Svc.VeeamEndpointBackup.log:1039 [error] [05.08.2026 14:01:03.463]    &lt;04&gt;    Info (1)    [SQLITE] &gt; LoggerOptions=Message, Warning, Error, Debug, Trace
+/mnt/e/VeeamSupportTool-SAT/Claudesrc/Tool-Cases/casework/WORKSTATION-VAW-003/logs/SAT-vaw-WORKSTATION-2026-08-26_16-50-06.526/1-Endpoint/2026-08-24_Svc.VeeamEndpointBackup.zip!2026-08-24T175351_Svc.VeeamEndpointBackup.log:1129 [error] [08.08.2026 01:53:03.804]    &lt;05&gt;    Info (1)    Service options: [Dispatch loop wait on error: [5 sec], Stop service: [20 sec], Stop all running jobs: True, Stop all running jobs: [00:05:00 sec], Stop service: [20 sec], Log jobs info: [60 min], JobStartedCheckTimeout: [5 sec], JobFinishedCheckTimeout: [30 sec], JobStartedMaxTime: [360 sec], PeriodicallyGarbageCollect: [False].VolumesDiscoverThreadsNumber: [5].VolumesDiscoverPeriodicallyHours: [4].SanRescanPeriodicallyDays: [1].PeriodicallyHvCtpScanner: [1] day.CatCatalogPeriodicallyHours: [24].LicenseCheckTimeout: [60 min].RpcTransportPort: [6183 min].RpcDeployerPort: [6183 min].]
+/mnt/e/VeeamSupportTool-SAT/Claudesrc/Tool-Cases/casework/WORKSTATION-VAW-003/logs/SAT-vaw-WORKSTATION-2026-08-26_16-50-06.526/1-Endpoint/2026-08-24_Svc.VeeamEndpointBackup.zip!2026-08-24T175351_Svc.VeeamEndpointBackup.log:1216 [error] [08.08.2026 01:53:04.020]    &lt;05&gt;    Info (1)    [SQLITE] &gt; LoggerOptions=Message, Warning, Error, Debug, Trace
+/mnt/e/VeeamSupportTool-SAT/Claudesrc/Tool-Cases/casework/WORKSTATION-VAW-003/logs/SAT-vaw-WORKSTATION-2026-08-26_16-50-06.526/1-Endpoint/2026-08-24_Svc.VeeamEndpointBackup.zip!2026-08-24T175351_Svc.VeeamEndpointBackup.log:1590 [error] [08.08.2026 02:15:19.792]    &lt;53&gt;    Info (1)    [SQLITE] &gt; LoggerOptions=Message, Warning, Error, Debug, Trace
+
+[exit 0]</code></pre><figcaption>Searching a bundle. Each hit carries its source path and line number.</figcaption></figure><h3 id="search-setup">Before You Begin</h3><ul><li>Have the folder, the archive or the file to search, or use <code>--discover-veeam</code> for this machine's Veeam log folders.</li><li>Have the text or the regular expression.</li></ul><div class="procedure"><div class="proc-head">To search logs for a text, do the following:</div><div class="proc-body"><ol><li>Run <code>logs search</code> with <code>--path</code> and <code>--text</code>.</li><li>Add <code>--max-results</code> and <code>--format csv --output hits.csv</code> to keep the hits in a file.</li><li>Read each hit: the severity, the source path, the line number and the matching text.</li></ol><div class="result"><strong>Expected result.</strong> Each hit carries its source path and line number.</div></div></div><pre><code>SupportAssistTool logs search --path ./logs --text "not enough space" \
+    --max-results 50 --format csv --output hits.csv
+SupportAssistTool logs search --discover-veeam --regex "Error.*timeout" --pattern "*.log"</code></pre><div class="tablewrap"><table><thead><tr><th>Option</th><th>What it does</th></tr></thead><tbody><tr><td><code>--path DIR</code></td><td>A folder, archive or file to search. Repeat it for several.</td></tr><tr><td><code>--discover-veeam</code></td><td>Searches the Veeam log folders found on this machine.</td></tr><tr><td><code>--text TEXT</code>, <code>--regex REGEX</code></td><td>Literal text, or a regular expression.</td></tr><tr><td><code>--pattern GLOB</code></td><td>Limits the search to matching file names.</td></tr><tr><td><code>--severity VALUE</code></td><td>Filters by level.</td></tr><tr><td><code>--case-sensitive</code></td><td>Matches letter case.</td></tr><tr><td><code>--context N</code></td><td>Lines of context kept with each hit, 4 by default.</td></tr><tr><td><code>--max-results N</code></td><td>Stops after N hits.</td></tr><tr><td><code>--from</code>, <code>--to</code>, <code>--date-order</code>, <code>--assumed-offset-minutes</code></td><td>Bound the period and say how to read dates, as for <code>logs review</code>.</td></tr><tr><td><code>--no-archives</code></td><td>Skips archives inside the sources.</td></tr><tr><td><code>--output FILE</code>, <code>--format text|html|json|csv</code></td><td>Where the hits are written, and in which form.</td></tr></tbody></table></div><div class="related"><h4>Related topics</h4><a href="#review">Review a bundle</a><a href="#gather">Gather support logs</a></div></section><section class="article" id="reconstruct"><div class="breadcrumb">Evidence</div><h2>Rebuild from a collection</h2><p class="lead"><code>logs reconstruct</code> rebuilds <code>environment.log</code> and <code>&lt;MACHINE&gt;-SystemHealth.txt</code> from a collection that carries only raw evidence, so Environment Review and Health Monitor can open it.</p><pre><code>SupportAssistTool logs reconstruct --path ./Support-Assist-Tool-vbr-2026-09-01 \
+    --output ./rebuilt</code></pre><p>The command lists anything it could not rebuild, and why. <code>health load</code> accepts the same collection folder directly; see <a href="#health">Health snapshot</a>.</p><div class="procedure"><div class="proc-head">To rebuild the reports of a collection, do the following:</div><div class="proc-body"><ol><li>Run <code>logs reconstruct --path COLLECTION_DIR --output DIR</code>.</li><li>Read the list of anything that could not be rebuilt, and why.</li><li>Open the output folder in Environment Review and Health Monitor, or run <code>health load</code> on it.</li></ol><div class="result"><strong>Expected result.</strong> environment.log and &lt;MACHINE&gt;-SystemHealth.txt are in the output folder.</div></div></div></section><section class="article" id="tools-review"><div class="breadcrumb">Evidence</div><h2>Review tool output</h2><p class="lead"><code>tools review</code> reads the output of the tools run on Customer / Lab machines and lists it by machine, in UTC order.</p><pre><code>SupportAssistTool tools review --source ./bundle/Tools
+SupportAssistTool tools review --source D:\Log-Collections --machine SQL01 --note</code></pre><p><code>--source</code> takes a bundle's <code>Tools</code> folder, a <code>Log-Collections</code> tree, or any folder above them. <code>--machine</code> keeps one machine's runs, <code>--json</code> prints the timeline as JSON, and <code>--note</code> formats it for pasting into a case note. Exit 74 means the source could not be read.</p><div class="procedure"><div class="proc-head">To review tool output as a timeline, do the following:</div><div class="proc-body"><ol><li>Run <code>tools review --source DIR</code> on the bundle's Tools folder or on the folder above it.</li><li>Add <code>--machine NAME</code> to keep one machine's runs.</li><li>Add <code>--note</code> to format the timeline for a case note, or <code>--json</code> for a script.</li></ol><div class="result"><strong>Expected result.</strong> The runs are listed by machine in UTC order. Exit 74 means the source could not be read.</div></div></div></section><section class="article" id="identify"><div class="breadcrumb">Host checks</div><h2>Identify the host</h2><p class="lead">Before collecting anything, establish what the machine is and what it runs.</p><figure class="shot transcript"><pre><code>$ SupportAssistTool products detect
+
+Detected Veeam products/roles: 1
+- Veeam Agent for Microsoft Windows [vaw] | Role: Endpoint Agent | Signature: detected
+  Architecture: x64 Windows
+  Evidence: C:\ProgramData\Veeam/Endpoint
+
+
+[exit 0]</code></pre><figcaption>Product detection naming the role and the evidence it was found from.</figcaption></figure><pre><code>SupportAssistTool products detect
+SupportAssistTool capabilities --json</code></pre><p><code>products detect</code> reports the Veeam products and roles found, with the evidence path each was detected from. <code>capabilities</code> reports what this build can do here, which is what a script should test before calling a platform-specific verb.</p><div class="procedure"><div class="proc-head">To identify a host, do the following:</div><div class="proc-body"><ol><li>Run <code>products detect</code>.</li><li>Run <code>capabilities --json</code> to see what this build can do here.</li></ol><div class="result"><strong>Expected result.</strong> The products and roles are listed with the evidence path each was detected from.</div></div></div></section><section class="article" id="health"><div class="breadcrumb">Host checks</div><h2>Health snapshot</h2><p class="lead"><code>health sample</code> takes a point-in-time snapshot of CPU, memory, paging, volumes and network adapters, and raises findings against thresholds.</p><figure class="shot transcript"><pre><code>$ SupportAssistTool health sample --output /tmp/tmp.eR5fjitZGj/system-health.txt
+
+Health sample written to /tmp/tmp.eR5fjitZGj/system-health.txt: no findings.
+
+[exit 0]</code></pre><figcaption>Taking a health snapshot.</figcaption></figure><pre><code>SupportAssistTool health sample --output system-health.txt
+SupportAssistTool health load --input system-health.txt
+SupportAssistTool health load --input ./Support-Assist-Tool-vbr-2026-09-01 --output summary.txt</code></pre><p><code>health load</code> opens a snapshot captured anywhere, including one saved by the graphical application on another platform. Given a collection folder, it reads the collection's own saved snapshot, or a snapshot rebuilt from the raw evidence when the collection has none.</p><div class="procedure"><div class="proc-head">To take and read a health snapshot, do the following:</div><div class="proc-body"><ol><li>Run <code>health sample --output system-health.txt</code> on the machine.</li><li>Run <code>health load --input system-health.txt</code> on any machine to read it. Give a collection folder to read the collection's own snapshot.</li></ol><div class="result"><strong>Expected result.</strong> The snapshot lists CPU, memory, paging, volumes and network adapters, with findings against thresholds.</div></div></div></section><section class="article" id="diagnostics"><div class="breadcrumb">Host checks</div><h2>Diagnostics</h2><p class="lead"><code>diagnostics</code> reports how SAT itself is running: elevation, session, working directory and the privileges it holds.</p><figure class="shot transcript"><pre><code>$ SupportAssistTool diagnostics
+
+Application: Support Assist Tool 0.5.0
+Platform: Linux
+Elevation: standard user
+Session: 0
+Current directory: /mnt/e/VeeamSupportTool-SAT/Claudesrc/Source/SAT-v0.5.0-work-src
+Temporary directory: /tmp
+Enabled privileges: none reported
+
+REQUIREMENTS
+  Present | glibc | glibc 2.43 | Used by: SAT itself
+  Present | Linux kernel | 6.18.33.2-microsoft-standard-WSL2 (x86_64) | Used by: Host Checks&#x27; snapshot module group
+  Present | unixODBC | libodbc.so.2 loads. | Used by: SQL Tools, Guided Diagnostics SQL steps
+  Missing | ODBC drivers for SQL Server | None listed (/etc/odbcinst.ini). | Used by: SQL Tools, Guided Diagnostics SQL steps
+  Present | psql | /usr/bin/psql | Used by: SQL Tools with PostgreSQL, the database console
+  Attention | Running as root | No, SAT is running as a regular user. | Used by: Packet capture with tcpdump, Host Checks&#x27; kernel log, Veeam&#x27;s official log exporters
+
+[exit 0]</code></pre><figcaption>Runtime context, including whether SAT is elevated.</figcaption></figure><pre><code>SupportAssistTool diagnostics
+SupportAssistTool diagnostics --include-user --json</code></pre><p><code>diagnostics</code> also lists what the tools need on this machine: glibc, the kernel, unixODBC, the ODBC drivers for SQL Server, psql and whether SAT runs as root on Linux; the Windows build, .NET, PowerShell, the services SAT reads, administrator rights, the ODBC drivers and psql on Windows. <code>--include-user</code> adds the account context. Capture this first when a command reports something as unavailable, because elevation is usually the reason.</p><div class="procedure"><div class="proc-head">To read the runtime context, do the following:</div><div class="proc-body"><ol><li>Run <code>diagnostics</code>, or <code>diagnostics --include-user --json</code> for a script.</li><li>Read the elevation, the session, the working directory and the requirements.</li></ol><div class="result"><strong>Expected result.</strong> Run this first when another command reports a reading as unavailable.</div></div></div></section><section class="article" id="checksum"><div class="breadcrumb">Host checks</div><h2>File checksums</h2><p class="lead"><code>files hash</code> prints the SHA-256 of each file it is given, reading the file in place. Use it to confirm that a download, a patch or a log bundle is the file it should be.</p><pre><code>SupportAssistTool files hash --path ./VeeamBackup&amp;Replication_12.3.iso
+SupportAssistTool files hash --path ./setup.exe \
+    --expect 9f2c4b1a7e3d5f60a8b9c0d1e2f3a4b5c6d7e8f90a1b2c3d4e5f60718293a4b5
+SupportAssistTool files hash --path ./bundle-a.zip --path ./bundle-b.zip --json</code></pre><p>Each file is printed in the layout <code>certutil -hashfile</code> uses on Windows: the file name between two rules, then its SHA-256, its size and its full path.</p><pre><code>========================================
+setup.exe
+========================================
+SHA256  9f2c4b1a7e3d5f60a8b9c0d1e2f3a4b5c6d7e8f90a1b2c3d4e5f60718293a4b5
+Size    1.21 GiB (1300234752 bytes)
+Path    D:\downloads\setup.exe
+Match   yes, expected 9f2c4b1a7e3d5f60a8b9c0d1e2f3a4b5c6d7e8f90a1b2c3d4e5f60718293a4b5</code></pre><p><code>--expect</code> takes a published SHA-256 value and compares every file with it. Letter case and spaces are ignored, so a value copied from a download page, or from older <code>certutil</code> output with a space between each pair of bytes, can be pasted as it is. <code>--json</code> prints one record per file, with <code>matches_expected</code> when <code>--expect</code> is given.</p><h3>Checking a SHA256SUMS list</h3><p><code>--check</code> reads a checksum list and checks every file it names, looking for each one beside the list, as <code>sha256sum -c</code> does. A list is read in the form <code>sha256sum</code> writes, <code>&lt;value&gt;  &lt;name&gt;</code> or <code>&lt;value&gt; *&lt;name&gt;</code>, or in the form <code>SHA256 (&lt;name&gt;) = &lt;value&gt;</code>. A file named <code>&lt;name&gt;.sha256</code> or <code>&lt;name&gt;.sha256sum</code> that holds a single value checks <code>&lt;name&gt;</code>. <code>--check</code> can be given more than once, and together with <code>--path</code>.</p><pre><code>SupportAssistTool files hash --check ./SHA256SUMS
+SupportAssistTool files hash --check ./tool.zip.sha256 --json</code></pre><pre><code>========================================
+SHA256SUMS
+========================================
+OK       good.zip
+FAILED   changed.zip
+         expected ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad
+         found    a52d159f262b2c6ddb724a61840befc36eb30c88877a4030b65cbe86298449c9
+MISSING  not-downloaded.zip
+NOT READ ../outside.zip
+         The name points outside the list's folder.
+4 listed: 1 OK, 1 FAILED, 1 MISSING, 1 NOT READ</code></pre><p>Only files in the list's folder, or below it, are read. A name that is absolute, starts with a drive or a server, or climbs out with <code>..</code> is reported as <code>NOT READ</code> and is not opened. With <code>--json</code>, each list is a record under <code>checks</code>, with an entry per file giving its <code>status</code>, the <code>expected</code> value and the <code>sha256</code> found.</p><table><thead><tr><th>Exit code</th><th>Meaning</th></tr></thead><tbody><tr><td>0</td><td>Every file was read, and matched <code>--expect</code> when it was given</td></tr><tr><td>3</td><td>At least one file does not match <code>--expect</code>, or a file a list names does not match it or is missing</td></tr><tr><td>64</td><td>The <code>--expect</code> value is not a SHA-256 value</td></tr><tr><td>70</td><td>A path is a folder, is missing, is not a regular file, or could not be read; a list could not be read or is not a checksum list; or a file a list names could not be read or points outside the list's folder</td></tr></tbody></table><p>Only regular files are read. A folder, a device or a pipe is reported against its path, and the remaining files are still hashed.</p><div class="procedure"><div class="proc-head">To verify a file against a published SHA-256, do the following:</div><div class="proc-body"><ol><li>Run <code>files hash --path FILE --expect VALUE</code>, with the value copied from the download page.</li><li>Read the Match line and the exit code.</li></ol><div class="result"><strong>Expected result.</strong> Exit 0 means the file matches. Exit 3 means it does not.</div></div></div><div class="procedure"><div class="proc-head">To check a SHA256SUMS list, do the following:</div><div class="proc-body"><ol><li>Download the list next to the files it names.</li><li>Run <code>files hash --check ./SHA256SUMS</code>.</li><li>Read the line for each file: OK, FAILED, MISSING or NOT READ.</li></ol><div class="result"><strong>Expected result.</strong> The last line counts the files listed and how many are OK, FAILED, MISSING and NOT READ.</div></div></div></section><section class="article" id="network"><div class="breadcrumb">Tools</div><h2>Network tools</h2><p class="lead">Proving whether a connection works, from the machine that has the problem: a port, a TLS handshake, a path toward this machine, and throughput between two machines.</p><figure class="shot transcript"><pre><code>$ SupportAssistTool network interfaces
+
+docker0 | IPv4 | 172.17.0.1/16 | up=yes | default=no | loopback=no | virtual=yes | vlan=no | team_bond=no
+eth0 | IPv4 | 172.24.202.32/20 | up=yes | default=yes | loopback=no | virtual=no | vlan=no | team_bond=no | gateway=172.24.192.1
+eth0 | IPv6 | fe80::215:5dff:fe73:6cb5%eth0/64 | up=yes | default=no | loopback=no | virtual=no | vlan=no | team_bond=no
+lo | IPv4 | 10.255.255.254/32 | up=yes | default=no | loopback=yes | virtual=yes | vlan=no | team_bond=no
+lo | IPv4 | 127.0.0.1/8 | up=yes | default=no | loopback=yes | virtual=yes | vlan=no | team_bond=no
+lo | IPv6 | ::1/128 | up=yes | default=no | loopback=yes | virtual=yes | vlan=no | team_bond=no
+
+[exit 0]</code></pre><figcaption>Every local interface a test can originate from.</figcaption></figure><figure class="shot transcript"><pre><code>$ SupportAssistTool network test --host 127.0.0.1 --port 22 --timeout-ms 2000
+
+Connected | 1 items | 0 errors | 0/s | 127.0.0.1
+CONNECTED host=127.0.0.1 port=22 address=127.0.0.1 elapsed_ms=8.74833
+  127.0.0.1 | connected | source=automatic | local=127.0.0.1 | native=0 | 8.74833 ms | Connected
+
+[exit 0]</code></pre><figcaption>A connection test, with the source address it used and the time it took.</figcaption></figure><h3 id="network-setup">Before You Begin</h3><ul><li>Run the test on the machine that fails, toward the machine it fails to reach. Direction matters.</li><li>Get the target and the port from the failing log line. Ports differ by role; <a href="#quick-checks-ports"><code>network presets</code></a> lists them.</li><li>To test the SAT payload or a UDP result, start a listener on the other machine first. A port below 1024 needs root for the listener.</li><li>Allow the port in every firewall between the two machines.</li></ul><div class="procedure"><div class="proc-head">To test whether a TCP port is reachable, do the following:</div><div class="proc-body"><ol><li>Run <code>network test --host HOST --port PORT</code>.</li><li>To prove the path from every local interface, add <code>--all-interfaces</code>. A Veeam host often has a management NIC and a separate backup NIC, and a ping that works does not show which one a job uses.</li><li>Read the result: the source address used, the time taken and whether the connection succeeded.</li></ol><div class="result"><strong>Expected result.</strong> Against a SAT listener, the two ends exchange a handshake and a 50 MB test payload, and the payload's SHA-256 is checked on arrival.</div></div></div><pre><code>SupportAssistTool network interfaces
+SupportAssistTool network test --host repo01 --port 6160
+SupportAssistTool network test --host repo01 --port 6160 --all-interfaces</code></pre><div class="tablewrap"><table><thead><tr><th>Option</th><th>What it does</th></tr></thead><tbody><tr><td><code>--host HOST</code>, <code>--port PORT</code></td><td>The target. Required.</td></tr><tr><td><code>--timeout-ms N</code></td><td>How long to wait for the connection, 5000 by default.</td></tr><tr><td><code>--source IP</code>, <code>--interface NAME</code></td><td>The local address or interface the test starts from.</td></tr><tr><td><code>--all-interfaces</code>, <code>--include-virtual</code></td><td>Tries each local interface in turn; the second adds virtual adapters to that set.</td></tr><tr><td><code>--sat-payload SIZE</code></td><td>The payload sent to a SAT listener, 50M by default.</td></tr><tr><td><code>--no-sat-payload</code>, <code>--no-sat-handshake</code></td><td>Keep the handshake and skip the payload, or make a plain connect test.</td></tr></tbody></table></div><div class="procedure"><div class="proc-head">To check a TLS handshake, do the following:</div><div class="proc-body"><ol><li>Run <code>network tls --host HOST --port PORT</code>.</li><li>Add <code>--compare-versions</code> to try TLS 1.2 and 1.3 separately, or <code>--version 1.2</code> or <code>--version 1.3</code> to force one.</li><li>Add <code>--expected-fingerprint HEX</code> to check the certificate against a known value, and <code>--sni NAME</code> when the server name differs from the host.</li></ol><div class="result"><strong>Expected result.</strong> The result reports the negotiated protocol and cipher and the certificate. <code>--no-system-trust</code> leaves the system trust store out of the check.</div></div></div><pre><code>SupportAssistTool network tls --host vbr01 --port 443 --compare-versions</code></pre><div class="procedure"><div class="proc-head">To test a UDP port, do the following:</div><div class="proc-body"><ol><li>On the other machine, run <code>network udp listen --port PORT --seconds 60</code>.</li><li>Run <code>network udp test --host HOST --port PORT --sat-listener</code>.</li><li>Read the result. Without a SAT listener to acknowledge, a UDP test is indeterminate.</li></ol><div class="result"><strong>Expected result.</strong> A cooperating SAT listener makes the result verified.</div></div></div><pre><code>SupportAssistTool network udp test --host vbr01 --port 9401 --sat-listener</code></pre><h3 id="network-listen">Testing toward this machine</h3><p>A listener puts a temporary endpoint on a port so the other end can be tested toward this machine. It stops when the command stops.</p><div class="procedure"><div class="proc-head">To listen for a test from another machine, do the following:</div><div class="proc-body"><ol><li>Run <code>network listen --port PORT --seconds 60</code>. Add <code>--multiple</code> to accept more than one connection.</li><li>Run the test from the other machine against this machine's address and the port.</li><li>Read the connections the listener prints.</li></ol><div class="result"><strong>Expected result.</strong> The listener prints each connection with its address. <code>--banner TEXT</code> sets the line sent to each client, with %port% filled in, and <code>--banner ""</code> sends none. The default banner says SAT is listening on the port.</div></div></div><pre><code>SupportAssistTool network listen --port 6160 --seconds 60 --multiple
+SupportAssistTool network udp listen --port 9401 --seconds 60</code></pre><p>When <code>network test</code> reaches a SAT listener, the two ends exchange a handshake and a test payload whose SHA-256 is checked on arrival. That proves the data path end to end, not only that the port accepts a connection. <code>network udp listen</code> takes <code>--single</code> to stop after one probe.</p><h3 id="network-throughput">Throughput</h3><div class="procedure"><div class="proc-head">To measure throughput between two machines, do the following:</div><div class="proc-body"><ol><li>On the receiving machine, run <code>network throughput server --port 2500</code>.</li><li>On the sending machine, run <code>network throughput client --host HOST --port 2500 --bytes 1G</code>.</li><li>Read the rate the link sustained for the bytes sent.</li></ol><div class="result"><strong>Expected result.</strong> The server waits 60 seconds for the client by default; <code>--connect-timeout-ms</code> and <code>--idle-timeout-ms</code> change the waits. The test loads the network while it runs.</div></div></div><pre><code>SupportAssistTool network throughput server --port 2500
+SupportAssistTool network throughput client --host repo01 --port 2500 --bytes 1G</code></pre><div class="related"><h4>Related topics</h4><a href="#quick-checks">Quick checks</a><a href="#service-channel">Veeam Service Channel</a><a href="#guided">Guided Diagnostics</a></div></section><section class="article" id="guided"><div class="breadcrumb">Tools</div><h2>Guided Diagnostics</h2><p class="lead"><code>guided</code> runs a scenario that starts from a symptom: a managed server that cannot be reached, an application-aware SQL Server job that fails, a broken log chain, a slow backup, or a certificate or TLS error. Each step is one read-only check.</p><h3 id="guided-setup">Before You Begin</h3><ul><li>Run <code>guided scenarios</code>. It lists the scenarios for this machine, their inputs (each with its default or <code>(optional)</code>) and what to set up first.</li><li>Run the scenario on the machine it names. Every step tests from the machine SAT runs on.</li></ul><div class="procedure"><div class="proc-head">To run a scenario, do the following:</div><div class="proc-body"><ol><li>Run <code>guided scenarios</code> and choose the scenario that matches the symptom.</li><li>Run <code>guided run --scenario ID</code> with an <code>--input NAME=VALUE</code> for each input the scenario needs.</li><li>Add <code>--continue</code> to run every step; without it the run stops at the first step that decides the case and fails.</li><li>Read each step: its status and what it found. Then copy the block for the case note.</li></ol><div class="result"><strong>Expected result.</strong> The command exits 3 when a step fails, and 64 when a required input is not given; the message names it.</div></div></div><pre><code>SupportAssistTool guided scenarios
+SupportAssistTool guided run --scenario managed-server-unreachable --input target=repo01 --input role=agent-windows
+SupportAssistTool guided run --scenario managed-server-unreachable --input target=repo01 --input vbr_version=12
+SupportAssistTool guided run --scenario tls-error --input host=vbr01 --input port=9401 --continue</code></pre><p><code>--machine HOST</code> is the same as <code>--input target=HOST</code>.</p><div class="tablewrap"><table><thead><tr><th>Scenario</th><th>Inputs</th></tr></thead><tbody><tr><td><code>managed-server-unreachable</code></td><td>Inputs <code>target</code>, <code>role</code> (agent-windows to begin with), <code>system</code> (Windows or Linux, optional), <code>sat_port</code> (2500) and <code>vbr_version</code> (12 or 13, optional). Left empty, <code>vbr_version</code> tests the ports of both versions and names the version of each port only one lists.</td></tr><tr><td><code>sql-application-aware-fails</code></td><td>Inputs <code>server</code> and <code>account</code> (optional).</td></tr><tr><td><code>sql-log-chain</code></td><td>Inputs <code>server</code>, <code>database</code> (optional) and <code>days</code> (14).</td></tr><tr><td><code>slow-backup</code></td><td>Inputs <code>source</code>, <code>proxy</code>, <code>network</code> and <code>target</code> (the busy percentages from the job statistics) and <code>path</code> (the repository path), all optional.</td></tr><tr><td><code>tls-error</code></td><td>Inputs <code>host</code>, <code>port</code> (9419 to begin with) and <code>fingerprint</code> (optional).</td></tr></tbody></table></div><p>Windows adds scenarios for the Veeam Agent service channel, the configuration database, VSS and RPC or port exhaustion. <code>--id</code> takes the id of an older guided diagnostic and runs the scenario that replaced it.</p><p>Each step prints its status, the step number, its title and what it found. The block for the case note follows. The scenarios and what each step reads are in the Windows User Guide and the Linux User Guide.</p><div class="related"><h4>Related topics</h4><a href="#network">Network tools</a><a href="#sql">SQL Tools</a><a href="#quick-checks">Quick checks</a></div></section><section class="article" id="service-channel"><div class="breadcrumb">Tools</div><h2>Veeam Service Channel</h2><p class="lead"><code>network service-channel</code> tests the channel Veeam Agent's processes use to reach the Veeam service. On Windows it checks the service, its named pipe and an HTTP/2 handshake on the pipe as the account running SAT, then reads the gRPC lines the product logged. On any machine, <code>--logs-only</code> reads a folder of the product's logs.</p><h3 id="service-channel-setup">Before You Begin</h3><ul><li>For a live test on Windows, run SAT as the user who sees the error.</li><li>For the logs, copy the product's log folder, such as a collected bundle's <code>Endpoint</code> folder, to the machine.</li></ul><div class="procedure"><div class="proc-head">To test the service channel, do the following:</div><div class="proc-body"><ol><li>Run <code>network service-channel --product agent</code> on the Windows machine, or add <code>--folder DIR --logs-only</code> to read a folder of logs.</li><li>Add <code>--hours N</code> to read further back than the last 24 hours.</li><li>Read each row: its status, layer, check and detail. The summary sentence follows.</li></ol><div class="result"><strong>Expected result.</strong> The command exits 3 when a layer fails.</div></div></div><pre><code>SupportAssistTool network service-channel --product agent
+SupportAssistTool network service-channel --product agent --folder ./Endpoint --hours 72 --logs-only</code></pre><div class="related"><h4>Related topics</h4><a href="#network">Network tools</a><a href="#guided">Guided Diagnostics</a></div></section>
+<section class="article" id="quick-checks"><div class="breadcrumb">Tools</div><h2>Quick checks</h2><p class="lead">The checks of the graphical application's quick tools (F2 to F12), one question each about this machine. Each command takes <code>--json</code>.</p><h3 id="quick-checks-name">Name Check</h3><p><code>network name</code> gives the addresses a name resolves to, where the answer came from first (the hosts file or which DNS server), each DNS server's own answer and the reverse lookup of each address.</p><div class="procedure"><div class="proc-head">To check a name, do the following:</div><div class="proc-body"><ol><li>Run <code>network name NAME</code>.</li><li>Read the answer from the hosts file, from each DNS server and the reverse lookup of each address.</li></ol><div class="result"><strong>Expected result.</strong> Servers that disagree show as separate answers.</div></div></div><pre><code>SupportAssistTool network name vbr01</code></pre><h3 id="quick-checks-ports">Local Port Checker</h3><p><code>network local-ports</code> reads this machine's sockets and firewall and gives each port a verdict: Open, Blocked here, Local only, Closed, or Closed and blocked. <code>--preset</code> takes a Veeam role's ports, and <code>--process</code> a process name or PID. <code>--tcp</code> and <code>--udp</code> choose the protocol. <code>--json</code> prints the result that the window's Export writes as JSON.</p><p><code>network presets</code> lists the roles <code>--preset</code> takes, with their ports from the Veeam Backup &amp; Replication guides for version 12 and version 13. It marks a port only one version lists as VBR 12 only or VBR 13 only, a range held only while a job or a failover uses it, a port that listens on loopback only, and an optional port.</p><div class="procedure"><div class="proc-head">To check ports, do the following:</div><div class="proc-body"><ol><li>Run <code>network presets</code> to find the role.</li><li>Run <code>network local-ports --preset ROLE</code>, or give the ports as a list such as <code>6160,6162,2500-2510</code>.</li><li>Read the verdict for each port and the program that owns it.</li></ol><div class="result"><strong>Expected result.</strong> A range, such as 2500 to 3300, is one row.</div></div></div><pre><code>SupportAssistTool network local-ports 6160,6162,2500-2510
+SupportAssistTool network local-ports --preset backup-repository
+SupportAssistTool network presets</code></pre><h3 id="quick-checks-time">Time Check</h3><p><code>time check</code> compares this clock with its time source, or with <code>--server</code>. <code>time convert</code> reads a time, or a whole log line, in the zone the log was written in: <code>--log</code> takes the offset from the log's own headers, <code>--zone</code> or <code>--offset</code> name it, and <code>--show-in</code> gives the same moment in another zone. <code>time log-clock</code> lists what a log records of its own clock, and <code>time zones</code> the zones <code>--zone</code> takes.</p><div class="procedure"><div class="proc-head">To read a time from a log, do the following:</div><div class="proc-body"><ol><li>Run <code>time convert</code> with the timestamp, or the whole line, in quotes.</li><li>Add <code>--log FILE</code> to take the offset from the log's own headers, or <code>--zone</code> or <code>--offset</code> when the log has none.</li><li>Add <code>--show-in</code> to read the same moment in the zone of another machine.</li></ol><div class="result"><strong>Expected result.</strong> The command prints the moment in the zone the log was written in and in the zone asked for.</div></div></div><pre><code>SupportAssistTool time check
+SupportAssistTool time convert "[15.09.2023 14:28:14.428]" --log Svc.VeeamBackup.log</code></pre><h3 id="quick-checks-files">File Lock Check and Volume Check</h3><p><code>files lock</code> lists the processes holding a file open, or anything under a folder. <code>volume list</code> gives every volume and what it sits on, its file system, space, compression, encryption, and Fast Clone on ReFS and XFS; <code>volume check --path</code> gives the volume a folder is on.</p><div class="procedure"><div class="proc-head">To find what holds a file or sits under a folder, do the following:</div><div class="proc-body"><ol><li>Run <code>files lock --path FILE</code> or <code>files lock --path FOLDER</code>.</li><li>Run <code>volume check --path DIR</code> for the volume a folder is on.</li></ol><div class="result"><strong>Expected result.</strong> Each program that holds the file is listed with its details.</div></div></div><pre><code>SupportAssistTool files lock --path D:\Backups\Job1
+SupportAssistTool volume list</code></pre><h3 id="quick-checks-watch">Service and Process Watch</h3><p><code>watch</code> lists Veeam's services and processes; with <code>--seconds</code> it prints what starts, ends or changes until then. <code>--filter</code> changes the name that is matched (veeam to begin with) and <code>--interval-ms</code> the reading interval.</p><div class="procedure"><div class="proc-head">To watch services during a job, do the following:</div><div class="proc-body"><ol><li>Run <code>watch --seconds 300</code>.</li><li>Start or retry the job.</li><li>Read what starts, ends or changes.</li></ol><div class="result"><strong>Expected result.</strong> Each change is printed with its time.</div></div></div><pre><code>SupportAssistTool watch --seconds 300</code></pre><h3 id="quick-checks-system">System checks</h3><ul><li><code>system pending-restart</code> says which restart marker is set, when, and the events that name the cause. It exits 3 when the system needs a restart.</li><li><code>system host-checks</code> reads what most often explains a failed snapshot or backup. On Windows: backup events (volsnap, VSS, disk and NTFS) over <code>--days</code>, 7 by default, the Veeam drivers, VSS shadow storage, and the .NET and TLS registry values. On Linux: the Veeam snapshot module and the kernel log. <code>--checks</code> takes a list such as <code>events,drivers</code>; without it every check for the system runs. It exits 3 on a finding.</li><li><code>system pipes</code> lists the named pipes on Windows and the Unix domain sockets on Linux, with the Veeam, SQL Server and PostgreSQL ones named. <code>--veeam</code> lists the Veeam and database ones only. Nothing is opened or connected to.</li><li><code>system installer-cache</code> (Windows) lists the installed products with an UpgradeCode (<code>--upgrade-code</code>) or whose name or publisher holds a text (<code>--name</code>, Veeam when neither is given), with their version, install date, original package, PackageCode, last used source and the cached package Windows keeps in C:\Windows\Installer, present or missing, and their patches. <code>--check</code> reads an .msi, an .exe or a folder (four levels down, such as a mounted ISO) and shows each file's identity and SHA-256, and whether an .msi is the package a product was installed from (the same PackageCode). It exits 3 when a cached package is missing.</li><li><code>wmi health</code> (Windows) checks WMI in stages: the Winmgmt service and the services it depends on, the repository's consistency (as administrator) and size, a timed probe of each namespace Veeam reads, and the WMI faults logged in the last 7 days, each row with Pass, Finding, Not present, Needs administrator or This machine only. <code>--machine</code> checks another machine's service and namespaces; its repository and event logs are read only on that machine itself. It exits 3 when a row is a finding.</li><li><code>wmi query --machine HV01 --user CONTOSO\admin --preset cluster</code> (Windows) signs in to HV01 as that account and reads its password from the SAT_WMI_PASSWORD environment variable; the connection is then encrypted. Without <code>--user</code>, another machine is signed in to as the account SAT runs as. <code>--user</code> takes DOMAIN\name, name@domain or a name alone for an account of that machine, and is refused for this machine.</li></ul><div class="procedure"><div class="proc-head">To run the system checks, do the following:</div><div class="proc-body"><ol><li>Run <code>system pending-restart</code>, then <code>system host-checks --days 30</code>.</li><li>On Windows, run <code>system installer-cache --name Veeam --check D:\</code> and <code>wmi health</code>.</li><li>Read the status of each row. Exit 3 marks a finding.</li></ol><div class="result"><strong>Expected result.</strong> The rows name what was read and what was found.</div></div></div><pre><code>SupportAssistTool system pending-restart
+SupportAssistTool system host-checks --days 30
+SupportAssistTool system installer-cache --name Veeam --check D:\
+SupportAssistTool system pipes --veeam
+SupportAssistTool wmi health</code></pre><h3 id="quick-checks-transfer">How long a transfer takes</h3><p><code>network transfer-time</code> works the time out step by step: the link in bytes, less the Ethernet and TCP/IP overhead, per hour, then the size. <code>network adapters</code> lists this machine's adapters with link speed, MTU, addresses, errors and discards.</p><div class="procedure"><div class="proc-head">To work out how long a transfer takes, do the following:</div><div class="proc-body"><ol><li>Run <code>network adapters</code> to find the adapter and its link speed.</li><li>Run <code>network transfer-time --size 20TB --link 10G</code>. Add <code>--share</code> for the percent of the link the transfer gets and <code>--reduced-to</code> for the percent of the data left after Veeam's compression (a job run's Transferred divided by Read).</li><li>For the packets on the link, add <code>--mtu 9000</code> for jumbo frames (1500 to begin with), <code>--ipv6</code> for IPv6 headers and <code>--timestamps</code> when TCP timestamps are on; each changes the overhead taken off the link.</li><li>Add <code>--network-speed</code> and <code>--storage-speed</code> for speeds measured elsewhere, <code>--host</code> to measure the network to SAT's listener on that machine (or with <code>--iperf3</code> to an iPerf3 server), or <code>--storage-result</code> to take the speed a Disk Speed Test kept.</li><li>Add <code>--email</code> to print only the email text.</li></ol><div class="result"><strong>Expected result.</strong> The lowest speed sets the time.</div></div></div><pre><code>SupportAssistTool network adapters
+SupportAssistTool network transfer-time --size 20TB --link 10G
+SupportAssistTool network transfer-time --size 20TB --link 10G --share 50 --reduced-to 50 --email
+SupportAssistTool network transfer-time --size 20TB --adapter Ethernet --host repo01 --port 2500</code></pre><div class="related"><h4>Related topics</h4><a href="#network">Network tools</a><a href="#storage">Storage checks</a><a href="#windows-only">Windows-only verbs</a></div></section>
+<section class="article" id="storage"><div class="breadcrumb">Tools</div><h2>Storage checks</h2><p class="lead">How fast storage reads and writes.</p><h3 id="storage-setup">Before You Begin</h3><ul><li>The speed test needs DiskSpd on Windows or fio on Linux. <code>tools source</code> prints where each comes from.</li><li>A write test needs a folder on the storage under test, with room for the test file. A read test needs an existing file.</li></ul><div class="procedure"><div class="proc-head">To run a Disk Speed Test, do the following:</div><div class="proc-body"><ol><li>Run <code>storage tests</code> to list Veeam's KB2014 tests.</li><li>Run <code>storage speed-test --test ID --folder DIR --role repository</code>, or <code>--custom</code> with your own mix.</li><li>Read the result: reads and writes apart, then what the result means for the role.</li></ol><div class="result"><strong>Expected result.</strong> A write test writes only SAT's own new file in the folder and removes it. A read test opens the file named with <code>--file</code> for reading only. <code>--role</code> says what the storage is: a repository, the source a backup reads, or other.</div></div></div><pre><code>SupportAssistTool storage tests
+SupportAssistTool storage speed-test --test sequential-write --folder E:\Repo --role repository
+SupportAssistTool storage speed-test --custom --folder E:\Repo --write-percent 100 --block 512K</code></pre><div class="tablewrap"><table><thead><tr><th>Option of <code>--custom</code></th><th>What it sets</th></tr></thead><tbody><tr><td><code>--write-percent 0-100</code></td><td>The share of writes; 0 only reads, which <code>--file</code> needs.</td></tr><tr><td><code>--random</code></td><td>Random access in place of sequential.</td></tr><tr><td><code>--block 64K</code>, <code>--size 4G</code>, <code>--seconds 60</code></td><td>The block size, the test file's size and how long the test runs.</td></tr><tr><td><code>--threads N</code>, <code>--outstanding N</code></td><td>How many threads, and how many requests each keeps waiting (the queue depth).</td></tr><tr><td><code>--warmup SECONDS</code></td><td>Time the test runs before it measures.</td></tr><tr><td><code>--caching</code></td><td>Lets the system cache the file; without it the cache is bypassed.</td></tr></tbody></table></div><p>The Disk Speed Test window on Integrations prints the same command with its CLI button.</p><div class="related"><h4>Related topics</h4><a href="#quick-checks">Quick checks</a><a href="#thirdparty">Third-party integrations</a></div></section>
+<section class="article" id="change"><div class="breadcrumb">Tools</div><h2>Change analysis</h2><p class="lead">Comparing file and registry metadata between two points in time, to see what changed on a machine between a working state and a broken one.</p><h3 id="change-setup">Before You Begin</h3><ul><li>Choose the folder to look at and the capture file to write, such as <code>before.satsnap</code>.</li><li>Run as administrator or root to read the places that need it. They are listed as skipped without it.</li><li>Keep the folder where it was captured when you compare with <code>--live</code>.</li></ul><div class="procedure"><div class="proc-head">To find what changed under a folder, do the following:</div><div class="proc-body"><ol><li>Run <code>files baseline --path DIR --output before.satsnap</code>.</li><li>Make the change, or wait for it.</li><li>Run <code>files compare --baseline before.satsnap --live --output changed.html --format html</code>.</li><li>Add <code>--keep</code> to keep the compare in the capture file.</li></ol><div class="result"><strong>Expected result.</strong> The report lists what was added, removed, changed and moved or renamed.</div></div></div><pre><code>SupportAssistTool files baseline --path /opt/veeam --output before.satsnap
+# ... the change happens ...
+SupportAssistTool files compare --baseline before.satsnap --live \
+    --output changed.html --format html</code></pre><p><code>--live</code> compares the baseline against the machine as it is. <code>--other</code> compares two saved baselines, which is how a working machine is compared with a broken one.</p><div class="tablewrap"><table><thead><tr><th>Option</th><th>What it does</th></tr></thead><tbody><tr><td><code>--path DIR</code>, <code>--output FILE</code></td><td>The folder to capture and the capture file to write.</td></tr><tr><td><code>--hash none|all|below-size|extensions</code></td><td>Which files are read for a SHA-256. <code>--hash-max-bytes N</code> sets the size limit and <code>--hash-extension .log</code> names an extension.</td></tr><tr><td><code>--exclude PATTERN</code></td><td>Leaves matching paths out.</td></tr><tr><td><code>--maximum-depth N</code>, <code>--maximum-objects N</code></td><td>Limit how deep and how many objects are read.</td></tr><tr><td><code>--follow-reparse</code></td><td>Follows reparse points.</td></tr><tr><td><code>--batch-size N</code></td><td>How many entries the capture writes to its file at a time; 1000 to begin with. <code>registry baseline</code> takes it too.</td></tr><tr><td><code>--no-file-id</code></td><td>Windows: does not record each file's volume serial number and file ID.</td></tr><tr><td><code>--hydrate-cloud-files</code></td><td>Windows: reads a cloud file that is not stored on the machine, such as a OneDrive placeholder, for its SHA-256, which downloads it. Without it such a file is not read.</td></tr><tr><td><code>--baseline FILE</code>, <code>--baseline-id ID</code></td><td>The capture to compare, and which capture in the file.</td></tr><tr><td><code>--live</code> or <code>--other FILE</code></td><td>Compare with the machine as it is, or with a second capture.</td></tr><tr><td><code>--other-id ID</code></td><td>Which capture in the second file.</td></tr><tr><td><code>--timestamp-tolerance-100ns N</code></td><td>Times that differ by no more than N units of 100 nanoseconds count as the same.</td></tr><tr><td><code>--no-move-detection</code></td><td>Lists a moved file as one removed and one added.</td></tr><tr><td><code>--no-hash-inference</code></td><td>Does not take two files with the same SHA-256 for one file that moved.</td></tr><tr><td><code>--keep</code></td><td>Keeps the compare in the <code>--baseline</code> file: when it ran, what it was compared with, the counts and every row.</td></tr><tr><td><code>--output FILE</code>, <code>--format text|html|json|csv</code></td><td>Where the report is written, and in which form.</td></tr></tbody></table></div><p>On Windows, a baseline captured as administrator on an NTFS volume also records the change journal's position, and the compare reads the journal from there. It adds a created-and-deleted row for each file or folder created and removed in between, which the two captures cannot show, and a renamed row for each rename. <code>--no-journal</code> leaves the journal out. A files baseline taken as administrator of a folder on a local NTFS volume is read from the volume's master file table, and otherwise folder by folder; <code>--live</code> reads the machine the way the baseline was read. The System Differences page keeps every compare in the capture file in the same way.</p><div class="procedure"><div class="proc-head">To read what a capture holds, do the following:</div><div class="proc-body"><ol><li>Run <code>baseline inspect --file before.satsnap</code>.</li><li>Run <code>baselines list --folder ./baselines</code> to list the captures in a folder.</li></ol><div class="result"><strong>Expected result.</strong> The output shows what the capture covers, how a files baseline was read (Read from:) and the compares kept in it. <code>snapshots list</code> and <code>snapshot inspect</code> are the same verbs under their older names.</div></div></div><pre><code>SupportAssistTool baselines list --folder ./baselines
+SupportAssistTool baseline inspect --file before.satsnap</code></pre><p>File baselines work on both platforms; the Windows options for alternate data streams, file IDs and cloud hydration are rejected on Linux. Registry baselines are Windows only and are listed under <a href="#windows-only">Windows-only verbs</a>.</p><div class="related"><h4>Related topics</h4><a href="#windows-only">Windows-only verbs</a><a href="#checksum">File checksums</a></div></section><section class="article" id="sql"><div class="breadcrumb">Tools</div><h2>SQL Tools</h2><p class="lead">Five read-only checks of a SQL Server or PostgreSQL server against Veeam's guides, on Windows and Linux. SQL Server is read over ODBC and PostgreSQL through psql.</p><h3 id="sql-setup">Before You Begin</h3><ul><li>Have the instance name as clients connect to it, such as <code>SQL01\VEEAMSQL2016</code>. For PostgreSQL, a host or <code>host:port</code>, with port 5432 when none is given.</li><li>SQL Server on Linux needs unixODBC and Microsoft's ODBC Driver 18 or 17. PostgreSQL needs psql, found in the folder <code>--tools-root</code> names, on the PATH or in the PostgreSQL install folders.</li><li>Each command connects as the account running SAT. With <code>--login LOGIN</code> it uses that SQL login and reads the password from the SQLCMDPASSWORD environment variable, or from PGPASSWORD for PostgreSQL. Set the variable before the command. No option takes a password.</li></ul><div class="procedure"><div class="proc-head">To check a SQL Server instance, do the following:</div><div class="proc-body"><ol><li>Run <code>sql check --server SQL01</code> for the rights of the account against Veeam's Permissions page.</li><li>Run <code>sql shape</code>, <code>sql backups</code> and <code>sql files</code> with the same <code>--server</code>.</li><li>Read each row: its status, area, check, detail and the Veeam page it follows.</li></ol><div class="result"><strong>Expected result.</strong> The status is Pass, Attention, Fail, Not applicable, Could not check or Info. The command exits 3 when a check fails.</div></div></div><pre><code>SupportAssistTool sql check --server SQL01 [--against guest|config] [--config-database VeeamBackup] [--account LOGIN]
+SupportAssistTool sql shape --server SQL01
+SupportAssistTool sql backups --server SQL01 [--database Sales] [--days 14]
+SupportAssistTool sql files --server SQL01</code></pre><p><code>--trust-certificate</code> accepts SQL Server's own self-signed certificate. <code>sql backups</code> prints its findings under -- FINDINGS --, then the log chain under -- LOG CHAIN, OLDEST FIRST --: a line per backup with its chain status (OK, Base, Base changed, Lost, After loss, New chain, Gap before), the time, the backup and its LSN range.</p><div class="procedure"><div class="proc-head">To run a read-only query, do the following:</div><div class="proc-body"><ol><li>Run <code>sql query --server SQL01 --database master --query "SELECT name FROM sys.databases"</code>.</li><li>Or give the name of a named query to <code>--query</code>, such as <code>"Backup audit (this database)"</code>.</li><li>Add <code>--format table</code>, <code>records</code> or <code>tsv</code> to choose the layout.</li></ol><div class="result"><strong>Expected result.</strong> The command refuses a statement that changes anything, before it connects. It prints the statement first, so it can be run in another tool, then the result: up to 8 columns as a table, a wider result as a block per row with every column. <code>tsv</code> prints the result alone, a header line and a line per row.</div></div></div><pre><code>SupportAssistTool sql query --server SQL01 [--database master] --query "SELECT name FROM sys.databases"
+SupportAssistTool sql query --server SQL01 --database VeeamBackup --query "Backup audit (this database)" --format records</code></pre><p>The named queries for SQL Server are Version and edition, Databases, Database files, Backup audit (this database), Backups in the last 7 days, Log space, Sessions, Logins and Availability group replicas. The named queries for PostgreSQL are Version and start time, Databases, Roles, Sessions, Replication, WAL archiver, Backup readiness (WAL archiving and slots), Settings changed from the default and Largest tables in the connected database.</p><p><code>--show-sql</code> prints the SQL a command runs, in order and as it is sent, before its results, between comment lines that SSMS, sqlcmd and psql read, so the statements can be run by hand. Without <code>--server</code> it prints the SQL only and connects to nothing. It works on all five commands and with <code>--engine postgres</code>.</p><h3 id="sql-cli-postgresql">PostgreSQL</h3><p><code>--engine postgres</code> runs the same five commands against PostgreSQL through psql. The server is HOST or HOST:PORT.</p><div class="procedure"><div class="proc-head">To check a PostgreSQL server, do the following:</div><div class="proc-body"><ol><li>Run <code>sql check --engine postgres --server localhost:5432</code>.</li><li>Add <code>--login ROLE</code> to connect as a role; the password is read from PGPASSWORD.</li><li>Run <code>sql shape</code>, <code>backups</code>, <code>files</code> and <code>query</code> the same way.</li></ol><div class="result"><strong>Expected result.</strong> Without <code>--login</code> the account running SAT connects; on Windows that is the postgres role Veeam's installer maps its Windows accounts to. The session is read only. <code>--against</code>, <code>--days</code> and <code>--trust-certificate</code> apply to SQL Server and are refused with <code>--engine postgres</code>.</div></div></div><pre><code>SupportAssistTool sql check --engine postgres --server localhost:5432 [--config-database VeeamBackup] [--account ROLE] [--login ROLE]
+SupportAssistTool sql shape --engine postgres --server localhost:5432
+SupportAssistTool sql query --engine postgres --server localhost:5432 [--database postgres] --query "SELECT datname FROM pg_database"</code></pre><p>The permission check holds the role against the superuser requirement on Veeam's permissions page and reports the role's other attributes as facts.</p><h3 id="sql-cli-lists">Instances and databases</h3><div class="procedure"><div class="proc-head">To list the instances and databases, do the following:</div><div class="proc-body"><ol><li>Run <code>sql instances</code> to list the SQL Server instances and PostgreSQL servers on this machine. <code>--engine</code> keeps one engine's.</li><li>Run <code>sql databases --server SQL01</code> to list the databases the server accepts connections to, one per line.</li></ol><div class="result"><strong>Expected result.</strong> The PostgreSQL servers are named host:port. <code>sql databases</code> connects as the account running SAT or with <code>--login</code>.</div></div></div><pre><code>SupportAssistTool sql instances [--engine sqlserver|postgres]
+SupportAssistTool sql databases --server SQL01 [--engine sqlserver|postgres] [--login LOGIN] [--trust-certificate] [--tools-root DIR]</code></pre><div class="related"><h4>Related topics</h4><a href="#quick-checks">Quick checks</a><a href="#thirdparty">Third-party integrations</a></div></section><section class="article" id="windows-only"><div class="breadcrumb">Tools</div><h2>Windows-only verbs</h2><p class="lead">These exist only in the Windows build, because the technology behind them is part of Windows. <code>--help</code> on Linux does not list them.</p><figure class="shot"><img alt="VSS writer state on Windows." src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAA5QAAACiCAMAAAAJI3JXAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACrUExURQcYGuDs5gcYS3LgaorQ5qlxGuC0b2e05gcYb6ns5opLGuDsr+DQkWcYGkAYGgdLkcWUSkCUzAdxr+DszMXs5l3gaqC8rHLgWDaqamWNK3LGSAgYOjUYGlZsGiMYGiONXwhISEjGakhIGgcYKwlsU6O7iHKqOsXsy00YGmY+GglciAc+cXy8spV2QjR2oKelc02PsnxcGmTgXWamsnlxoKWPWVRPieC0kcXQzONrZc0AAA2GSURBVHja7JsLW9s6EoYTgh1KL8RpS5MGTkqhsL13e9qz+/9/2WpmdLMth0AD28v7PucpiWNJI3k+zUjyGY0AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAB2x8WLk/tvdD25vF3BxWQyOd2hIavnL17jA/CTsX75V/vC+dntHX8RK3u10dsLovRFXz2fKF2rIq+e34koV8+X+AL8FEjkmSzbbip6Wbz+QVGuL8+Wtyx6vrHkbkWZdRtRws/A+dnLvxbLbjr7A/lcVJYT1now2CFKgA0Ofn7W8fGLmLqqPFUD65eSVcr1xeXFZGKyXbsYq0no4tJ+XfnMU7z71dfX7r+Yjy6tZp8Xr1N0lkjtFrV50STKi5jGxrb6ojw/MyNkaVxoa9RR+uJSPvpOSLO6pL6w5rVjUom2un4pvy8zMwHunNVz53eve0tKH7MyUYq7ruXrQnxTBbBQLcmtC/v1JA93LkyaDFIEytUUrq6Tp/cjpTR4ftZuqxAp1yav5VBbLe1K3a6H0gkvd29BLKu91h/XImv9ukaQcI+hctLPVtc+ZGSijH7vA9Kpd3vzYLlmWW9QlupKvyR55HlxkEBSYl+Udk+nrYLe9L5k61AO7kLkxYuTlbtFkvYotK4orXGN8utY5+JmmTjAD3FR2mp1adtpW5QnPtaoe4oD20nKquOy4aOW8joNqars6p52RCmTwsmAKC39lS9ZW6UgKCUXl6OhtkYxdi8mp5IY+KA5GpVEGRLp0zw+ZmYC3L0ona/2HU6DSU+UyyjK02tEuc6WiPLlMq4gl51tlVWI1bcXpbtxFS4W2orB8+Ts4lIqvUaUy+5PLTMB7pz1ZSnXK4kyCVA8O09fe6IMmy9xhRnd21/K9zr951unr7pxk0zotRWl++py9VX0vVGU2Y/tlSTbs3BfLJa2xEpeqgKQ9M30EBI5u00cXU8ydQfGn2nming9SkFtHdSenZRc9jz8VefmtFGqGz2uaNZW8Uhk/TI71+m1FUV1dup+1OoKooyjcBEDbFuUd3QUA9Db50lnDdGrJ9mhx4sT232Nxx8pK12ET3lEsosxqC3tsMFOGNqVTFTo2cnFonckkg5Cwm9WoPu6z+q5yafUVhZP3U0Xk8tcrf71oWVYTNr+VqglirJlJsAds9pq/h9KCQFg97Hy62tECfAL7gYhSgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABwTB89+U17Nh9v7trBg9nNiu7t18O1HV0dXm/SwYOnhzfpwtHV43I11X0N4tGz8fjhYxuTsR+Vxn2ykZi6TzMbGvepMtvGY+tkqehOn++Nqzx4YGY3YlbB9rJAwn0b6fnG3r6ZNy8/cRmc4VavEeVux/PoWbWlnh4+/rVEuaGybIi3E6W4gXfsaWkczA5TprarBWaxqH4Mrra3PwtFopab8Tje12q2Z13qVnp0yc2aaF3sYhqjQtGmpesqb1XN9SaJw9bR+2ajvIDdp+0Gt79JBPIFa1+4qYJSp4dDzzXcd0NRjhr/BMtG6pg0Q96wWZRTKXZU37cop5/vIRZs0tGWA79dEL1pMjKtN9dr9eWirMV/Z3lT0dVKoiwGdina85J5lF0TOxHNs6rboTvV2y8qGvZicJ/mKrJ2q+of8o+ZL/I/ejYbZQVSm7d4gL5NaaA0xwzL+Da+YYYP2ajtD3Zgo8fMx7vVxpaidM94Wv9Somw2PbsfEGVpxLwXdURpxsWmoqttK8q5xat6qF/bxcJNYdQskct2u1zutCqX7Jv8YPW3C+SivEZPg/mr1Tgr+PjBg85zzHykeSSZ+SyE7ZT5zkIyarFc7pJabPoxE5uU+vg470VZ+cTAdyQkK9JTd7my9nVE3APbtwQic6ewQpg//Ob+ShrmxqcJq4aQeKeiarBZ9OifZ2qvz5q0RDLTle36nZtkwzwbcyqpzq61h8RHjbjMyfPuOmVN3cc3zdO8tpl50fRRja8H5ToLf1tDUnvTrK3wuPyjtqcm49oRbWtC6iva/3yNKMOgbivKxox5+NgNiIYrrWm3ogwW6sPVVD62mocPFaAbMLVRzUkFWqLcmJ8MBj5vR1ghuQay5UVHlNmc2IhzaPekC9Z3SXrnPq2u87xUqmnCvaVB0ds0DB+8eeI/7e2Ldfr10ZOjZ3UYYhPlMxkRN5VkndamJZl1y62DB/891LTc9UY9S//RWlTeeq9Wp9Y00n1LA2If8zmuL0rnZPZokpma2x+8GbWGpO8npcBWmE/VYK2kaGYs2qRnGD9tygDckNRhOq5CBpPryj+UaZws41PuTBhP+1lgRwodUTYxG2y72rai1BT44Tf1e1GmzdV+PpmPQyTwE6u7bRqm2LAcfPQkTEB1saiu1NVMkeLR1TfX/9RqGpYrlZ4zWLp+8OCj62EqoI0Vcuob5K/+Yc3jsrYpLKYLotSVnGS+V4d502GGrbMpU0dann4K9p2pTQcotWoeGL9PH32yuJOL0rt88sKwtyCDXDmvS2tlqc7H6JBnaE1qtHqEmmS3pCX/pnRPumQNZmbGKSYOSWnKLomy0JZaM2xmKGpePA/9GhblPM66dWGy6IsyTqcmGemTd+jQ4SbMVL38NcgpC8HTcR6eva81YQdlkyi9eERZtYyFH5g6jNkuI6WarBfdBTdirlDeaqjPfXGG6i/unqtDuRoLZDsdt85fo2FO4LNoWHWtKEOxeUr4bPhyUWYbVqIPM9BV7w11BTIPsH2AJjz35CfTkJTloqzMiHz8Kz8N6JjNTJS1r91mDXnOSZTTMGkWRZnMLLm4Thu6bd33hGxI5jHxa0qZZShTaEsNHjYzFPUuK9OOpRf1NUvKTJSmmQFR2vDNkrKqwfVrT5TBEduRcj6e9ZJddbXtI6VFLUtoxtXu15Rqo6Slbvgt9B22WvUlXES0WCkhVGNllRVoN3xjUYot2VOcJn2WY26+poyizPal6m6kzH3ElQhdF61WuTemVbJOv52EqRgpK++42Rw3KMqrw7IoYwslUeZmlo8E9NeSKPPnECeeTKCFFUevrUyUJTOTKKs8FN4kUmq6PRgppYC62OBmU/SSnnpSpGylr9MQgzqVbL2mHKdEax5PS3YpSp/K6RIo7OXkrfrqbF0nX2xdK3WnAq3zxn5uf33++vRbNstdK8ps97W9HOwkXFn6mm/DfEyPtzNsXpR1vupsjVgzrgqitH32qpe+dkQp41JMX9u96Yly2MezXhaT8aqcX/Rmzbz+TluN5R5DZqb0ddYe/uvXlHXcO6s2pK+ij6buPKpW+pqCwZZryrjm6IkyLnI2pa/5PqirKgzmLkVpN9kxR2n3tcnHfmj3tXPweYv3B2wan8/CqUVTpX2x3kaPnxiaqtWf0Ec7vPE5StysqrO4k3yyM1g+fa3CaY/5l0zkfqPHtlpMZ+M6P9jc2w/nlCrcqT28XJTaL61NPyVR2qlrx9tbbh3M7G70eH+ZauoSzLRM4U0+JINOUBBiJyKJrbqdVTYzLUfHVZqb3fDXAwuQdvIStqJsNFtnxNHI6X/2q5DSFQNlvLG/+xoCT2f3tZXvJ1ezzMiiz4ZIqbHCP3RxiTyj3NXuazynnKZjx3hOmcLfOJxTNvGcMhZIB/q32n0Vb8t206vOvlpflPHUI/evuHUvlXzcT0cB4YQjnhOYoa2t/uwubVWPFf65OsxPAuzwJxy2VDbpph2u+BJGeLUnF2XsV2ZRPBPVqT9G5Xn71atp9kJJV5RNeDerysxM5wmxbGygZXC2gx3Wz/2XV6Q3Dx/vD5iZiqaDENfE08NpWGn28u7WLG8JiTQ6bb2N5sPSLM3AYY3ciW+ZvaVzyjCrt0Tp98djC8nV5q2Do/AOXO/lgXDmZG8deffc6ZoyHWEVT7rShnPvPZ5UQPuw3bn/78WWR/y3mad+Js53WNddjcWGN3rg5m/0IMo/imwpsUuKb3mllPuP5hbvviLKP0yVV4d3Uen/+/8S+YmZMzUBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADA78b74+PjzydDv+59OH57k9rc/cdv/sWoAvyQKN9uFtlb/+FjQc2C/P7J/f23v/4OUQLcoSgD531RGp9EgvLPu6BKRAlwH6IcDYhSL79XPX7xSTCiBNiVKCUHFeV9kX/3PjhtxRXiuyxV7QdKlWFMdBElwI5EKZHO4uEXd+mLl9Yn/7ccKfc+fJd7XMn3x//4/BVRAuxGlPZX9DVa/f35XZDqZlHabU7OTonvESXATkXpM1RVlEtFP462EOXq7+96z2eLlaSvALsV5dvs2vH3tij/174dpDAIA1EAPYi9gEKLofe/mzEmmkoRirMq7y3EoFl+JmbM993XOmcqb09CCcHL19R9Ke6jq0qZl7mPY6rdV4gNZdneqXc5Vq86aqFsAfwslOmYoE8J0aHMqSw9keG9xitfx/bTznMrleeWSJfTuXsmlBAVyiBCCUIJfxbKq1Miv3JKBAAAAAAAAAAAAAAAAAAAAAAAgJsWk/JAvLThMbYAAAAASUVORK5CYII="/><figcaption>VSS writer state on Windows.</figcaption></figure><div class="tablewrap"><table><thead><tr><th>Verb</th><th>What it does</th><th>Example</th></tr></thead><tbody><tr><td><code>vss writers</code></td><td>Lists the VSS writers and their state</td><td><code>SupportAssistTool.exe vss writers</code></td></tr><tr><td><code>vss test</code></td><td>Takes a bounded test shadow copy of the named volumes</td><td><code>SupportAssistTool.exe vss test --volume C:\ --hold-seconds 10</code></td></tr><tr><td><code>registry baseline</code></td><td>Captures registry metadata under the given roots</td><td><code>SupportAssistTool.exe registry baseline --root HKLM\Software\Veeam --output before.satsnap</code></td></tr><tr><td><code>registry compare</code></td><td>Compares a registry baseline with another or with the live registry</td><td><code>SupportAssistTool.exe registry compare --baseline before.satsnap --live</code></td></tr><tr><td><code>usn query</code></td><td>Reports whether a volume's NTFS change journal can be used</td><td><code>SupportAssistTool.exe usn query --volume C:\</code></td></tr><tr><td><code>logs eventlog</code></td><td>Searches a Windows event log channel</td><td><code>SupportAssistTool.exe logs eventlog --channel "Veeam Agent" --severity error</code></td></tr><tr><td><code>wmi query</code></td><td>Runs a preset or custom WMI query, locally or against another machine</td><td><code>SupportAssistTool.exe wmi query --preset host</code></td></tr><tr><td><code>wmi health</code></td><td>Checks the WMI service, repository, namespaces and recent WMI faults, locally or against another machine</td><td><code>SupportAssistTool.exe wmi health --machine HV01</code></td></tr><tr><td><code>packet start</code>, <code>status</code>, <code>stop</code></td><td>Starts, checks and stops a packet capture with pktmon or netsh. <code>--ip ADDRESS</code> and <code>--port PORT</code> keep the traffic of one address and port; <code>--backend auto|pktmon|netsh</code> picks the capture.</td><td><code>SupportAssistTool.exe packet start --output capture.etl --port 10005</code></td></tr><tr><td><code>packet convert</code></td><td>Converts an ETL capture to pcapng with ETL2PCAPNG</td><td><code>SupportAssistTool.exe packet convert --input capture.etl --output capture.pcapng</code></td></tr><tr><td><code>packet events</code></td><td>Lists the notable events in a .pcapng or .pcap with their times: TCP retransmissions, duplicate ACKs, keep-alives, resets, zero windows, missing segments, and TLS handshake messages and alerts. On Linux and Windows</td><td><code>SupportAssistTool.exe packet events --input capture.pcapng</code></td></tr><tr><td><code>procmon start</code>, <code>status</code>, <code>stop</code></td><td>Starts, checks and stops a Process Monitor trace</td><td><code>SupportAssistTool.exe procmon start --output capture.pml</code></td></tr></tbody></table></div><p><code>packet start</code> and <code>procmon start</code> print <code>state=</code> followed by the path of a state file, kept in a <code>capture-state</code> folder beside the output unless <code>--state-dir</code> names another. <code>status</code> and <code>stop</code> take that path with <code>--state</code>, so a capture started in one window can be checked and stopped from another:</p><pre><code>SupportAssistTool.exe packet start --output D:\cases\05412345\capture.etl --port 10005
+SupportAssistTool.exe packet status --state STATE_FILE
+SupportAssistTool.exe packet stop --state STATE_FILE
+SupportAssistTool.exe procmon start --output D:\cases\05412345\trace.pml
+SupportAssistTool.exe procmon status --state STATE_FILE
+SupportAssistTool.exe procmon stop --state STATE_FILE</code></pre><p> <code>vss test</code> also accepts <code>--writer</code>, <code>--backup-type copy|full</code>, <code>--component-mode</code>, <code>--select-all-components</code>, <code>--bootable-system-state</code>, <code>--partial-file-support</code> and <code>--direct</code>.</p><p>On Linux, the equivalent host readings (systemd units, SELinux or AppArmor state, mounts and package inventory) are part of Environment Review in the graphical application.</p><div class="procedure"><div class="proc-head">To capture packets on Windows, do the following:</div><div class="proc-body"><ol><li>Run <code>packet start --output capture.etl --port 10005</code> and note the state file it prints.</li><li>Reproduce the problem.</li><li>Run <code>packet stop --state STATE_FILE</code>, then <code>packet convert --input capture.etl --output capture.pcapng</code>.</li><li>Run <code>packet events --input capture.pcapng</code> to list the notable events with their times.</li></ol><div class="result"><strong>Expected result.</strong> The events are TCP retransmissions, duplicate ACKs, keep-alives, resets, zero windows, missing segments, and TLS handshake messages and alerts. A capture can hold customer traffic: review it before sharing.</div></div></div><div class="procedure"><div class="proc-head">To compare the registry before and after a change, do the following:</div><div class="proc-body"><ol><li>Run <code>registry baseline --root HKLM\Software\Veeam --output before.satsnap</code>. Repeat <code>--root</code> for each key. <code>--view native|32|64|both</code> chooses the registry view and <code>--security</code> includes security descriptors.</li><li>Make the change.</li><li>Run <code>registry compare --baseline before.satsnap --live</code>, or <code>--other after.satsnap</code> to compare two captures. Add <code>--keep</code> to keep the compare in the capture file.</li></ol><div class="result"><strong>Expected result.</strong> The report lists the keys and values that were added, removed or changed.</div></div></div><div class="procedure"><div class="proc-head">To test VSS, do the following:</div><div class="proc-body"><ol><li>Run <code>vss writers</code> to list the writers and their state.</li><li>Run <code>vss test --volume C:\ --hold-seconds 10</code> to take a bounded test shadow copy of the volume.</li></ol><div class="result"><strong>Expected result.</strong> <code>--writer GUID</code> limits the test to a writer, and <code>--backup-type copy|full</code> chooses the type.</div></div></div><div class="procedure"><div class="proc-head">To run a WMI query, do the following:</div><div class="proc-body"><ol><li>Run <code>wmi query --preset host</code>, <code>cluster</code> or <code>process</code> for a ready-made query, or <code>--namespace root\cimv2 --query WQL</code> for your own.</li><li>Add <code>--machine HOST</code> to query another machine, and <code>--user ACCOUNT</code> to sign in as an account. The password comes from SAT_WMI_PASSWORD.</li></ol><div class="result"><strong>Expected result.</strong> A failed query is printed with its meaning.</div></div></div><div class="procedure"><div class="proc-head">To search a Windows event log, do the following:</div><div class="proc-body"><ol><li>Run <code>logs eventlog --channel "Veeam Agent" --severity error</code>.</li><li>Add <code>--event-id N</code>, <code>--text TEXT</code>, <code>--from</code> and <code>--to</code> to narrow the hits, and <code>--output FILE --format text|html|json|csv</code> to keep them.</li></ol><div class="result"><strong>Expected result.</strong> The hits are printed as <code>logs search</code> prints them.</div></div></div></section><section class="article" id="thirdparty"><div class="breadcrumb">Tools</div><h2>Third-party integrations</h2><p class="lead">SAT can drive a few tools it does not ship. <code>tools status</code> reports which are present, <code>tools source</code> prints where SAT obtains one, from the link built into this SAT, and <code>tools run</code> runs a tool the way the Run window of Integrations does.</p><figure class="shot transcript"><pre><code>$ SupportAssistTool tools status
+
+iperf3 | iPerf3 | missing | Not found | native: SAT&#x27;s built-in TCP throughput client/server
+wireshark | Wireshark | missing | Not found | native: SAT&#x27;s own packet capture and PCAPNG conversion
+sqlcmd | SQLCMD | available | /mnt/c/Program Files/Microsoft SQL Server/Client SDK/ODBC/180/Tools/Binn/sqlcmd.exe | native: SAT&#x27;s built-in ODBC SQL diagnostics
+psql | psql (PostgreSQL) | available | /usr/bin/psql | native: SAT&#x27;s built-in ODBC SQL diagnostics
+tcpdump | tcpdump | missing | Not found | native: SAT&#x27;s built-in connectivity diagnostics
+fio | fio | missing | Not found | native: The Disk Speed Test needs it on Linux; there is no built-in equivalent
+
+[exit 0]</code></pre><figcaption>Optional tool availability on this host.</figcaption></figure><h3 id="thirdparty-setup">Before You Begin</h3><ul><li>Install the tool, or place it in the Tools folder beside SAT. <code>--tools-root</code> or <code>--root</code> names another folder.</li><li>On Linux the tool comes from the distribution's package manager.</li></ul><div class="procedure"><div class="proc-head">To run iPerf3 between two machines, do the following:</div><div class="proc-body"><ol><li>On the receiving machine, run <code>tools run --id iperf3 --mode Server</code>.</li><li>On the sending machine, run <code>tools run --id iperf3 --host repo01 --direction Upload --streams Multiple --stream-count 5 --duration 60</code>.</li><li>Read the output iPerf3 prints.</li></ol><div class="result"><strong>Expected result.</strong> The first line printed, on the error stream, is the command line that was run. The exit code is 0 when the tool finished and 70 when it failed.</div></div></div><pre><code>SupportAssistTool tools status
+SupportAssistTool tools source --id iperf3
+SupportAssistTool tools run --id iperf3 --mode Server --port 5201
+SupportAssistTool tools run --id iperf3 --host repo01 --streams Multiple --stream-count 5 --duration 60
+SupportAssistTool iperf server --port 2500
+SupportAssistTool iperf client --host repo01 --port 2500 --payload 1G</code></pre><div class="tablewrap"><table><thead><tr><th>Option</th><th>What it does</th></tr></thead><tbody><tr><td><code>--mode Client|Server</code></td><td>Client sends to the other machine's iPerf3 server. Server waits for a client. Client to begin with.</td></tr><tr><td><code>--host HOST</code></td><td>The machine running the iPerf3 server.</td></tr><tr><td><code>--direction Upload|Download</code></td><td>Upload sends from this machine, as a proxy writes to a repository. Download is the reverse, as a restore.</td></tr><tr><td><code>--streams Single|Multiple</code>, <code>--stream-count N</code></td><td>One connection, or several at once. The count is 5 to begin with, the number of upload streams Veeam uses for a job by default.</td></tr><tr><td><code>--duration SECONDS</code>, <code>--port PORT</code>, <code>--protocol TCP|UDP</code></td><td>20 seconds, port 5201 and TCP to begin with.</td></tr><tr><td><code>--root DIR</code></td><td>The folder that holds the tool.</td></tr></tbody></table></div><p>The Run window of Integrations has the presets Quick check: one stream for 20 seconds, Veeam default: five streams for a minute, Like a restore: five streams back to this machine, and Server: wait for the other machine. The Veeam default preset is <code>--streams Multiple --stream-count 5 --duration 60</code>, and the restore preset adds <code>--direction Download</code>.</p><div class="procedure"><div class="proc-head">To capture packets on Linux, do the following:</div><div class="proc-body"><ol><li>Run <code>tools run --id tcpdump --host HOST --port 22 --count 500</code> as root.</li><li>Reproduce the problem while the capture runs.</li><li>Read the packet lines it prints.</li></ol><div class="result"><strong>Expected result.</strong> <code>--interface</code> names the interface, any to begin with, and <code>--count</code> the packet limit, 500 to begin with.</div></div></div><pre><code>SupportAssistTool tools run --id tcpdump --interface any --host repo01 --port 22 --count 500</code></pre><p>On Windows, <code>tools run --id etl2pcapng --input capture.etl --output capture.pcapng</code> converts an ETL capture. <code>iperf client</code> and <code>iperf server</code> run iPerf3 when it is present; <code>--tools-root</code> points at the folder that holds it, and <code>--arg</code> passes an extra argument to iPerf3 and can be given more than once. Each of these tools is optional: a missing tool makes the related verb report itself unavailable and does not affect anything else.</p><div class="related"><h4>Related topics</h4><a href="#network">Network tools</a><a href="#storage">Storage checks</a></div></section><section class="article" id="automation"><div class="breadcrumb">Reference</div><h2>Using SAT from a script</h2><p class="lead">The CLI is meant to be scripted: test <code>capabilities</code> first, then branch on exit codes.</p><pre><code>#!/bin/bash
+set -u
+./SupportAssistTool logs review --path "$1" --output review.txt
+case $? in
+  0) echo "reviewed, no findings" ;;
+  3) echo "reviewed, findings present" ;;
+  2) echo "not applicable on this host" ;;
+  *) echo "review failed"; exit 1 ;;
+esac</code></pre><p>Most commands accept <code>--json</code> for machine-readable output. On Windows, output redirection and pipes work normally, so <code>&gt; file</code> and <code>| findstr</code> behave as expected.</p><div class="procedure"><div class="proc-head">To run SAT from a script, do the following:</div><div class="proc-body"><ol><li>Run <code>capabilities --json</code> and test it before calling a platform-specific verb.</li><li>Run the command, with <code>--json</code> where the output is read by another program.</li><li>Branch on the exit code.</li><li>Put a password in an environment variable (SQLCMDPASSWORD, PGPASSWORD, SAT_WMI_PASSWORD) before the command. No option takes a password.</li></ol><div class="result"><strong>Expected result.</strong> The script reads the exit code and the JSON, not the text.</div></div></div></section><section class="article" id="privacy"><div class="breadcrumb">Reference</div><h2>What is collected</h2><p class="lead">Collections are bounded to what a support case needs.</p><ul><li>Veeam product logs, and the platform context needed to read them.</li><li>Third-party error logs are sanitised before inclusion, and can be excluded with <code>--no-third-party-errors</code>.</li><li>The vendor's own exporters run only when <code>--official-exporters</code> is given.</li><li>Remote credentials are held for the session only and are not written to disk. Private keys are not exported.</li><li>Registry values that look secret-like are redacted in Environment Review output.</li></ul><p>Review a collection before sending it.</p></section><section class="article" id="open-source"><div class="breadcrumb">Reference &gt; Open-Source Components</div><h2>Open-Source Components</h2><p class="lead">SAT bundles the open-source components below, each under its own licence.</p><p>Support Assist Tool includes the open-source components below. They are bundled in the package&#8217;s <code>lib</code> directory and resolved through <code>$ORIGIN/lib</code>, so only the C library and the loader come from the host.</p><div class="tablewrap"><table><thead><tr><th>Component</th><th>Licence</th><th>What SAT uses it for</th></tr></thead><tbody><tr><td>OpenSSL</td><td>Apache License 2.0</td><td>TLS, cryptography and SHA-256 on Linux, and the SSH/SFTP transport.</td></tr><tr><td>libssh2</td><td>BSD 3-Clause</td><td>The SSH and SFTP transport.</td></tr><tr><td>libarchive</td><td>BSD 2-Clause</td><td>Reading customer log bundles: zip, tar, gz, xz and 7z.</td></tr><tr><td>SQLite</td><td>Public domain</td><td>Case and parser data stores.</td></tr><tr><td>RE2</td><td>BSD 3-Clause</td><td>Pattern matching in the log parser.</td></tr><tr><td>Abseil</td><td>Apache License 2.0</td><td>Required by RE2.</td></tr><tr><td>zlib</td><td>zlib licence</td><td>Decompression, through libarchive.</td></tr><tr><td>zstd</td><td>BSD 3-Clause</td><td>Decompression, through libarchive.</td></tr><tr><td>liblzma (XZ Utils)</td><td>Public domain</td><td>Decompression, through libarchive.</td></tr><tr><td>lz4</td><td>BSD 2-Clause</td><td>Decompression, through libarchive.</td></tr><tr><td>bzip2</td><td>BSD-style</td><td>Decompression, through libarchive.</td></tr></tbody></table></div><p>Each component remains under its own licence, unchanged by inclusion here. SAT includes no NirSoft code, binaries, assets or branding.</p></section><section class="article" id="troubleshooting"><div class="breadcrumb">Reference</div><h2>Troubleshooting</h2><p class="lead">The common problems and their fixes.</p><table><thead><tr><th>Symptom</th><th>Cause and fix</th></tr></thead><tbody><tr><td>The executable will not start on Linux</td><td>The <code>lib</code> directory is not beside it. Run from the unpacked package; a binary copied out of it does not start.</td></tr><tr><td><code>version</code> works but a verb reports 'not available'</td><td>The verb is for the other platform, or a capability is missing. Run <code>capabilities</code> to see what this build can do here.</td></tr><tr><td>A reading is skipped and mentions approval</td><td>It needs elevation. Run <code>diagnostics</code> to confirm, and elevate only where the machine's owner allows it.</td></tr><tr><td>An archive parses to 'No log files could be extracted'</td><td>The extraction path was too long for the platform. Point <code>--output</code> at a shorter directory.</td></tr><tr><td>Exit code 3 is treated as failure by a script</td><td>3 means the command completed and found something. Test for it explicitly.</td></tr><tr><td><code>files hash</code> exits 64 with <code>--expect</code></td><td>The value is not 64 hexadecimal characters. Copy the whole SHA-256 value; spaces and letter case do not matter.</td></tr><tr><td>Running SAT with a path opens the window and runs no command</td><td>Every argument was an existing path, which is how the desktop starts SAT for dropped files. Put a command first, for example <code>files hash --path</code>.</td></tr></tbody></table></section><div class="footer">Support Assist Tool v0.5.0: CLI User Guide</div></div></main><aside class="ontoc"><strong>On this page</strong><div id="onThisPage"></div></aside></div><script>const links=[...document.querySelectorAll('.navlinks a')];
+const articles=[...document.querySelectorAll('.article')];
+const articleIds=new Set(articles.map(a=>a.id));
+const toc=document.getElementById('onThisPage');
+const search=document.getElementById('navSearch');
+const mainEl=document.querySelector('.main');
+
+function buildOnThisPage(article){
+  toc.innerHTML='';
+  if(!article) return;
+  const heads=[...article.querySelectorAll('h3[id],h4[id]')];
+  if(!heads.length){
+    const a=document.createElement('a');
+    a.href='#'+article.id;
+    a.textContent='Overview';
+    toc.appendChild(a);
+    return;
+  }
+  heads.forEach(h=>{
+    const a=document.createElement('a');
+    a.href='#'+h.id;
+    a.textContent=h.textContent;
+    if(h.tagName==='H4') a.classList.add('sub');
+    toc.appendChild(a);
+  });
+}
+
+/* Section-at-a-time reading.
+ *
+ * The guide is one self-contained file, but showing every section at once makes it a very long scroll.
+ * Instead the sidebar acts as a category menu and only the selected section is shown; the rest are
+ * hidden. This is enabled by the 'paged' class added here, so with JavaScript disabled the full page
+ * still renders (graceful fallback) and printing shows every section (see the print rule in the CSS).
+ */
+document.body.classList.add('paged');
+
+function showArticle(id,push){
+  if(!articleIds.has(id)) id=articles.length?articles[0].id:'';
+  articles.forEach(a=>a.classList.toggle('shown',a.id===id));
+  links.forEach(a=>{
+    const on=a.getAttribute('href')==='#'+id;
+    a.classList.toggle('active',on);
+    if(on){let g=a.closest('.navgroup'); while(g){g.open=true; g=g.parentElement?g.parentElement.closest('.navgroup'):null;}}
+  });
+  buildOnThisPage(articles.find(a=>a.id===id));
+  if(mainEl) mainEl.scrollTop=0;
+  window.scrollTo(0,0);
+  if(push && ('#'+id)!==location.hash) history.pushState(null,'','#'+id);
+}
+
+// Sidebar links switch section instead of scrolling the whole page.
+links.forEach(a=>{
+  a.addEventListener('click',e=>{
+    const id=(a.getAttribute('href')||'').replace(/^#/,'');
+    if(articleIds.has(id)){e.preventDefault(); showArticle(id,true);}
+  });
+});
+
+// A link to a heading inside an article (#drop-files under Interface Basics) shows that article
+// first and then scrolls to the heading. Without this the heading stays in a hidden article, and the
+// link changes the address and shows nothing.
+function showTarget(id){
+  if(articleIds.has(id)){showArticle(id,false); return true;}
+  const target=id?document.getElementById(id):null;
+  const article=target?target.closest('.article'):null;
+  if(!article) return false;
+  showArticle(article.id,false);
+  // A sidebar entry for the heading itself (a tool that is a section of its category's article) is
+  // the one marked, with its group open.
+  const own=links.find(a=>a.getAttribute('href')==='#'+id);
+  if(own){
+    links.forEach(a=>a.classList.toggle('active',a===own));
+    let g=own.closest('.navgroup'); while(g){g.open=true; g=g.parentElement?g.parentElement.closest('.navgroup'):null;}
+  }
+  target.scrollIntoView();
+  return true;
+}
+
+// A link in the text, to an article or to a heading in any article. Handled on the click, so a
+// second click on a link the address already names still lands.
+document.addEventListener('click',e=>{
+  const a=e.target.closest('a[href^="#"]');
+  if(!a || links.includes(a)) return;
+  const id=a.getAttribute('href').slice(1);
+  if(showTarget(id)){
+    e.preventDefault();
+    if(('#'+id)!==location.hash) history.pushState(null,'','#'+id);
+  }
+});
+
+// Back/forward and a link pasted into the address bar land on the right section, and on the
+// heading when the link names one.
+window.addEventListener('hashchange',()=>{
+  showTarget(location.hash.replace(/^#/,''));
+});
+
+// Initial view: the section or heading named in the URL, otherwise the first one.
+if(!showTarget(location.hash.replace(/^#/,''))) showArticle(articles.length?articles[0].id:'',false);
+
+search.addEventListener('input',()=>{
+  const q=search.value.trim().toLowerCase();
+  document.querySelectorAll('.navgroup').forEach(group=>{
+    let any=false;
+    group.querySelectorAll('.navlinks a').forEach(a=>{
+      const show=!q || a.textContent.toLowerCase().includes(q);
+      a.classList.toggle('hidden',!show);
+      any=any||show;
+    });
+    group.classList.toggle('hidden',!any);
+    if(q && any) group.open=true;
+  });
+});
+
+/* Expand a figure to its natural size.
+ *
+ * The figures are application screenshots, captured at roughly 1385px and read in a column around
+ * 605px wide. Scaled to fit they show where something is; they do not show what it says. Clicking
+ * one switches it to natural size inside a scrollable figure, which keeps the page layout intact
+ * and needs no popup - the images are embedded, so there is nothing to fetch and this works with
+ * the file opened straight off a USB stick.
+ */
+(function () {
+  var figures = document.querySelectorAll('figure.shot');
+  Array.prototype.forEach.call(figures, function (figure) {
+    var image = figure.querySelector('img');
+    if (!image) { return; }
+
+    var caption = figure.querySelector('figcaption');
+    if (caption) {
+      var hint = document.createElement('span');
+      hint.className = 'shot-hint';
+      hint.textContent = ' (click to view full size)';
+      caption.appendChild(hint);
+    }
+
+    image.setAttribute('tabindex', '0');
+    image.setAttribute('role', 'button');
+
+    var toggle = function () {
+      var expanded = figure.classList.toggle('expanded');
+      image.setAttribute('aria-label',
+        expanded ? 'Screenshot at full size. Activate to fit to the page.'
+                 : 'Screenshot fitted to the page. Activate to view full size.');
+      if (expanded) { figure.scrollLeft = 0; }
+    };
+
+    image.addEventListener('click', toggle);
+    image.addEventListener('keydown', function (event) {
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        toggle();
+      }
+    });
+  });
+})();
+</script></body></html>

@@ -1,0 +1,19 @@
+#pragma once
+
+#include <string_view>
+
+namespace support_assist {
+inline constexpr std::string_view kProductName = "@SUPPORT_ASSIST_PRODUCT_NAME@";
+inline constexpr std::string_view kCompanyName = "@SUPPORT_ASSIST_COMPANY_NAME@";
+inline constexpr std::string_view kProductSlug = "@SUPPORT_ASSIST_PRODUCT_SLUG@";
+inline constexpr std::string_view kVersion = "@PROJECT_VERSION@";
+inline constexpr std::string_view kReleaseChannel = "@SUPPORT_ASSIST_RELEASE_CHANNEL@";
+inline constexpr std::string_view kBuildRevision = "@SUPPORT_ASSIST_BUILD_REVISION@";
+// The 4th version component, shown only in About as version + "." + kBuildNumber,
+// and the build date. Never on the main GUI rail.
+inline constexpr int kBuildNumber = @SUPPORT_ASSIST_BUILD_NUMBER@;
+inline constexpr std::string_view kBuildDate = "@SUPPORT_ASSIST_BUILD_DATE@";
+inline constexpr std::string_view kExecutableName = "@SUPPORT_ASSIST_EXECUTABLE@";
+inline constexpr int kSnapshotSchemaVersion = 1;
+inline constexpr int kHelperProtocolVersion = 1;
+} // namespace support_assist

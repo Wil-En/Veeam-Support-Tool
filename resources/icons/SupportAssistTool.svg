@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+<defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#76e882"/><stop offset=".16" stop-color="#3fbe58"/><stop offset=".52" stop-color="#188b44"/><stop offset=".84" stop-color="#0b5c30"/><stop offset="1" stop-color="#04391f"/></linearGradient><linearGradient id="h" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".18"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient></defs>
+<rect x="58" y="58" width="908" height="908" rx="180" fill="url(#g)" stroke="#022c18" stroke-width="30"/>
+<rect x="78" y="78" width="868" height="868" rx="160" fill="none" stroke="#acf9b4" stroke-opacity=".86" stroke-width="14"/>
+<rect x="106" y="106" width="812" height="812" rx="132" fill="none" stroke="#127337" stroke-width="10"/>
+<rect x="124" y="124" width="776" height="405" rx="110" fill="url(#h)"/>
+<text x="512" y="625" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="300" font-weight="700" fill="#f6fff7" stroke="#bbf2c2" stroke-width="7">SAT</text>
+</svg>

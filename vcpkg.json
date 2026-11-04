@@ -1,0 +1,21 @@
+{
+  "name": "support-assist-tool",
+  "version-string": "0",
+  "builtin-baseline": "9e593bb18ea69cc5095e012465dcd675a822ed0d",
+  "dependencies": [
+    "sqlite3",
+    "openssl",
+    "re2",
+    "libssh2",
+    {
+      "name": "libarchive",
+      "default-features": false,
+      "features": [
+        "bzip2",
+        "lz4",
+        "lzma",
+        "zstd"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "productName": "Support Assist Tool",
+  "productSlug": "Support-Assist-Tool",
+  "companyName": "Support Assist Tool Project",
+  "version": "0.5.0",
+  "cmakeProject": "SupportAssistTool",
+  "executableName": "SupportAssistTool",
+  "upgradeCode": "37E20C11-1C68-43AA-8E8F-E31F625BF52D",
+  "releaseChannel": "Beta",
+  "buildRevision": "0.5.0-beta.6",
+  "buildNumber": 6,
+  "buildDate": "2026-10-28"
+}

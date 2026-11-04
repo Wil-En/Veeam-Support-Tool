@@ -1,0 +1,99 @@
+{
+  "schema": 1,
+  "about": "SQL Tools' PostgreSQL checks (run through psql). sources: the pages the comparisons follow; basis says whether the page text was read or only an excerpt of it. requirements: what Veeam's pages require of the configuration database account; a role attribute with no entry here is reported as a fact without a pass or fail. authentication: how the Veeam installer sets up Windows (SSPI) login. configuration_database: the name and port Veeam uses unless told otherwise; the name in use is read from the Veeam registry when this is the backup server. notes: sentences shown beside the facts they explain. queries: the named read-only queries the Read-only query offers; each is one SELECT.",
+  "sources": {
+    "kb4818": {
+      "title": "KB4818: PostgreSQL Connection and Authorization Information",
+      "url": "https://www.veeam.com/kb4818",
+      "publisher": "Veeam",
+      "basis": "page text",
+      "reviewed": "2026-10-17"
+    },
+    "kb4542": {
+      "title": "KB4542: SSPI Authentication Errors",
+      "url": "https://www.veeam.com/kb4542",
+      "publisher": "Veeam",
+      "basis": "page text",
+      "reviewed": "2026-10-17"
+    },
+    "vbr-permissions": {
+      "title": "Installation and Usage of Veeam Backup & Replication (Permissions, Veeam Backup & Replication User Guide)",
+      "url": "https://helpcenter.veeam.com/docs/vbr/userguide/permissions_installing.html",
+      "publisher": "Veeam",
+      "basis": "excerpt of the page in a search result; the page text did not load",
+      "reviewed": "2026-10-17"
+    },
+    "vbr-silent-install": {
+      "title": "Veeam Backup & Replication Server (silent installation, Veeam Backup & Replication User Guide)",
+      "url": "https://helpcenter.veeam.com/docs/backup/hyperv/silent_install_vbr.html",
+      "publisher": "Veeam",
+      "basis": "excerpt of the page in a search result; the page text did not load",
+      "reviewed": "2026-10-17"
+    },
+    "postgresql-archiver": {
+      "title": "The pg_stat_archiver view (PostgreSQL documentation)",
+      "url": "https://www.postgresql.org/docs/current/monitoring-stats.html#MONITORING-PG-STAT-ARCHIVER-VIEW",
+      "publisher": "PostgreSQL Global Development Group",
+      "basis": "documentation of the view",
+      "reviewed": "2026-10-17"
+    },
+    "postgresql-roles": {
+      "title": "Role attributes (PostgreSQL documentation)",
+      "url": "https://www.postgresql.org/docs/current/role-attributes.html",
+      "publisher": "PostgreSQL Global Development Group",
+      "basis": "documentation of the attributes",
+      "reviewed": "2026-10-17"
+    }
+  },
+  "configuration_database": {
+    "default_name": "VeeamBackup",
+    "default_port": 5432,
+    "source": "vbr-silent-install"
+  },
+  "authentication": {
+    "windows_integrated_role": "postgres",
+    "source": "kb4818"
+  },
+  "requirements": [
+    {
+      "id": "superuser",
+      "attribute": "rolsuper",
+      "label": "Superuser",
+      "text": "The account used for installation, upgrade and operation requires the superuser role.",
+      "status_if_missing": "fail",
+      "source": "vbr-permissions"
+    }
+  ],
+  "notes": [
+    {
+      "id": "sspi_default",
+      "text": "A PostgreSQL instance set up by the Veeam installer uses Windows (SSPI) authentication. pg_ident.conf maps NT AUTHORITY\\SYSTEM and the Windows account that ran the installer to the postgres role, and postgres has a blank password in that case. Any other Windows account is refused until it is added to pg_ident.conf.",
+      "source": "kb4818"
+    },
+    {
+      "id": "listen_default",
+      "text": "The instance the Veeam installer sets up for Backup & Replication listens on localhost only.",
+      "source": "kb4818"
+    }
+  ],
+  "queries": [
+    {"name": "Version and start time",
+     "sql": "SELECT version() AS version, pg_postmaster_start_time()::text AS started, (SELECT setting FROM pg_settings WHERE name = 'data_directory') AS data_directory"},
+    {"name": "Databases",
+     "sql": "SELECT d.datname, pg_get_userbyid(d.datdba) AS owner, pg_encoding_to_char(d.encoding) AS encoding, d.datcollate, pg_database_size(d.oid) AS size_bytes, d.datallowconn FROM pg_database d WHERE has_database_privilege(d.oid, 'CONNECT') ORDER BY d.datname"},
+    {"name": "Roles",
+     "sql": "SELECT rolname, rolsuper, rolcreatedb, rolcreaterole, rolcanlogin, rolreplication, rolconnlimit, rolvaliduntil FROM pg_roles ORDER BY rolname"},
+    {"name": "Sessions",
+     "sql": "SELECT pid, usename, application_name, client_addr::text AS client_addr, state, wait_event_type, wait_event, backend_start::text AS backend_start, left(query, 200) AS query FROM pg_stat_activity WHERE pid <> pg_backend_pid() ORDER BY backend_start"},
+    {"name": "Replication",
+     "sql": "SELECT application_name, client_addr::text AS client_addr, state, sync_state, sent_lsn::text AS sent_lsn, replay_lsn::text AS replay_lsn, replay_lag::text AS replay_lag FROM pg_stat_replication ORDER BY application_name"},
+    {"name": "WAL archiver",
+     "sql": "SELECT archived_count, last_archived_wal, last_archived_time::text AS last_archived_time, failed_count, last_failed_wal, last_failed_time::text AS last_failed_time FROM pg_stat_archiver"},
+    {"name": "Backup readiness (WAL archiving and slots)",
+     "sql": "SELECT current_setting('wal_level') AS wal_level, current_setting('archive_mode') AS archive_mode, CASE WHEN current_setting('archive_command') = '' THEN '(none)' ELSE current_setting('archive_command') END AS archive_command, a.archived_count, a.last_archived_wal, a.last_archived_time::text AS last_archived_time, a.failed_count, a.last_failed_wal, a.last_failed_time::text AS last_failed_time, (SELECT COUNT(*) FROM pg_stat_progress_basebackup) AS base_backups_running, (SELECT COUNT(*) FROM pg_replication_slots) AS replication_slots, (SELECT COUNT(*) FROM pg_replication_slots WHERE NOT active) AS inactive_slots, pg_size_pretty(pg_wal_lsn_diff(pg_current_wal_lsn(), COALESCE((SELECT MIN(restart_lsn) FROM pg_replication_slots), pg_current_wal_lsn()))) AS wal_held_by_slots FROM pg_stat_archiver AS a"},
+    {"name": "Settings changed from the default",
+     "sql": "SELECT name, setting, unit, source FROM pg_settings WHERE source NOT IN ('default', 'override') ORDER BY name"},
+    {"name": "Largest tables in the connected database",
+     "sql": "SELECT schemaname, relname, pg_total_relation_size(relid) AS total_bytes, n_live_tup, n_dead_tup, last_autovacuum::text AS last_autovacuum FROM pg_stat_user_tables ORDER BY pg_total_relation_size(relid) DESC LIMIT 50"}
+  ]
+}

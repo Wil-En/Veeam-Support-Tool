@@ -1,0 +1,66 @@
+{
+  "schema": 1,
+  "about": "The Veeam Service Channel test: per product, the service that hosts its gRPC server, the named pipe the channel uses (empty when not known), the log folder and the logs to read; and the log lines that tell how the channel did, each with its reading. The health call is the standard grpc.health.v1.Health/Check request for the whole server (source grpc-health), which reads the service's state and changes nothing; its URL is added to a health row that is not Pass. observed_on names the evidence a product's entry was read from; a pattern with observed false comes from the gRPC status code guide and was not seen in a Veeam log yet.",
+  "sources": {
+    "kb2127": {
+      "title": "Veeam KB2127",
+      "url": "https://www.veeam.com/kb2127",
+      "reviewed": "2026-10-13"
+    },
+    "grpc-status": {
+      "title": "gRPC status codes",
+      "url": "https://grpc.io/docs/guides/status-codes/",
+      "reviewed": "2026-10-12"
+    },
+    "grpc-health": {
+      "title": "gRPC health checking protocol",
+      "url": "https://github.com/grpc/grpc/blob/master/doc/health-checking.md",
+      "reviewed": "2026-10-22"
+    }
+  },
+  "hours": 24,
+  "timeout_ms": 5000,
+  "products": [
+    {"id": "agent", "name": "Veeam Agent for Microsoft Windows", "service": "VeeamEndpointBackupSvc",
+     "pipe": "\\\\.\\pipe\\Veeam\\VAW\\ServiceConnectionPipe", "log_folder": "%ProgramData%\\Veeam\\Endpoint",
+     "log_files": ["Svc.VeeamEndpointBackup*.log", "Svc.gRPC*.log", "UI.*.log", "Job.*.log"],
+     "observed_on": "Veeam Agent for Windows 13.0.2.1102, 2026-10-12"},
+    {"id": "vbr", "name": "Veeam Backup & Replication", "service": "VeeamBackupSvc", "pipe": "",
+     "log_folder": "%ProgramData%\\Veeam\\Backup", "log_files": ["Svc.VeeamBackup*.log"], "observed_on": ""}
+  ],
+  "patterns": [
+    {"id": "started", "name": "gRPC service started", "all_of": ["gRPC service successfully started"], "status": "info",
+     "reading": "The service started its gRPC host."},
+    {"id": "stopped", "name": "gRPC service stopped", "all_of": ["gRPC service successfully stopped"], "status": "info",
+     "reading": "The service stopped its gRPC host; clients cannot connect until it starts again."},
+    {"id": "pipe_access", "name": "Pipe opened to authenticated users", "all_of": ["gRPC service pipe access"],
+     "status": "info", "reading": "The service opened its pipe to authenticated users."},
+    {"id": "client_start", "name": "Client channel started", "all_of": ["Start gRPC client keep-alive thread"],
+     "status": "info", "reading": "A client process started its channel to the service."},
+    {"id": "connect_failed", "name": "Failed to connect with the backup service",
+     "all_of": ["Failed to connect with the backup service"], "status": "fail", "source": "kb2127",
+     "reading": "A client could not reach the service's pipe: the service was stopped, starting or not answering. It is logged every 30 seconds while it lasts."},
+    {"id": "connect_timeout", "name": "Connection to the service timed out",
+     "all_of": ["The operation has timed out", "localhost:80"], "status": "fail",
+     "reading": "The client's connection to the service pipe timed out before the call started."},
+    {"id": "deadline", "name": "Call deadline exceeded", "all_of": ["StatusCode=\"DeadlineExceeded\""],
+     "status": "attention",
+     "reading": "The client connected, but the service did not answer the call in time: it was busy or blocked."},
+    {"id": "request_failed", "name": "Request to the backup service failed",
+     "all_of": ["Failed to send the request to Veeam Backup Service"], "status": "attention",
+     "reading": "The error the user interface shows after a failed call."},
+    {"id": "kestrel_teardown", "name": "Connection teardown in the gRPC host",
+     "all_of": ["IConnectionCompleteFeature.OnCompleted"], "status": "info",
+     "reading": "Teardown noise from the service's gRPC host, also seen on healthy machines; it matters only when frequent."},
+    {"id": "unavailable", "name": "Unavailable", "all_of": ["StatusCode=\"Unavailable\""], "status": "fail",
+     "source": "grpc-status", "observed": false,
+     "reading": "The server was not reachable or the connection dropped."},
+    {"id": "unauthenticated", "name": "Unauthenticated", "all_of": ["StatusCode=\"Unauthenticated\""], "status": "fail",
+     "source": "grpc-status", "observed": false, "reading": "The server rejected the caller's identity."},
+    {"id": "permission_denied", "name": "Permission denied", "all_of": ["StatusCode=\"PermissionDenied\""],
+     "status": "fail", "source": "grpc-status", "observed": false, "reading": "The server refused the caller's rights."},
+    {"id": "tls_trust", "name": "Certificate not trusted", "all_of": ["The remote certificate is invalid"],
+     "status": "fail", "observed": false,
+     "reading": "A TLS channel's certificate was not trusted; the TLS Handshake tool shows the certificate."}
+  ]
+}

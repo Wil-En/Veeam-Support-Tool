@@ -1,0 +1,35 @@
+{
+  "schema": 1,
+  "about": "SQL Tools' permission lists, as Veeam's Permissions page gives them. guest_processing: full is the sysadmin role; minimal is the list headed Minimal permissions (server roles, securables, and roles in model, master and msdb). configuration_database: installation needs CREATE ANY DATABASE; operation needs db_datareader, db_datawriter and EXECUTE on the configuration database, or db_owner; upgrade recommends db_owner. A guide revision is a data edit here.",
+  "sources": {
+    "vbr13-permissions": {
+      "title": "Permissions (Veeam Backup & Replication 13 User Guide)",
+      "url": "https://helpcenter.veeam.com/docs/vbr/userguide/required_permissions.html?ver=13",
+      "reviewed": "2026-10-12"
+    }
+  },
+  "guest_processing": {
+    "source": "vbr13-permissions",
+    "section": "Performing Guest Processing",
+    "full_server_roles": ["sysadmin"],
+    "minimal": {
+      "server_roles": ["public", "dbcreator"],
+      "securables": ["VIEW ANY DEFINITION", "VIEW SERVER STATE", "CONNECT SQL"],
+      "databases": {
+        "model": ["db_backupoperator", "db_denydatareader", "public"],
+        "master": ["db_backupoperator", "db_datareader", "public"],
+        "msdb": ["db_backupoperator", "db_datareader", "public", "db_datawriter"]
+      }
+    }
+  },
+  "configuration_database": {
+    "source": "vbr13-permissions",
+    "section": "Microsoft SQL Server (where the configuration database is stored)",
+    "default_name": "VeeamBackup",
+    "install_securables": ["CREATE ANY DATABASE"],
+    "operation_roles": ["db_datareader", "db_datawriter"],
+    "operation_permissions": ["EXECUTE"],
+    "operation_alternative_role": "db_owner",
+    "upgrade_role": "db_owner"
+  }
+}

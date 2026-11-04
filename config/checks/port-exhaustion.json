@@ -1,0 +1,130 @@
+{
+  "schema": 1,
+  "about": "Port exhaustion and RPC checks for the Guided Diagnostics scenario RPC or port exhaustion (Windows). The ranges, delays, thresholds and the events counted. A value listed under set_by is a SAT starting value with no figure in the source read; the others follow the page named in source. The step texts are in scenarios.json.",
+  "ranges": {
+    "default_dynamic": {
+      "start": 49152,
+      "ports": 16384,
+      "source": "https://learn.microsoft.com/en-us/troubleshoot/windows-server/networking/default-dynamic-port-range-tcpip-chang"
+    },
+    "attention_below_ports": 16384,
+    "fail_below_ports": 5000,
+    "veeam_data_mover": {
+      "start": 2500,
+      "ports": 801,
+      "source": "https://helpcenter.veeam.com/docs/vbr/userguide/used_ports.html?ver=13"
+    }
+  },
+  "tcp_time_wait": {
+    "default_seconds": 240,
+    "valid_min_seconds": 30,
+    "valid_max_seconds": 300,
+    "source": "https://www.veeam.com/kb4217"
+  },
+  "usage": {
+    "attention_percent": 50,
+    "fail_percent": 90,
+    "set_by": "attention_percent is SAT; fail_percent follows the Directory Services article",
+    "not_counted_note": "Ports in the BOUND state are not in the socket table, so the counts are a lower bound."
+  },
+  "holder": {
+    "top": 5,
+    "share_percent": 50,
+    "close_wait_attention": 500,
+    "time_wait_total_minimum": 1000,
+    "time_wait_remote_share_percent": 50,
+    "set_by": "SAT"
+  },
+  "handles": {
+    "attention": 3000,
+    "fail": 10000,
+    "fail_also_needs_port_share_percent": 20,
+    "exclude_processes": ["System", "lsass.exe", "store.exe", "sqlservr.exe", "sqlsvr.exe"],
+    "nonpaged_pool_attention_percent_of_ram": 10,
+    "source": "https://learn.microsoft.com/en-us/troubleshoot/windows-client/networking/tcp-ip-port-exhaustion-troubleshooting",
+    "set_by": "nonpaged_pool_attention_percent_of_ram is SAT; the handle figures are Microsoft's"
+  },
+  "rpc": {
+    "key": "HKLM\\Software\\Microsoft\\Rpc\\Internet",
+    "values": ["Ports", "PortsInternetAvailable", "UseInternetPorts"],
+    "minimum_ports": 100,
+    "in_use_attention_percent": 80,
+    "services": ["RpcSs", "RpcEptMapper", "DcomLaunch"],
+    "firewall_service": "mpssvc",
+    "endpoint_mapper_port": 135,
+    "endpoint_mapper_service": "RpcSs",
+    "source": "https://learn.microsoft.com/en-us/troubleshoot/windows-server/networking/configure-rpc-dynamic-port-allocation-with-firewalls",
+    "set_by": "in_use_attention_percent is SAT; the minimum follows the source"
+  },
+  "event_days": 7,
+  "events": [
+    {
+      "group": "ports",
+      "log": "System",
+      "providers": ["Tcpip"],
+      "id": 4231,
+      "fail_within_hours": 24,
+      "attention_within_days": 7,
+      "meaning": "A request for an ephemeral TCP port failed because all of them were in use.",
+      "source": "https://learn.microsoft.com/en-us/troubleshoot/windows-client/networking/tcp-ip-port-exhaustion-troubleshooting"
+    },
+    {
+      "group": "ports",
+      "log": "System",
+      "providers": ["Tcpip"],
+      "id": 4227,
+      "attention_within_days": 7,
+      "meaning": "A connection failed because its local port was recently used for the same remote endpoint; connections are opened and closed at a high rate.",
+      "source": "https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2008-R2-and-2008/cc735929(v=ws.10)"
+    },
+    {
+      "group": "ports",
+      "log": "System",
+      "providers": ["Tcpip"],
+      "id": 4266,
+      "attention_within_days": 7,
+      "meaning": "A request for an ephemeral UDP port failed because all of them were in use. Also logged on machines that work normally.",
+      "source": ""
+    },
+    {
+      "group": "pool",
+      "log": "System",
+      "providers": ["Srv"],
+      "id": 2019,
+      "fail_within_hours": 24,
+      "attention_within_days": 7,
+      "meaning": "The Server service could not allocate from the system nonpaged pool because the pool was empty.",
+      "source": "https://learn.microsoft.com/en-us/answers/questions/2414967/server-was-unable-to-allocate-from-the-system-nonp"
+    },
+    {
+      "group": "pool",
+      "log": "System",
+      "providers": ["Srv"],
+      "id": 2020,
+      "fail_within_hours": 24,
+      "attention_within_days": 7,
+      "meaning": "The Server service could not allocate from the system paged pool because the pool was empty.",
+      "source": "https://learn.microsoft.com/en-us/troubleshoot/windows-server/performance/unable-allocate-memory-system-paged-pool"
+    },
+    {
+      "group": "rpc",
+      "log": "System",
+      "providers": ["NETLOGON"],
+      "id": 5820,
+      "attention_within_days": 7,
+      "meaning": "The Netlogon service could not add the AuthZ RPC interface. Logged when the RPC port configuration is wrong or the pool is too small.",
+      "source": "https://learn.microsoft.com/en-us/troubleshoot/windows-server/networking/configure-rpc-dynamic-port-allocation-with-firewalls"
+    }
+  ],
+  "error_meanings": [
+    {"code": 1720, "name": "RPC_S_CANT_CREATE_ENDPOINT", "meaning": "The endpoint cannot be created."},
+    {"code": 1721, "name": "RPC_S_OUT_OF_RESOURCES", "meaning": "Not enough resources are available to complete this operation."},
+    {"code": 1722, "name": "RPC_S_SERVER_UNAVAILABLE", "meaning": "The RPC server is unavailable. Logged when a lower layer reports a connectivity failure."},
+    {"code": 1723, "name": "RPC_S_SERVER_TOO_BUSY", "meaning": "The RPC server is too busy to complete this operation."},
+    {"code": 1753, "name": "EPT_S_NOT_REGISTERED", "meaning": "There are no more endpoints available from the endpoint mapper."},
+    {"code": 10013, "name": "WSAEACCES", "meaning": "Permission denied. A bind to a port inside an excluded port range gives this."},
+    {"code": 10048, "name": "WSAEADDRINUSE", "meaning": "Address already in use: another socket holds this protocol, address and port."},
+    {"code": 10055, "name": "WSAENOBUFS", "meaning": "No buffer space available: the system lacked buffer space or a queue was full."},
+    {"code": 10061, "name": "WSAECONNREFUSED", "meaning": "Connection refused: nothing listens on the target port."}
+  ]
+}

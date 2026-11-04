@@ -1,0 +1,290 @@
+{
+  "schema": 1,
+  "about": "The Object Storage Check's presets and the Veeam guides' rules it checks against. A preset names its endpoint ({region} is filled in), its addressing style, its default region and the regions offered in its list (any other can be typed), the entry in object-storage-prices.json its estimate uses, and how that provider bills a bucket-configuration read ('read' or 'list'). A preset marked 'later' is listed and not yet checked. The permissions are each product's own list from its guide, with the page, its build and the date they were read. The check writes nothing.",
+  "reviewed": "2026-10-06",
+  "request_cap": 25,
+  "presets": [
+    {
+      "id": "amazon-s3",
+      "name": "Amazon S3",
+      "endpoint": "s3.{region}.amazonaws.com",
+      "addressing": "virtual-hosted",
+      "default_region": "us-east-1",
+      "regions_source": "https://docs.aws.amazon.com/general/latest/gr/s3.html",
+      "regions": ["us-east-1", "us-east-2", "us-west-1", "us-west-2", "ca-central-1", "ca-west-1", "mx-central-1",
+                  "sa-east-1", "eu-central-1", "eu-central-2", "eu-west-1", "eu-west-2", "eu-west-3", "eu-south-1",
+                  "eu-south-2", "eu-north-1", "il-central-1", "me-south-1", "me-central-1", "af-south-1",
+                  "ap-east-1", "ap-east-2", "ap-south-1", "ap-south-2", "ap-southeast-1", "ap-southeast-2",
+                  "ap-southeast-3", "ap-southeast-4", "ap-southeast-5", "ap-southeast-6", "ap-southeast-7",
+                  "ap-northeast-1", "ap-northeast-2", "ap-northeast-3", "us-gov-east-1", "us-gov-west-1"],
+      "prices": "aws-s3",
+      "bucket_reads": "read",
+      "immutability": "s3"
+    },
+    {
+      "id": "s3-compatible",
+      "name": "S3-compatible storage",
+      "endpoint": "",
+      "addressing": "path",
+      "default_region": "us-east-1",
+      "regions": ["us-east-1"],
+      "prices": "",
+      "bucket_reads": "read",
+      "immutability": "s3"
+    },
+    {
+      "id": "backblaze-b2",
+      "name": "Backblaze B2",
+      "endpoint": "s3.{region}.backblazeb2.com",
+      "addressing": "virtual-hosted",
+      "default_region": "us-west-004",
+      "regions_source": "https://www.backblaze.com/docs/cloud-storage-call-the-s3-compatible-api",
+      "regions": ["us-west-000", "us-west-001", "us-west-002", "us-west-004", "us-east-005", "eu-central-003",
+                  "ca-east-006"],
+      "prices": "backblaze-b2",
+      "bucket_reads": "list",
+      "immutability": "s3"
+    },
+    {
+      "id": "wasabi",
+      "name": "Wasabi",
+      "endpoint": "s3.{region}.wasabisys.com",
+      "addressing": "virtual-hosted",
+      "default_region": "us-east-1",
+      "regions_source": "https://docs.wasabi.com/docs/what-are-the-service-urls-for-wasabi-s-different-storage-regions",
+      "regions": ["us-east-1", "us-east-2", "us-central-1", "us-west-1", "us-west-2", "ca-central-1",
+                  "eu-central-1", "eu-central-2", "eu-west-1", "eu-west-2", "eu-west-3", "eu-south-1",
+                  "ap-northeast-1", "ap-northeast-2", "ap-southeast-1", "ap-southeast-2"],
+      "prices": "wasabi",
+      "bucket_reads": "read",
+      "immutability": "s3"
+    },
+    {
+      "id": "cloudflare-r2",
+      "name": "Cloudflare R2",
+      "endpoint": "",
+      "addressing": "path",
+      "default_region": "auto",
+      "regions": ["auto"],
+      "prices": "cloudflare-r2",
+      "bucket_reads": "read",
+      "immutability": ""
+    },
+    {
+      "id": "ibm-cos",
+      "name": "IBM Cloud Object Storage",
+      "endpoint": "s3.{region}.cloud-object-storage.appdomain.cloud",
+      "addressing": "virtual-hosted",
+      "default_region": "us-south",
+      "regions_source": "https://cloud.ibm.com/docs/cloud-object-storage?topic=cloud-object-storage-endpoints",
+      "regions": ["us-south", "us-east", "ca-tor", "ca-mon", "br-sao", "eu-gb", "eu-de", "eu-es", "au-syd",
+                  "jp-tok", "jp-osa", "in-che", "in-mum", "us", "eu", "ap"],
+      "prices": "ibm-cos",
+      "bucket_reads": "read",
+      "immutability": "s3"
+    },
+    {
+      "id": "1111-cloud",
+      "name": "11:11 Cloud Object Storage",
+      "endpoint": "",
+      "addressing": "path",
+      "default_region": "us-east-1",
+      "regions": ["us-east-1"],
+      "prices": "",
+      "bucket_reads": "read",
+      "immutability": "s3"
+    },
+    {
+      "id": "on-site",
+      "name": "On-site S3 storage (MinIO and similar)",
+      "endpoint": "",
+      "addressing": "path",
+      "default_region": "us-east-1",
+      "regions": ["us-east-1"],
+      "prices": "on-site",
+      "bucket_reads": "read",
+      "immutability": "s3"
+    },
+    {
+      "id": "azure-blob",
+      "name": "Azure Blob Storage",
+      "endpoint": "",
+      "addressing": "",
+      "default_region": "",
+      "prices": "azure-blob",
+      "bucket_reads": "read",
+      "immutability": "",
+      "later": true
+    },
+    {
+      "id": "google-cloud-storage",
+      "name": "Google Cloud Storage",
+      "endpoint": "storage.googleapis.com",
+      "addressing": "",
+      "default_region": "",
+      "prices": "google-cloud-storage",
+      "bucket_reads": "read",
+      "immutability": "",
+      "later": true
+    }
+  ],
+  "immutability": {
+    "s3": {
+      "source": "https://helpcenter.veeam.com/docs/vbr/userguide/os_immutability_limitations.html",
+      "build": "13.1.1.18",
+      "reviewed": "2026-09-28",
+      "rules": [
+        "Versioning and Object Lock are both enabled on the bucket.",
+        "Object Lock's default retention is off: Veeam sets the retention on each object itself.",
+        "The bucket has no lifecycle rules.",
+        "Versioning and Object Lock are not switched on or off once the bucket is in use."
+      ]
+    }
+  },
+  "permissions": [
+    {
+      "id": "vbr-13",
+      "product": "Veeam Backup & Replication 13",
+      "source": "https://helpcenter.veeam.com/docs/vbr/userguide/permissions_object_storage.html",
+      "build": "13.1.1.18",
+      "reviewed": "2026-09-28",
+      "standard": [
+        "s3:ListBucket",
+        "s3:GetBucketLocation",
+        "s3:GetObject",
+        "s3:PutObject",
+        "s3:DeleteObject",
+        "s3:GetBucketVersioning",
+        "s3:GetBucketObjectLockConfiguration",
+        "s3:ListAllMyBuckets"
+      ],
+      "standard_note": "s3:ListAllMyBuckets is needed only when the bucket is chosen from a list rather than typed.",
+      "immutability": [
+        "s3:ListBucketVersions",
+        "s3:GetObjectVersion",
+        "s3:GetObjectRetention",
+        "s3:GetObjectLegalHold",
+        "s3:PutObjectRetention",
+        "s3:PutObjectLegalHold",
+        "s3:DeleteObjectVersion"
+      ],
+      "archiving": [
+        "s3:RestoreObject",
+        "s3:AbortMultipartUpload"
+      ]
+    },
+    {
+      "id": "vbr-12",
+      "product": "Veeam Backup & Replication 12.0 and earlier",
+      "source": "https://www.veeam.com/kb3151",
+      "build": "",
+      "reviewed": "2026-09-28",
+      "standard": [
+        "s3:ListBucket",
+        "s3:GetBucketLocation",
+        "s3:GetObject",
+        "s3:PutObject",
+        "s3:DeleteObject",
+        "s3:GetBucketVersioning",
+        "s3:GetBucketObjectLockConfiguration",
+        "s3:ListAllMyBuckets"
+      ],
+      "standard_note": "s3:ListAllMyBuckets is needed only when the bucket is chosen from a list rather than typed.",
+      "immutability": [
+        "s3:ListBucketVersions",
+        "s3:GetObjectVersion",
+        "s3:GetObjectRetention",
+        "s3:GetObjectLegalHold",
+        "s3:PutObjectRetention",
+        "s3:PutObjectLegalHold",
+        "s3:DeleteObjectVersion"
+      ],
+      "archiving": []
+    },
+    {
+      "id": "vaw-13",
+      "product": "Veeam Agent for Microsoft Windows 13, straight to object storage",
+      "source": "https://helpcenter.veeam.com/docs/agentforwindows/userguide/permissions.html?ver=13",
+      "build": "13.1.1.700",
+      "reviewed": "2026-10-06",
+      "standard": [
+        "s3:ListAllMyBuckets",
+        "s3:DeleteObject",
+        "s3:GetBucketLocation",
+        "s3:GetBucketObjectLockConfiguration",
+        "s3:GetBucketVersioning",
+        "s3:GetObject",
+        "s3:ListBucket",
+        "s3:PutObject"
+      ],
+      "standard_note": "The agent's guide gives s3:ListAllMyBuckets as identity-based and the rest as permissions on the bucket. For an immutable bucket it refers to Veeam Backup & Replication's list, used here.",
+      "immutability": [
+        "s3:ListBucketVersions",
+        "s3:GetObjectVersion",
+        "s3:GetObjectRetention",
+        "s3:GetObjectLegalHold",
+        "s3:PutObjectRetention",
+        "s3:PutObjectLegalHold",
+        "s3:DeleteObjectVersion"
+      ],
+      "archiving": []
+    },
+    {
+      "id": "val-13",
+      "product": "Veeam Agent for Linux 13, straight to object storage",
+      "source": "https://helpcenter.veeam.com/docs/agentforlinux/userguide/permissions.html",
+      "build": "13.1.1.4",
+      "reviewed": "2026-10-06",
+      "standard": [
+        "s3:ListAllMyBuckets",
+        "s3:DeleteObject",
+        "s3:GetBucketLocation",
+        "s3:GetBucketObjectLockConfiguration",
+        "s3:GetBucketVersioning",
+        "s3:GetObject",
+        "s3:ListBucket",
+        "s3:PutObject"
+      ],
+      "standard_note": "The agent's guide gives s3:ListAllMyBuckets as identity-based and the rest as permissions on the bucket. For an immutable bucket it refers to Veeam Backup & Replication's list, used here.",
+      "immutability": [
+        "s3:ListBucketVersions",
+        "s3:GetObjectVersion",
+        "s3:GetObjectRetention",
+        "s3:GetObjectLegalHold",
+        "s3:PutObjectRetention",
+        "s3:PutObjectLegalHold",
+        "s3:DeleteObjectVersion"
+      ],
+      "archiving": []
+    },
+    {
+      "id": "vb365-8",
+      "product": "Veeam Backup for Microsoft 365 8",
+      "source": "https://helpcenter.veeam.com/docs/vbo365/guide/amazon_s3_permissions.html",
+      "build": "8.6.0.1102",
+      "reviewed": "2026-10-06",
+      "standard": [
+        "s3:ListAllMyBuckets",
+        "s3:GetBucketLocation",
+        "s3:ListBucket",
+        "s3:ListBucketMultipartUploads",
+        "s3:GetBucketObjectLockConfiguration",
+        "s3:GetBucketVersioning",
+        "s3:ListBucketVersions",
+        "s3:PutObject",
+        "s3:GetObject",
+        "s3:DeleteObject",
+        "s3:AbortMultipartUpload",
+        "s3:ListMultipartUploadParts",
+        "s3:RestoreObject",
+        "s3:GetObjectVersion",
+        "s3:GetObjectRetention",
+        "s3:PutObjectRetention",
+        "s3:DeleteObjectVersion"
+      ],
+      "standard_note": "The guide lists these for every object storage repository on Amazon S3. Its EC2 permissions for the archiver appliance are not part of this check.",
+      "immutability": [],
+      "archiving": []
+    }
+  ]
+}

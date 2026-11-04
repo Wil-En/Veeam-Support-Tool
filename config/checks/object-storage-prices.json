@@ -1,0 +1,141 @@
+{
+  "schema": 1,
+  "about": "Best-guess list prices for the Object Storage Check's cost warning. tools/update_object_storage_prices.py refreshes them before every build; a source that does not answer is a build warning, and its last known values and check date stay in use. Prices are per 1,000 requests in the currency given; 'read' covers GET, HEAD and bucket-configuration reads, 'list' covers listings.",
+  "stale_after_days": 120,
+  "providers": {
+    "aws-s3": {
+      "name": "Amazon S3",
+      "billing": "per-request",
+      "basis": "S3 Standard, US East (N. Virginia)",
+      "currency": "USD",
+      "per_1000": {
+        "read": 0.0004,
+        "list": 0.005
+      },
+      "free": "",
+      "source": {
+        "kind": "aws-price-list",
+        "url": "https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonS3/current/region_index.json",
+        "region": "us-east-1"
+      },
+      "checked": "2026-10-28",
+      "last_result": "confirmed"
+    },
+    "azure-blob": {
+      "name": "Azure Blob Storage",
+      "billing": "per-request",
+      "basis": "Hot LRS block blob, East US",
+      "currency": "USD",
+      "per_1000": {
+        "read": 0.0004,
+        "list": 0.005
+      },
+      "free": "",
+      "source": {
+        "kind": "azure-retail-prices",
+        "url": "https://prices.azure.com/api/retail/prices?$filter=serviceName%20eq%20'Storage'%20and%20armRegionName%20eq%20'eastus'%20and%20skuName%20eq%20'Hot%20LRS'%20and%20productName%20eq%20'Blob%20Storage'"
+      },
+      "checked": "2026-10-28",
+      "last_result": "confirmed"
+    },
+    "google-cloud-storage": {
+      "name": "Google Cloud Storage",
+      "billing": "per-request",
+      "basis": "Standard storage, single region, flat namespace",
+      "currency": "USD",
+      "per_1000": {
+        "read": 0.0004,
+        "list": 0.005
+      },
+      "free": "",
+      "source": {
+        "kind": "gcs-pricing-page",
+        "url": "https://cloud.google.com/storage/pricing"
+      },
+      "checked": "2026-10-28",
+      "last_result": "confirmed"
+    },
+    "cloudflare-r2": {
+      "name": "Cloudflare R2",
+      "billing": "per-request",
+      "basis": "Standard storage",
+      "currency": "USD",
+      "per_1000": {
+        "read": 0.00036,
+        "list": 0.0045
+      },
+      "free": "10 million reads and 1 million listings or writes a month are free",
+      "source": {
+        "kind": "r2-pricing-page",
+        "url": "https://developers.cloudflare.com/r2/pricing/"
+      },
+      "checked": "2026-10-28",
+      "last_result": "confirmed"
+    },
+    "backblaze-b2": {
+      "name": "Backblaze B2",
+      "billing": "per-request",
+      "basis": "S3-compatible API: object reads (classes B and C) free; bucket and listing calls are class D",
+      "currency": "USD",
+      "per_1000": {
+        "read": 0.0,
+        "list": 0.0004
+      },
+      "free": "the first 2,500 class D calls a day are free",
+      "source": {
+        "kind": "b2-transaction-page",
+        "url": "https://www.backblaze.com/cloud-storage/transaction-pricing"
+      },
+      "checked": "2026-10-28",
+      "last_result": "confirmed"
+    },
+    "wasabi": {
+      "name": "Wasabi",
+      "billing": "none",
+      "basis": "No fees for API requests or egress",
+      "currency": "USD",
+      "per_1000": {
+        "read": 0.0,
+        "list": 0.0
+      },
+      "free": "",
+      "source": {
+        "kind": "wasabi-pricing-page",
+        "url": "https://wasabi.com/pricing"
+      },
+      "checked": "2026-10-28",
+      "last_result": "confirmed"
+    },
+    "ibm-cos": {
+      "name": "IBM Cloud Object Storage",
+      "billing": "unknown",
+      "basis": "No automatic price source; the warning says SAT has no prices for this endpoint",
+      "currency": "USD",
+      "per_1000": {},
+      "free": "",
+      "source": {
+        "kind": "none",
+        "url": ""
+      },
+      "checked": "",
+      "last_result": "no price source"
+    },
+    "on-site": {
+      "name": "On-site S3-compatible storage (MinIO and similar)",
+      "billing": "none",
+      "basis": "Storage the customer runs bills no requests",
+      "currency": "USD",
+      "per_1000": {
+        "read": 0.0,
+        "list": 0.0
+      },
+      "free": "",
+      "source": {
+        "kind": "none",
+        "url": ""
+      },
+      "checked": "",
+      "last_result": "no price source needed"
+    }
+  }
+}

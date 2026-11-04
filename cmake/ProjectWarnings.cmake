@@ -1,0 +1,30 @@
+function(support_assist_set_warnings target)
+  if(MSVC)
+    target_compile_options(${target} PRIVATE /W4 /permissive- /Zc:__cplusplus /EHsc /utf-8)
+    if(SUPPORT_ASSIST_STRICT_WARNINGS)
+      target_compile_options(${target} PRIVATE /WX)
+    endif()
+  else()
+    target_compile_options(${target} PRIVATE -Wall -Wextra -Wpedantic -Wconversion -Wshadow -Wformat=2)
+    if(SUPPORT_ASSIST_STRICT_WARNINGS)
+      target_compile_options(${target} PRIVATE -Werror)
+    endif()
+  endif()
+endfunction()
+
+# Security hardening for SAT-owned native binaries/libraries. Keep this separate
+# from warning policy so a warning relaxation can never silently remove exploit
+# mitigations.
+function(support_assist_apply_security_hardening target)
+  if(MSVC)
+    target_compile_options(${target} PRIVATE /sdl /guard:cf)
+    target_link_options(${target} PRIVATE /DYNAMICBASE /NXCOMPAT /guard:cf)
+  elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    target_compile_options(${target} PRIVATE -fstack-protector-strong)
+    # _FORTIFY_SOURCE is effective for optimized Release/RelWithDebInfo builds.
+    target_compile_definitions(${target} PRIVATE $<$<NOT:$<CONFIG:Debug>>:_FORTIFY_SOURCE=2>)
+    target_link_options(${target} PRIVATE -Wl,-z,relro,-z,now -Wl,-z,noexecstack)
+  elseif(APPLE)
+    target_compile_options(${target} PRIVATE -fstack-protector-strong)
+  endif()
+endfunction()

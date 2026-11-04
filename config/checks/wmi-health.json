@@ -1,0 +1,100 @@
+{
+  "schema": 1,
+  "about": "WMI health: the namespaces the check probes, each with what it is for, a one-row read-only WQL probe and what its absence means; the WMI error codes it decodes; and the events it reads from the last event_days days. repository_limit_gb is the WMI repository size Microsoft documents as the limit, a finding from 90% of it; slow_probe_ms is the probe time above which a namespace is a finding. An error marked routine is an everyday WMI client outcome: its WMI-Activity events are listed as Routine, not as a finding.",
+  "sources": {
+    "wmi-errors": {
+      "title": "WMI Error Constants (Microsoft Learn)",
+      "url": "https://learn.microsoft.com/windows/win32/wmisdk/wmi-error-constants"
+    },
+    "winmgmt": {
+      "title": "Winmgmt (Microsoft Learn)",
+      "url": "https://learn.microsoft.com/windows/win32/wmisdk/winmgmt"
+    }
+  },
+  "repository_limit_gb": 4,
+  "slow_probe_ms": 2000,
+  "event_days": 7,
+  "namespaces": [
+    {
+      "namespace": "root\\cimv2",
+      "role": "Windows",
+      "why": "The operating system, disks, services and processes, which Veeam reads on every Windows machine it works with.",
+      "probe": "SELECT Name FROM Win32_OperatingSystem",
+      "absent_means": "Every Windows machine has this namespace. Without it the WMI repository is damaged."
+    },
+    {
+      "namespace": "root\\wmi",
+      "role": "Windows drivers",
+      "why": "Data that drivers publish, such as network adapter and storage driver status.",
+      "probe": "SELECT InstanceName FROM MSNdis_HardwareStatus",
+      "absent_means": "Every Windows machine has this namespace. Without it the WMI repository is damaged."
+    },
+    {
+      "namespace": "root\\StandardCimv2",
+      "role": "Windows networking",
+      "why": "Network adapters, addresses and firewall rules, as the NetAdapter and NetTCPIP PowerShell modules read them.",
+      "probe": "SELECT Name FROM MSFT_NetAdapter",
+      "absent_means": "Windows 8 and Windows Server 2012 and later have this namespace; an earlier Windows does not."
+    },
+    {
+      "namespace": "root\\Microsoft\\Windows\\Storage",
+      "role": "Windows storage",
+      "why": "Disks, partitions and volumes, as the Storage PowerShell module reads them.",
+      "probe": "SELECT DriveLetter FROM MSFT_Volume",
+      "absent_means": "Windows 8 and Windows Server 2012 and later have this namespace; an earlier Windows does not."
+    },
+    {
+      "namespace": "root\\virtualization\\v2",
+      "role": "Hyper-V",
+      "why": "VM enumeration and control by Veeam Backup & Replication on a Hyper-V host.",
+      "probe": "SELECT Name FROM Msvm_ComputerSystem WHERE Caption = 'Hosting Computer System'",
+      "absent_means": "The Hyper-V role is not installed."
+    },
+    {
+      "namespace": "root\\MSCluster",
+      "role": "Failover Clustering",
+      "why": "The cluster, its nodes and resources, which Veeam reads to back up a failover cluster.",
+      "probe": "SELECT Name FROM MSCluster_Cluster",
+      "absent_means": "The Failover Clustering feature is not installed."
+    },
+    {
+      "namespace": "root\\CIMV2\\Security\\MicrosoftVolumeEncryption",
+      "role": "BitLocker",
+      "why": "The BitLocker state of each volume.",
+      "probe": "SELECT DriveLetter FROM Win32_EncryptableVolume",
+      "absent_means": "BitLocker is not installed."
+    }
+  ],
+  "errors": [
+    {"code": "0x80041003", "name": "WBEM_E_ACCESS_DENIED", "meaning": "This account is not allowed to do that in WMI."},
+    {"code": "0x80041010", "name": "WBEM_E_INVALID_CLASS", "meaning": "The class does not exist in this namespace."},
+    {"code": "0x8004100E", "name": "WBEM_E_INVALID_NAMESPACE", "meaning": "The namespace is not on the machine."},
+    {"code": "0x80041014", "name": "WBEM_E_INITIALIZATION_FAILURE", "meaning": "A WMI component failed to start."},
+    {"code": "0x80041015", "name": "WBEM_E_TRANSPORT_FAILURE", "meaning": "A network error stopped the WMI call."},
+    {"code": "0x80041032", "name": "WBEM_E_CALL_CANCELLED", "meaning": "The caller stopped reading the result set.", "routine": true},
+    {"code": "0x8004103B", "name": "WBEM_E_OUT_OF_DISK_SPACE", "meaning": "The disk is full or the repository reached its 4 GB limit."},
+    {"code": "0x80041064", "name": "WBEM_E_LOCAL_CREDENTIALS", "meaning": "An account was given for this machine. WMI signs in on this machine as the account SAT runs as."},
+    {"code": "0x8004106C", "name": "WBEM_E_QUOTA_VIOLATION", "meaning": "WMI is using too much memory."},
+    {"code": "0x80041088", "name": "WBEM_E_PROVIDER_TIMED_OUT", "meaning": "A provider did not answer in time."},
+    {"code": "0x800706BA", "name": "RPC_S_SERVER_UNAVAILABLE", "meaning": "The RPC server is unavailable: the machine is down, WMI is stopped, or the ports are blocked."},
+    {"code": "0x80070005", "name": "E_ACCESSDENIED", "meaning": "DCOM refused the account."},
+    {"code": "0x80041002", "name": "WBEM_E_NOT_FOUND", "meaning": "The object asked for was not found.", "routine": true},
+    {"code": "0x8004100C", "name": "WBEM_E_NOT_SUPPORTED", "meaning": "The provider does not support the operation asked for.", "routine": true},
+    {"code": "0x8004100F", "name": "WBEM_E_INVALID_OBJECT", "meaning": "The object is not valid, such as an instance without its key properties."},
+    {"code": "0x80041019", "name": "WBEM_E_ALREADY_EXISTS", "meaning": "The object to create already exists.", "routine": true}
+  ],
+  "events": [
+    {
+      "log": "Application",
+      "provider": "Microsoft-Windows-WMI",
+      "id": 5612,
+      "meaning": "WMI stopped a provider host (WmiPrvSE.exe) because it reached a quota, such as its handle, memory or thread limit."
+    },
+    {
+      "log": "Microsoft-Windows-WMI-Activity/Operational",
+      "provider": "Microsoft-Windows-WMI-Activity",
+      "id": 5858,
+      "meaning": "A WMI operation failed. ResultCode is its error and ClientProcessId the process that asked."
+    }
+  ]
+}

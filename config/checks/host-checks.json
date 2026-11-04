@@ -1,0 +1,72 @@
+{
+  "schema": 1,
+  "about": "Host Checks (Host Diagnostics): read-only checks of the things on a host that most often explain a failed snapshot or backup. Each group is one check box. Events are counted, never judged beyond their own meaning; the newest event's own text is shown, as an event id alone does not name the cause. Drivers are listed as found, not as expected. Registry values are read as numbers; an absent value is reported as the Windows default.",
+  "sources": [
+    {"name": "Veeam KB4573: shadow copies deleted or aborted (volsnap 25 and 36)", "url": "https://www.veeam.com/kb4573", "read": "summary"},
+    {"name": "Veeam KB1846: VSS error 8193", "url": "https://www.veeam.com/kb1846", "read": "summary"},
+    {"name": "Veeam Backup & Replication 12 system requirements: .NET Framework 4.7.2", "url": "https://helpcenter.veeam.com/docs/backup/vsphere/system_requirements.html?ver=120", "read": "summary"},
+    {"name": "Microsoft: how to determine which .NET Framework versions are installed (release numbers)", "url": "https://learn.microsoft.com/dotnet/framework/migration-guide/how-to-determine-which-versions-are-installed", "read": "read"},
+    {"name": "Microsoft: TLS registry settings (SCHANNEL Protocols, Enabled and DisabledByDefault)", "url": "https://learn.microsoft.com/windows-server/security/tls/tls-registry-settings", "read": "read"},
+    {"name": "Veeam KB4695: Veeam Agent for Linux module not found after a kernel update", "url": "https://www.veeam.com/kb4695", "read": "summary"}
+  ],
+  "groups": [
+    {"id": "events", "title": "Backup events", "platform": "windows", "needs_admin": false,
+     "description": "System and Application events that explain failed snapshots and storage trouble: volsnap, VSS, disk and NTFS."},
+    {"id": "drivers", "title": "Veeam drivers", "platform": "both", "needs_admin": false,
+     "description": "The Veeam drivers on this machine and their state; on Linux the snapshot module, loaded and built for this kernel."},
+    {"id": "shadow-storage", "title": "VSS shadow storage", "platform": "windows", "needs_admin": true,
+     "description": "Shadow storage per volume: used, allocated and maximum, and the shadow copies on it."},
+    {"id": "dotnet-tls", "title": ".NET and TLS", "platform": "windows", "needs_admin": false,
+     "description": "The .NET Framework release and the registry values that turn TLS 1.2 on or off."},
+    {"id": "kernel-log", "title": "Kernel log", "platform": "linux", "needs_admin": true,
+     "description": "Kernel messages that name a Veeam snapshot module, an I/O error or a file system error."}
+  ],
+  "event_days": 7,
+  "events": [
+    {"log": "System", "providers": ["volsnap"], "id": 25,
+     "meaning": "Shadow copies were deleted because the shadow storage could not grow in time.", "source": "https://www.veeam.com/kb4573"},
+    {"log": "System", "providers": ["volsnap"], "id": 36,
+     "meaning": "Shadow copies were aborted because the shadow storage reached its limit.", "source": "https://www.veeam.com/kb4573"},
+    {"log": "Application", "providers": ["VSS"], "id": 8193,
+     "meaning": "A VSS error. The event's own text names the cause.", "source": "https://www.veeam.com/kb1846"},
+    {"log": "Application", "providers": ["VSS"], "id": 12289,
+     "meaning": "A VSS error from a provider or writer. The event's own text names it.", "source": ""},
+    {"log": "System", "providers": ["disk"], "id": 129,
+     "meaning": "A reset was issued to a storage device.", "source": ""},
+    {"log": "System", "providers": ["disk"], "id": 153,
+     "meaning": "An I/O operation on a storage device was retried.", "source": ""},
+    {"log": "System", "providers": ["Ntfs", "Microsoft-Windows-Ntfs"], "id": 55,
+     "meaning": "The file system structure on a volume is corrupt.", "source": ""},
+    {"log": "System", "providers": ["Ntfs", "Microsoft-Windows-Ntfs"], "id": 98, "levels": ["warning", "error", "critical"],
+     "meaning": "A volume needs a check by chkdsk. Windows also logs this event, as Information, for a volume that is healthy; those are not counted.", "source": ""}
+  ],
+  "windows_driver_prefix": "Veeam",
+  "windows_cbt_store": "C:\\ProgramData\\Veeam\\CtpStore",
+  "linux_modules": ["veeamsnap", "blksnap", "veeamblksnap"],
+  "dotnet_minimum": {"release": 461808, "name": "4.7.2",
+                     "source": "https://helpcenter.veeam.com/docs/backup/vsphere/system_requirements.html?ver=120"},
+  "dotnet_releases": [
+    {"release": 533320, "name": "4.8.1"},
+    {"release": 528040, "name": "4.8"},
+    {"release": 461808, "name": "4.7.2"},
+    {"release": 461308, "name": "4.7.1"},
+    {"release": 460798, "name": "4.7"},
+    {"release": 394802, "name": "4.6.2"},
+    {"release": 394254, "name": "4.6.1"},
+    {"release": 393295, "name": "4.6"},
+    {"release": 379893, "name": "4.5.2"},
+    {"release": 378675, "name": "4.5.1"},
+    {"release": 378389, "name": "4.5"}
+  ],
+  "tls_protocols": ["TLS 1.2", "TLS 1.3", "TLS 1.1", "TLS 1.0"],
+  "tls_required": "TLS 1.2",
+  "kernel_logs": ["/var/log/kern.log", "/var/log/messages"],
+  "kernel_log_bytes": 16777216,
+  "kernel_signatures": [
+    {"text": "blksnap", "meaning": "A message from the blksnap snapshot module."},
+    {"text": "veeamsnap", "meaning": "A message from the veeamsnap snapshot module."},
+    {"text": "I/O error", "meaning": "The kernel reported an I/O error on a device."},
+    {"text": "EXT4-fs error", "meaning": "The ext4 file system reported an error."},
+    {"text": "metadata I/O error", "meaning": "XFS could not read or write its own metadata."}
+  ]
+}

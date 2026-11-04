@@ -1,0 +1,252 @@
+{
+  "version": 6,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 25,
+    "patch": 0
+  },
+  "configurePresets": [
+    {
+      "name": "windows-msvc-debug",
+      "displayName": "Windows MSVC Debug / Native Win32 GUI",
+      "generator": "Visual Studio 17 2022",
+      "architecture": "x64",
+      "binaryDir": "${sourceDir}/out/build/windows-msvc-debug",
+      "cacheVariables": {
+        "SUPPORT_ASSIST_OBJECT_STORAGE_CHECK": "ON",
+        "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
+        "VCPKG_OVERLAY_PORTS": "${sourceDir}/ports",
+        "SUPPORT_ASSIST_BUILD_TESTS": "ON",
+        "SUPPORT_ASSIST_BUILD_GUI": "ON",
+        "SUPPORT_ASSIST_ENABLE_LIBARCHIVE": "ON",
+        "VCPKG_TARGET_TRIPLET": "x64-windows-static"
+      }
+    },
+    {
+      "name": "windows-msvc-release",
+      "inherits": "windows-msvc-debug",
+      "displayName": "Windows MSVC Release / Native Win32 GUI",
+      "binaryDir": "${sourceDir}/out/build/windows-msvc-release",
+      "cacheVariables": {
+        "SUPPORT_ASSIST_OBJECT_STORAGE_CHECK": "OFF",
+        "SUPPORT_ASSIST_BUILD_TESTS": "ON"
+      }
+    },
+    {
+      "name": "linux-native-debug",
+      "displayName": "Linux Native Debug / X11 GUI + CLI",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/out/build/linux-native-debug",
+      "cacheVariables": {
+        "SUPPORT_ASSIST_OBJECT_STORAGE_CHECK": "ON",
+        "CMAKE_BUILD_TYPE": "Debug",
+        "SUPPORT_ASSIST_BUILD_TESTS": "ON",
+        "SUPPORT_ASSIST_BUILD_GUI": "ON",
+        "SUPPORT_ASSIST_ENABLE_RE2": "OFF",
+        "SUPPORT_ASSIST_ENABLE_LIBARCHIVE": "ON"
+      }
+    },
+    {
+      "name": "linux-native-release",
+      "inherits": "linux-native-debug",
+      "displayName": "Linux Native Release / X11 GUI + CLI",
+      "binaryDir": "${sourceDir}/out/build/linux-native-release",
+      "cacheVariables": {
+        "SUPPORT_ASSIST_OBJECT_STORAGE_CHECK": "OFF",
+        "SUPPORT_ASSIST_ENABLE_LIBARCHIVE": "ON",
+        "CMAKE_BUILD_TYPE": "Release",
+        "SUPPORT_ASSIST_BUILD_TESTS": "OFF",
+        "SUPPORT_ASSIST_PORTABLE_RUNTIME": "ON"
+      }
+    },
+    {
+      "name": "linux-headless-debug",
+      "inherits": "linux-native-debug",
+      "displayName": "Linux Headless Debug / CLI",
+      "binaryDir": "${sourceDir}/out/build/linux-headless-debug",
+      "cacheVariables": {
+        "SUPPORT_ASSIST_ENABLE_LIBARCHIVE": "ON",
+        "SUPPORT_ASSIST_BUILD_GUI": "OFF"
+      }
+    },
+    {
+      "name": "linux-headless-release",
+      "inherits": "linux-headless-debug",
+      "displayName": "Linux Headless Release / CLI",
+      "binaryDir": "${sourceDir}/out/build/linux-headless-release",
+      "cacheVariables": {
+        "SUPPORT_ASSIST_OBJECT_STORAGE_CHECK": "OFF",
+        "SUPPORT_ASSIST_ENABLE_LIBARCHIVE": "ON",
+        "CMAKE_BUILD_TYPE": "Release",
+        "SUPPORT_ASSIST_BUILD_TESTS": "OFF"
+      }
+    },
+    {
+      "name": "portable-linux-debug",
+      "inherits": "linux-headless-debug",
+      "displayName": "Compatibility Alias: Linux Headless Debug",
+      "binaryDir": "${sourceDir}/out/build/portable-linux-debug"
+    },
+    {
+      "name": "portable-linux-archive-debug",
+      "inherits": "linux-headless-debug",
+      "displayName": "Compatibility Alias: Linux Headless Debug + Archive",
+      "binaryDir": "${sourceDir}/out/build/portable-linux-archive-debug"
+    },
+    {
+      "name": "linux-x64-release",
+      "inherits": "linux-headless-release",
+      "displayName": "Compatibility Alias: Historical Linux x64 Release CLI",
+      "binaryDir": "${sourceDir}/out/build/linux-x64-release"
+    },
+    {
+      "name": "macos-native-debug",
+      "displayName": "macOS Native Debug / Cocoa GUI + CLI",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/out/build/macos-native-debug",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_OSX_DEPLOYMENT_TARGET": "11.0",
+        "SUPPORT_ASSIST_BUILD_TESTS": "ON",
+        "SUPPORT_ASSIST_BUILD_GUI": "ON",
+        "SUPPORT_ASSIST_ENABLE_RE2": "OFF",
+        "SUPPORT_ASSIST_ENABLE_LIBARCHIVE": "ON"
+      }
+    },
+    {
+      "name": "macos-native-release",
+      "inherits": "macos-native-debug",
+      "displayName": "macOS Native Release / Cocoa GUI + CLI",
+      "binaryDir": "${sourceDir}/out/build/macos-native-release",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "SUPPORT_ASSIST_BUILD_TESTS": "OFF",
+        "SUPPORT_ASSIST_PORTABLE_RUNTIME": "ON"
+      }
+    },
+    {
+      "name": "macos-headless-debug",
+      "inherits": "macos-native-debug",
+      "displayName": "macOS Headless Debug / CLI",
+      "binaryDir": "${sourceDir}/out/build/macos-headless-debug",
+      "cacheVariables": {
+        "SUPPORT_ASSIST_BUILD_GUI": "OFF"
+      }
+    },
+    {
+      "name": "macos-headless-release",
+      "inherits": "macos-headless-debug",
+      "displayName": "macOS Headless Release / CLI",
+      "binaryDir": "${sourceDir}/out/build/macos-headless-release",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "SUPPORT_ASSIST_BUILD_TESTS": "OFF"
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "windows-msvc-debug",
+      "configurePreset": "windows-msvc-debug"
+    },
+    {
+      "name": "windows-msvc-release",
+      "configurePreset": "windows-msvc-release"
+    },
+    {
+      "name": "linux-native-debug",
+      "configurePreset": "linux-native-debug"
+    },
+    {
+      "name": "linux-native-release",
+      "configurePreset": "linux-native-release"
+    },
+    {
+      "name": "linux-headless-debug",
+      "configurePreset": "linux-headless-debug"
+    },
+    {
+      "name": "linux-headless-release",
+      "configurePreset": "linux-headless-release"
+    },
+    {
+      "name": "portable-linux-debug",
+      "configurePreset": "portable-linux-debug"
+    },
+    {
+      "name": "portable-linux-archive-debug",
+      "configurePreset": "portable-linux-archive-debug"
+    },
+    {
+      "name": "linux-x64-release",
+      "configurePreset": "linux-x64-release"
+    },
+    {
+      "name": "macos-native-debug",
+      "configurePreset": "macos-native-debug"
+    },
+    {
+      "name": "macos-native-release",
+      "configurePreset": "macos-native-release"
+    },
+    {
+      "name": "macos-headless-debug",
+      "configurePreset": "macos-headless-debug"
+    },
+    {
+      "name": "macos-headless-release",
+      "configurePreset": "macos-headless-release"
+    }
+  ],
+  "testPresets": [
+    {
+      "name": "windows-msvc-debug",
+      "configurePreset": "windows-msvc-debug",
+      "output": {
+        "outputOnFailure": true
+      }
+    },
+    {
+      "name": "linux-native-debug",
+      "configurePreset": "linux-native-debug",
+      "output": {
+        "outputOnFailure": true
+      }
+    },
+    {
+      "name": "linux-headless-debug",
+      "configurePreset": "linux-headless-debug",
+      "output": {
+        "outputOnFailure": true
+      }
+    },
+    {
+      "name": "portable-linux-debug",
+      "configurePreset": "portable-linux-debug",
+      "output": {
+        "outputOnFailure": true
+      }
+    },
+    {
+      "name": "portable-linux-archive-debug",
+      "configurePreset": "portable-linux-archive-debug",
+      "output": {
+        "outputOnFailure": true
+      }
+    },
+    {
+      "name": "macos-native-debug",
+      "configurePreset": "macos-native-debug",
+      "output": {
+        "outputOnFailure": true
+      }
+    },
+    {
+      "name": "macos-headless-debug",
+      "configurePreset": "macos-headless-debug",
+      "output": {
+        "outputOnFailure": true
+      }
+    }
+  ]
+}
