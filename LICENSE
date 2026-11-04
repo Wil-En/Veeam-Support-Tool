@@ -1,13 +1,19 @@
-## Copyright
+Copyright (c) 2026 Will (Wilow) Engels
+All Rights Reserved.
 
-Copyright © 2026 Wilow Engels. All rights reserved.
+Support Assist Tool and its source code were independently developed by
+Will Engels prior to transfer of the source code to Veeam Software's
+GitHub organization for security review and evaluation.
 
-Support Assist Tool is presently under development and is not distributed
-under an open-source license.
+The source code is being made available to Veeam Software for internal
+security review, vulnerability analysis, testing, and evaluation associated
+with determining whether Support Assist Tool will be adopted by Veeam.
 
-No license to use, copy, modify, distribute, sublicense, or create derivative
-works from the source code is granted unless expressly authorized in writing
-by the copyright holder.
+No assignment or transfer of copyright or other ownership rights is intended
+by placement of the source code in a Veeam-controlled repository.
 
-Third-party components used by Support Assist Tool remain subject to their
-respective licenses.
+Except as necessary for the above review and evaluation, no permission is
+granted to copy, modify, distribute, sublicense, publish, sell, or otherwise
+use the source code without the copyright holder's written permission.
+
+Third-party components remain subject to their respective licenses.
